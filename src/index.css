@@ -7,6 +7,53 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.theme-dark {
+  --c1: #008800;
+  --c2: #D7F2BA;
+  --c3: #BDE4A8;
+  --c4: #1D2F6F;
+  --c5: #8390FA;
+  --white-text: #ececec;
+  --black-text: #0a0a0a;
+  --error-text: #c62828;
+  --error-background: #fbe9e7;
+  --gradient: linear-gradient(to right, #d99e38, #ffcb74);
+}
+
+.theme-light {
+  --c1: #008800;
+  --c2: #D7F2BA;
+  --c3: #BDE4A8;
+  --c4: #1D2F6F;
+  --c5: #8390FA;
+  --white-text: #ececec;
+  --black-text: #0a0a0a;
+  --error-text: #c62828;
+  --error-background: #fbe9e7;
+  --gradient: linear-gradient(to right, #d99e38, #ffcb74);
+}
+
+.link {
+  text-decoration: none;
+  color: var(--white-text);
+  cursor: pointer;
+}
+
+.error-message {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--error-background);
+  color: var(--error-text);
+  border: 1px solid var(--error-text);
+  margin: 5px;
+}
+
+hr.style-two {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

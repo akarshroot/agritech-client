@@ -1,0 +1,53 @@
+.bg-dashboard {
+    background-image: url(../../assets/backgrounds/stacked-peaks.svg);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -10;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100vh;
+}
+
+.profile-section {
+    width: 20%;
+    background-color: var(--c3);
+    color: var(--black-text);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid var(--c1);
+    border-right: 2px solid var(--c1);
+}
+
+.profile-image-container img {
+    border-radius: 50%;
+    aspect-ratio: 1;
+    max-width: 80%;
+    border: 2px solid var(--c4);
+    margin: 20px 20px 5px;
+}
+
+.details-section-element {
+    margin: 10px;
+}
+
+.widgets-section {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.widget {
+    min-width: 300px;
+    height: 300px;
+    border: 4px dashed var(--c1);
+    margin: 20px;
+    border-radius: 12px;
+}

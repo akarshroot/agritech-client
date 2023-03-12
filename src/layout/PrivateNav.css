@@ -1,0 +1,45 @@
+.private-nav {
+    background-color: var(--c4);
+    height: fit-content;
+}
+
+.private-nav h3 {
+    color: var(--white-text);
+    padding: 5px;
+    background-color: var(--c1);
+    margin: 0px;
+}
+
+.links-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0px;
+}
+
+.nav-element {
+    width: 200px;
+    padding: 10px;
+}
+
+.nav-element-selected {
+    color: var(--white-text);
+    background-color: var(--c1);
+}
+
+.nav-element-btn {
+    border-radius: 5px;
+    border: 2px solid var(--white-text);
+    display: flex;
+    align-items: center;
+    padding: 0px 5px;
+    margin: 2px;
+    transition-duration: 300ms;
+}
+
+.nav-element-btn:hover {
+    background-color: var(--white-text);
+    color: var(--black-text);
+}
