@@ -8,11 +8,11 @@ body {
 }
 
 .theme-dark {
-  --c1: #008800;
-  --c2: #D7F2BA;
-  --c3: #BDE4A8;
-  --c4: #1D2F6F;
-  --c5: #8390FA;
+  --c1: #40513B;
+  --c2: #609966;
+  --c3: #9DC08B;
+  --c4: #EDF1D6;
+  /* --c5: #8390FA; */
   --white-text: #ececec;
   --black-text: #0a0a0a;
   --error-text: #c62828;
@@ -21,11 +21,10 @@ body {
 }
 
 .theme-light {
-  --c1: #008800;
-  --c2: #D7F2BA;
-  --c3: #BDE4A8;
-  --c4: #1D2F6F;
-  --c5: #8390FA;
+  --c1: #40513B;
+  --c2: #609966;
+  --c3: #9DC08B;
+  --c4: #EDF1D6;
   --white-text: #ececec;
   --black-text: #0a0a0a;
   --error-text: #c62828;
@@ -35,8 +34,12 @@ body {
 
 .link {
   text-decoration: none;
-  color: var(--white-text);
   cursor: pointer;
+  color: inherit;
+}
+
+.link:hover {
+  color: inherit;
 }
 
 .error-message {

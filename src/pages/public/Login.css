@@ -39,7 +39,7 @@
     margin: 5px;
     font-size: medium;
     transition-duration: 300ms;
-    padding: 2px;
+    padding: 0px 5px;
 }
 
 .form-input[type="submit"] {

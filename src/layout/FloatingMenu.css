@@ -1,0 +1,44 @@
+.floating-menu-container {
+    border-radius: 12px;
+    min-width: 300px;
+    width: 40%;
+    position: fixed;
+    bottom: 30px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    background-color: antiquewhite;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.floating-menu-container ul {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.floating-menu-container ul li {
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: 400ms;
+}
+
+.floating-menu-container ul li:hover {
+    background-color: var(--c1);
+    color: var(--white-text);
+    font-weight: 600;
+}
+
+.floating-menu-container ul li img {
+    width: 30px;
+    margin: 5px;
+}

@@ -1,9 +1,12 @@
 .private-nav {
     background-color: var(--c4);
     height: fit-content;
+    position: sticky;
+    top: 0px;
+    z-index: 999;
 }
 
-.private-nav h3 {
+.private-nav h4 {
     color: var(--white-text);
     padding: 5px;
     background-color: var(--c1);
@@ -22,6 +25,7 @@
 .nav-element {
     width: 200px;
     padding: 10px;
+    color: var(--black-text);
 }
 
 .nav-element-selected {
@@ -31,15 +35,24 @@
 
 .nav-element-btn {
     border-radius: 5px;
-    border: 2px solid var(--white-text);
+    border: 2px solid var(--black-text);
+    color: var(--black-text);
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 0px 5px;
     margin: 2px;
     transition-duration: 300ms;
+    cursor: pointer;
 }
 
 .nav-element-btn:hover {
-    background-color: var(--white-text);
+    background-color: var(--c3);
     color: var(--black-text);
+}
+
+@media screen and (max-width: 768px) {
+    .private-nav {
+        position: static;
+    }
 }

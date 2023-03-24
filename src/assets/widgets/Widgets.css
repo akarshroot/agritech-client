@@ -1,0 +1,28 @@
+.widget-container {
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.widget-container h4 {
+    font-size: 18px;
+}
+
+.widget-container span.quantity {
+    font-size: large;
+    font-weight: 600;
+}
+
+.widget-container span.subtext {
+    font-size: medium;
+    color: gray;
+}
+
+.current-campaign-widget-details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}

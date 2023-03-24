@@ -1,0 +1,133 @@
+.planning-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.planning-header {
+    text-align: left;
+}
+
+.planning-header h3 {
+    font-weight: bold;
+}
+
+.current-plans {
+    text-align: left;
+}
+
+.plan {
+    padding: 15px;
+    min-width: 300px;
+    width: 50%;
+    margin: 20px;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    text-align: left;
+}
+
+.plan-details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.requirements {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.plan-details td, th {
+    padding: 5px;
+}
+
+.plan-details .action-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.create-plan-form .form-input {
+    width: 80%;
+}
+
+.requirement-form-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.requirement-form-group .form-input[name="item"] {
+    width: 200px;
+}
+
+.requirement-form-group .form-input[name="quantity"] {
+    width: 120px;
+}
+
+.requirement-form-group .form-input[name="estCost"] {
+    width: 160px;
+}
+
+.requirement-form-group .form-input[name="estSale"] {
+    width: 160px;
+}
+
+.req-action-btns {
+    margin: 10px;
+}
+
+/* CSS */
+.button-28 {
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #1A1A1A;
+  border-radius: 15px;
+  box-sizing: border-box;
+  color: #3B3B3B;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0;
+  min-height: 60px;
+  min-width: 0;
+  outline: none;
+  text-align: center;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 150px;
+  height: 60px;
+  will-change: transform;
+}
+
+.button-28:disabled {
+  pointer-events: none;
+}
+
+.button-28:hover {
+  color: var(--white-text);
+  background-color: var(--c2);
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+
+.delete-plan:hover {
+    background-color: var(--error-background);
+    color: var(--error-text);
+}
+
+.button-28:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
