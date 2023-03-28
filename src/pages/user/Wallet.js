@@ -1,23 +1,20 @@
 import React, {useEffect, useState} from 'react'
-import {getBalance} from './management/web3ServerApi/web3ServerApi'
-
-const hardCodedAccount = '0x2ee4961905E3c9B6eC890d5F919224Ad6BD87637'
+import {useUser} from '../../context/UserContext'
+import {getBalance} from '../../interceptors/web3ServerApi'
 
 /*
 
 {
   date: date,
   amountTransfered: Number,
-  transfersTo: address, 
+  transfersTo: address,
 }
 
 */
 
 function Wallet() {
-  
-  const [balance,setBalance] = useState(0)
-  const [account,setAccount] = useState(hardCodedAccount)
-
+  const [balance,setBalance] = useState('--')
+  const {userData} = useUser()
   const [transactions,setTransactions] = useState([])
   async function getBalanceFormServer(acc){
 
@@ -27,29 +24,31 @@ function Wallet() {
   }
 
   useEffect(()=>{
-    getBalanceFormServer(account)
+      getBalanceFormServer(userData.walletAddress)
   },[])
 
   return (
     <div>
-      <tbody>
-        <tr>
-          <td>
-            <h3>Address:</h3>
-          </td>
-          <td>
-            <h4>{account}</h4>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h3>Balance:</h3>
-          </td>
-          <td>
-            <h4>{balance} KCO</h4>
-          </td>
-        </tr>
-      </tbody>
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <h3>Address:</h3>
+            </td>
+            <td>
+              <h5>{userData.walletAddress}</h5>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3>Balance:</h3>
+            </td>
+            <td>
+              <h4>{balance} KCO</h4>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
           {transactions.map(e => <div>{e}</div>)}
       </div>
