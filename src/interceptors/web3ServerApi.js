@@ -8,6 +8,17 @@ async function getBalance(acc){
     return res.data
 }
 
+async function createCampaign(data){
+    const res = await axios.post(funUrl+'deployContract/', data)
+    return res.data     
+}
+async function transferKCO(data){
+    const res = await axios.post(web3Url+'transfer', data)
+    return res.data     
+}
+
 export {
-    getBalance
+    getBalance,
+    createCampaign,
+    transferKCO,
 }

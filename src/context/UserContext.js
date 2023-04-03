@@ -28,6 +28,7 @@ export function UserProvider({ children }) {
         landArea: "9 acre",
         crop: "Wheat",
         // walletAddress: "0x2ee4961905E3c9B6eC890d5F919224Ad6BD87637"
+        // walletAddress: "0xbe48d73a8244dcdaa359be58caba27e8cde0d280"
         walletAddress: "0x879005ce3b64a880e1512d759cecb1bd857590f8"
     })
 
@@ -41,7 +42,7 @@ export function UserProvider({ children }) {
     async function login(credentials) {
         try {
             const user = await new Promise((resolve, reject) => {
-                if (credentials.email == "admin@test.com" && credentials.password == "admin") setTimeout(() => {
+                if (credentials.email === "admin@test.com" && credentials.password === "admin") setTimeout(() => {
                     setCurrentUser(true)
                     cookies.set("isLoggedIn", "true")
                     resolve(true)
