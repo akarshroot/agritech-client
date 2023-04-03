@@ -4,6 +4,7 @@ import { useUser } from '../../context/UserContext'
 import './Signup.css'
 
 function Signup() {
+    const name = useRef()
     const email = useRef()
     const phno = useRef()
     const password = useRef()
@@ -11,13 +12,20 @@ function Signup() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
-    const {theme} = useUser()    
+    const {theme, signup} = useUser()    
 
     async function processSignup(e) {
+        const data = {
+            name: name.current.value,
+            email: email.current.value,
+            phno: phno.current.value,
+            password: password.current.value
+        }
         e.preventDefault()
         setLoading(true)
         try {
-            await new Promise((res, rej) => {setTimeout(()=>res(), 3000)})
+            await signup(data)
+            alert("Signup Successful!")
         } catch (e) {
             setError(e.message)
         }
@@ -32,6 +40,7 @@ function Signup() {
                 <h1>SIGN UP</h1>
                 <div className="error-message" hidden={!error}>{error}</div>
                 <form onSubmit={(e) => processSignup(e)} id="signup">
+                    <input ref={name} placeholder="Full Name" className='form-input' type="text" id="name" required /><br/>
                     <input ref={email} placeholder="Email" className='form-input' type="email" id="email" required /><br/>
                     <input ref={phno} placeholder="Phone Number" className='form-input' type="number" id="phno" required /><br/>
                     <input ref={password} placeholder="Password" className='form-input' type="password" id="password" required /><br/>

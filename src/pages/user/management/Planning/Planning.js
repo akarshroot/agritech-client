@@ -80,8 +80,6 @@ function Planning() {
             <hr className="style-two" />
             <div className="planning-content">
                 <button className="button-28" onClick={handlePlanModalOpen}>Create New Plan</button>
-
-
                 <Modal show={createPlanModalOpen} onHide={handlePlanModalClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Create a new plan</Modal.Title>

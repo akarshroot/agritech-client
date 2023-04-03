@@ -4,11 +4,11 @@ import { useUser } from '../context/UserContext'
 import './PrivateNav.css'
 
 function PrivateNav(props) {
-    const { currentUser, logout } = useUser()
+    const { currentUser, checkTokenCookie, logout } = useUser()
     const [tab, setTab] = useState(window.location.pathname.split("/")[1])
 
     useEffect(() => {
-        if(!currentUser) logout()
+        if(!currentUser && !checkTokenCookie) logout()
         setTab(window.location.pathname.split("/")[1])
         return () => {
             setTab("dashboard")

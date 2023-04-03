@@ -19,6 +19,7 @@ export function UserProvider({ children }) {
 
     //User Data
     const cookies = Cookies; //constructor method deprecated
+    const checkTokenCookie = cookies.get("isLoggedIn");
     const [currentUser, setCurrentUser] = useState(cookies.get("isLoggedIn"))
 
     const [userData, setUserData] = useState({
@@ -38,32 +39,78 @@ export function UserProvider({ children }) {
     //////////////////////////AUTH FUNCTIONS START HERE//////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
 
+    async function signup(data) {
+        try {
+            const response = await axios.post("auth/signup", data, { withCredentials: true })
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data);
+            } else throw response
+            // setLoading(false)
+        } catch (error) {
+            // setLoading(false)
+            throw error.response.data.message
+        }
+    }
+
+
+
     async function login(credentials) {
         try {
-            const user = await new Promise((resolve, reject) => {
-                if (credentials.email == "admin@test.com" && credentials.password == "admin") setTimeout(() => {
-                    setCurrentUser(true)
-                    cookies.set("isLoggedIn", "true")
-                    resolve(true)
-                }, 3000)
-                else setTimeout(() => reject(new Error("Invalid Credentials")), 3000)
-            })
-            setCurrentUser(user)
+            const response = await axios.post("auth/login", credentials)
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data);
+            } else {
+                console.log(response);
+                throw response
+            }
+            axios.defaults.headers.common['Authorization'] = `${response.data['accessToken']}`
+            setCurrentUser(response.data.userId)
             navigate("/dashboard")
         } catch (error) {
-            throw error
+            console.log(error.response.data.message);
+            throw error.response.data.message
         }
+        // try {
+        //     const user = await new Promise((resolve, reject) => {
+        //         if (credentials.email == "admin@test.com" && credentials.password == "admin") setTimeout(() => {
+        //             setCurrentUser(true)
+        //             cookies.set("isLoggedIn", "true")
+        //             resolve(true)
+        //         }, 3000)
+        //         else setTimeout(() => reject(new Error("Invalid Credentials")), 3000)
+        //     })
+        //     setCurrentUser(user)
+        //     navigate("/dashboard")
+        // } catch (error) {
+        //     throw error
+        // }
     }
 
     async function logout() {
         try {
             setCurrentUser(false)
             cookies.remove("isLoggedIn")
+            cookies.remove("refreshToken")
+            //delete token api call
         } catch (error) {
             console.error(error.message);
         }
         navigate("/")
     }
+
+    async function checkToken() {
+        const { data } = await axios.post("refreshToken", {})
+        console.log("Checking refreshtoken " + cookies.get("refreshToken") + "-----", data);
+        if (data.error == false) {
+            setCurrentUser(data.userId)
+            axios.defaults.headers.common['Authorization'] = `${data['accessToken']}`
+            return true
+        }
+        else {
+            logout()
+            return false
+        }
+    };
 
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////AUTH FUNCTIONS END HERE//////////////////////////////
@@ -86,10 +133,13 @@ export function UserProvider({ children }) {
     //////////////////////////WIDGET FUNCTIONS END HERE//////////////////////////////
     ////////////////////////////////////////////////////////////
 
-
+    
     useEffect(() => {
-
-    }, []);
+        if (checkTokenCookie)
+            checkToken();
+        console.log(currentUser, checkTokenCookie);
+        // if(currentUser) getUserData(currentUser)
+    }, [checkTokenCookie]);
 
 
     const value = {
@@ -99,7 +149,9 @@ export function UserProvider({ children }) {
         setTheme,
         logout,
         login,
-        getActiveCampaign
+        signup,
+        getActiveCampaign,
+        checkTokenCookie
     }
     return (
         <UserContext.Provider value={value}>
