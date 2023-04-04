@@ -106,7 +106,7 @@ function Wallet() {
   }
 
   useEffect(()=>{
-      getBalanceFormServer(userData.walletAddress)
+      getBalanceFormServer(userData?.walletAddress)
   },[])
 
   return (
@@ -120,7 +120,7 @@ function Wallet() {
                   <h3>Address:</h3>
                 </td>
                 <td>
-                  <h5>{userData.walletAddress}</h5>
+                  <h5>{userData?.walletAddress}</h5>
                 </td>
               </tr>
 

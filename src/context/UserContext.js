@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import axios from 'axios'
 // import { io } from 'socket.io-client'
@@ -21,19 +22,7 @@ export function UserProvider({ children }) {
     const cookies = Cookies; //constructor method deprecated
     const checkTokenCookie = cookies.get("isLoggedIn");
     const [currentUser, setCurrentUser] = useState()
-
-    // const [userData, setUserData] = useState({
-    //     imgUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-    //     name: "Test User",
-    //     region: "Punjab",
-    //     landArea: "9 acre",
-    //     crop: "Wheat",
-    //     // walletAddress: "0x2ee4961905E3c9B6eC890d5F919224Ad6BD87637"
-    //     // walletAddress: "0xbe48d73a8244dcdaa359be58caba27e8cde0d280"
-    //     walletAddress: "0x879005ce3b64a880e1512d759cecb1bd857590f8"
-    // })
     const [userData, setUserData] = useState()
-
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
@@ -106,7 +95,7 @@ export function UserProvider({ children }) {
         setLoading(true)
         const { data } = await axios.post("refreshToken", {})
         console.log("Checking refreshtoken " + cookies.get("isLoggedIn") + "-----", data);
-        if (data.error == false) {
+        if (data.error === false) {
             setCurrentUser(data.userId)
             axios.defaults.headers.common['Authorization'] = `${data['accessToken']}`
             setLoading(false)

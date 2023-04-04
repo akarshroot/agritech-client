@@ -31,7 +31,8 @@ function ModalForm({show,handleShow}){
       target: target.value,
       minContribution: minContribution.value,
       password: password.value,
-      walletAddress:userData.walletAddress
+      walletAddress:userData.walletAddress,
+      userId: userData._id
     }
     console.log("Sending Data", dataToSend)
     const res = await createCampaign(dataToSend);
