@@ -5,8 +5,7 @@ import './Dashboard.css'
 
 function Dashboard() {
 
-    const { currentUser, userData, theme } = useUser()
-    const [loading, setLoading] = useState(true)
+    const { currentUser, userData, theme, loading, getUserData } = useUser()
     const [widgets, setWidgets] = useState([
         {
             category: "campaign",
@@ -35,9 +34,8 @@ function Dashboard() {
     ])
 
     useEffect(() => {
-        setTimeout(() => { setLoading(false) }, 2000)
+        if(!userData) getUserData()
     })
-
 
     return (
         <>

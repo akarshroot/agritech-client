@@ -14,7 +14,7 @@ function Navbar() {
     const [mobileMenuState, toggleMobileMenuState] = useState(false)
 
     const navigate = useNavigate()
-    const { currentUser, userData, logout, theme } = useUser()
+    const { currentUser, logout, theme } = useUser()
 
     function openMobileMenu() {
         toggleMobileMenuState(true)
@@ -53,7 +53,7 @@ function Navbar() {
         if (currentUser) {
             setLoading(false)
         }
-    }, [currentUser, userData])
+    }, [currentUser])
 
 
     return (
@@ -69,7 +69,7 @@ function Navbar() {
                 <li id="close-mobile-menu" onClick={closeMobileMenu}>X</li>
                 <li className={navState ? "nav-tab nav-tab-hover" : "nav-tab nav-tab-hover-dark"} onClick={() => { navigate("/") }}>Home</li>
                 {currentUser ? loading ? <>Loading...</> : <li className={navState ? "nav-tab-btn nav-tab-btn-hover" : "nav-tab-btn nav-tab-btn-hover-dark"} onClick={() => navigate("/dashboard")}>Dashboard</li> : <></>}
-                <li className={navState ? "nav-tab-btn nav-tab-btn-hover" : "nav-tab-btn nav-tab-btn-hover-dark"} style={navState ? { borderColor: "var(--c1)", boxShadow: "inset 0 0 0 0 var(--c1)" } : { borderColor: "var(--c3)" }} onClick={currentUser ? logout : () => { navigate("/login") }}>{currentUser ? loading ? <>Loading...</> : "userData" ? "Logout" : "" : "Login"}</li>
+                <li className={navState ? "nav-tab-btn nav-tab-btn-hover" : "nav-tab-btn nav-tab-btn-hover-dark"} style={navState ? { borderColor: "var(--c1)", boxShadow: "inset 0 0 0 0 var(--c1)" } : { borderColor: "var(--c3)" }} onClick={currentUser ? logout : () => { navigate("/login") }}>{currentUser ? loading ? <>Loading...</> :  "Logout" : "Login"}</li>
             </ul>
         </div >
     )

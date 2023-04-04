@@ -4,16 +4,15 @@ import { useUser } from '../context/UserContext'
 import './PrivateNav.css'
 
 function PrivateNav(props) {
-    const { currentUser, logout } = useUser()
+    const { currentUser, logout, loading } = useUser()
     const [tab, setTab] = useState(window.location.pathname.split("/")[1])
 
     useEffect(() => {
-        if(!currentUser) logout()
         setTab(window.location.pathname.split("/")[1])
         return () => {
             setTab("dashboard")
         }
-    }, [window.location.pathname])
+    }, [window.location.pathname, currentUser, loading])
 
     return (
         <div className={`private-nav theme-${props.theme}`}>
@@ -34,14 +33,27 @@ function PrivateBody(props) {
     const Body = props.body
     const navigate = useNavigate()
 
-    const { currentUser, theme, userData } = useUser()
-    if(!currentUser) {navigate("/")}
+    const { currentUser, theme, checkTokenCookie, loading } = useUser()
+
+
+    useEffect(() => {
+        if (!checkTokenCookie && !currentUser) { navigate("/") }
+    })
+
     return (
         <>
-            <PrivateNav theme={theme} />
-            <div className="body">
-                <Body theme={theme} />
-            </div>
+
+            {
+                loading ?
+                    <>Loading...</>
+                    :
+                    <>
+                        <PrivateNav theme={theme} />
+                        <div className="body">
+                            <Body theme={theme} />
+                        </div>
+                    </>
+            }
         </>
     )
 }
