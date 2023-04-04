@@ -20,18 +20,19 @@ export function UserProvider({ children }) {
     //User Data
     const cookies = Cookies; //constructor method deprecated
     const checkTokenCookie = cookies.get("isLoggedIn");
-    const [currentUser, setCurrentUser] = useState(cookies.get("isLoggedIn"))
+    const [currentUser, setCurrentUser] = useState()
 
-    const [userData, setUserData] = useState({
-        imgUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-        name: "Test User",
-        region: "Punjab",
-        landArea: "9 acre",
-        crop: "Wheat",
-        // walletAddress: "0x2ee4961905E3c9B6eC890d5F919224Ad6BD87637"
-        // walletAddress: "0xbe48d73a8244dcdaa359be58caba27e8cde0d280"
-        walletAddress: "0x879005ce3b64a880e1512d759cecb1bd857590f8"
-    })
+    // const [userData, setUserData] = useState({
+    //     imgUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+    //     name: "Test User",
+    //     region: "Punjab",
+    //     landArea: "9 acre",
+    //     crop: "Wheat",
+    //     // walletAddress: "0x2ee4961905E3c9B6eC890d5F919224Ad6BD87637"
+    //     // walletAddress: "0xbe48d73a8244dcdaa359be58caba27e8cde0d280"
+    //     walletAddress: "0x879005ce3b64a880e1512d759cecb1bd857590f8"
+    // })
+    const [userData, setUserData] = useState()
 
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
@@ -93,6 +94,8 @@ export function UserProvider({ children }) {
             cookies.remove("isLoggedIn")
             cookies.remove("refreshToken")
             //delete token api call
+            await axios.delete("/refreshToken")
+            setUserData()
         } catch (error) {
             console.error(error.message);
         }
@@ -100,15 +103,19 @@ export function UserProvider({ children }) {
     }
 
     async function checkToken() {
+        setLoading(true)
         const { data } = await axios.post("refreshToken", {})
-        console.log("Checking refreshtoken " + cookies.get("refreshToken") + "-----", data);
+        console.log("Checking refreshtoken " + cookies.get("isLoggedIn") + "-----", data);
         if (data.error == false) {
             setCurrentUser(data.userId)
             axios.defaults.headers.common['Authorization'] = `${data['accessToken']}`
+            setLoading(false)
+            console.log(cookies.get("isLoggedIn"));
             return true
         }
         else {
             logout()
+            setLoading(false)
             return false
         }
     };
@@ -134,16 +141,43 @@ export function UserProvider({ children }) {
     //////////////////////////WIDGET FUNCTIONS END HERE//////////////////////////////
     ////////////////////////////////////////////////////////////
 
-    
+    ////////////////////////////////////////////////////////////
+    //////////////////////////USER FUNCTIONS START HERE//////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    async function getUserData() {
+        try {
+            setLoading(true)
+            if (!currentUser) return
+            const response = await axios.post("/user/data", { userId: currentUser })
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data);
+                setUserData(response.data.data)
+            } else {
+                console.log(response);
+                throw response
+            }
+        } catch (error) {
+            throw error
+        }
+        setLoading(false)
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////USER FUNCTIONS END HERE//////////////////////////////
+    ////////////////////////////////////////////////////////////
+
     useEffect(() => {
         if (checkTokenCookie)
             checkToken();
-        console.log(currentUser, checkTokenCookie);
+        else setLoading(false)
+        console.log(checkTokenCookie);
         // if(currentUser) getUserData(currentUser)
     }, [checkTokenCookie]);
 
 
     const value = {
+        loading,
         currentUser,
         userData,
         theme,
@@ -152,11 +186,17 @@ export function UserProvider({ children }) {
         login,
         signup,
         getActiveCampaign,
-        checkTokenCookie
+        checkTokenCookie,
+        getUserData
     }
     return (
         <UserContext.Provider value={value}>
-            {!loading && children}
+            {
+                loading ? <>Loading...</>
+                    :
+                    children
+            }
+            {/* {!loading && children} */}
         </UserContext.Provider>
     )
 }

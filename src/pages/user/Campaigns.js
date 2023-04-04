@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import {CampaignWidget} from '../../assets/widgets/Widgets'
-import useInput from '../../assets/hooks/useInput'
+import useInput from '../../hooks/useInput'
 import {createCampaign} from '../../interceptors/web3ServerApi'
 import {useUser} from '../../context/UserContext'
 
