@@ -7,16 +7,17 @@ import useInput from '../../hooks/useInput'
 import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
 import { useUser } from '../../context/UserContext'
 import { getAllCamps } from '../../interceptors/serverAPIs'
+import { useNavigate } from 'react-router-dom'
 
 
 function ModalForm({ show, handleShow }) {
 
-  const {userData} = useUser()
-  const title = useInput('text','Title Goes Here')
-  const deadline = useInput('number','Deadline in seconds')
-  const target = useInput('number','Target Amount')
-  const minContribution = useInput('number','Minimum Amount')
-  const password = useInput('password','Password')
+  const { userData } = useUser()
+  const title = useInput('text', 'Title Goes Here')
+  const deadline = useInput('number', 'Deadline in seconds')
+  const target = useInput('number', 'Target Amount')
+  const minContribution = useInput('number', 'Minimum Amount')
+  const password = useInput('password', 'Password')
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -96,12 +97,12 @@ function ModalForm({ show, handleShow }) {
   )
 }
 
-function ContributeModal({ show, handleShow, cid, minContri }) {
+export function ContributeModal({ show, handleShow, cid, minContri }) {
 
-  const password = useInput('password',"Password")
-  const amount = useInput('number',"how much?")
-  
-  async function handleSubmit(){
+  const password = useInput('password', "Password")
+  const amount = useInput('number', "how much?")
+
+  async function handleSubmit() {
     const toSendData = {
       amount: amount.value,
       password: password.value,
@@ -112,49 +113,49 @@ function ContributeModal({ show, handleShow, cid, minContri }) {
   }
   return (
     <Modal
-        show={show}
-        onHide={handleShow}
-        backdrop="static"
-        keyboard={false}
-        size='md'
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Contribute</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h4>Minimum contribution is '{minContri}' KCO</h4>
-          <Form onSubmit={handleSubmit}>
+      show={show}
+      onHide={handleShow}
+      backdrop="static"
+      keyboard={false}
+      size='md'
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Contribute</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>Minimum contribution is '{minContri}' KCO</h4>
+        <Form onSubmit={handleSubmit}>
 
 
-            <div className='d-flex flex-column align-items-center'>
-              <fieldset>
-                <label htmlFor={'contriCampAmount'+cid}>Amount</label><br/>
-                <input id={'contriCampAmount'+cid} {...amount} />
-              </fieldset>
-              <fieldset>
-                <label htmlFor={'contriCampPassFor'+cid}>Confirm with password</label><br/>
-                <input id={'contriCampPassFor'+cid} {...password} />
-              </fieldset>
-              <Button className='my-3' type='submit' variant="warning">Contribute</Button>
-            </div>
-                  
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleShow}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <div className='d-flex flex-column align-items-center'>
+            <fieldset>
+              <label htmlFor={'contriCampAmount' + cid}>Amount</label><br />
+              <input id={'contriCampAmount' + cid} {...amount} />
+            </fieldset>
+            <fieldset>
+              <label htmlFor={'contriCampPassFor' + cid}>Confirm with password</label><br />
+              <input id={'contriCampPassFor' + cid} {...password} />
+            </fieldset>
+            <Button className='my-3' type='submit' variant="warning">Contribute</Button>
+          </div>
+
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleShow}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
   )
 }
 
 function Campaigns() {
-  const [showContribute,setShowContribute] = useState(false);
-  const [show,setShow] = useState(false);
-  const {userData,getUserData} = useUser();
-  const [campaigns,setCampaigns] = useState([]);
-  const [loading,setLoading] = useState(false);
+  const [showContribute, setShowContribute] = useState(false);
+  const [show, setShow] = useState(false);
+  const { userData, getUserData, getUserCampaigns, userCampaigns } = useUser();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   function handleShow() {
     setShow(!show)
@@ -171,47 +172,46 @@ function Campaigns() {
         })
       })
     }
-    if(!campaigns.length && userData){
-      getAllCamps().then((res) => {
-        console.log(res)
-        setCampaigns(res)
-      })
-    }
-  },[])
+  }, [])
 
   return (
     <div className='container p-2'>
       <div className='row shadow my-4 justify-content-around'>
         <div className='col-md-3 p-3'>
+          <Button variant="success" onClick={() => { navigate("/campaigns/all") }}>
+            View All Campaigns
+          </Button>
+          <br />
+          <br />
           <Button variant="success" onClick={handleShow}>
             + Create Campaign
           </Button>
         </div>
       </div>
       <div>
-        <h1 className='display-3 text-start'>Campaigns</h1>
+        <h1 className='display-3 text-start'>Your Campaigns</h1>
         <hr />
         <div className='row'>
-            {loading? <>Loading...</>
-                    :
-                    campaigns?.map((data,i) => {
-                      return(
-                        <React.Fragment key={'campaignsKey'+i}>
-                        <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
-                          <CampaignWidget {...data}>
-                            <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
-                          </CampaignWidget>
-                          <ContributeModal 
-                            show={showContribute}
-                            handleShow={handleShowContribute}
-                            cid={data._id}
-                            minContri = {data.minContri}
-                            />
-                          </div>
-                        </React.Fragment>
-                      )
-                    })
-            }
+          {loading ? <>Loading...</>
+            :
+            userCampaigns?.map((data, i) => {
+              return (
+                <React.Fragment key={'campaignsKey' + i}>
+                  <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
+                    <CampaignWidget {...data}>
+                      <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
+                    </CampaignWidget>
+                    <ContributeModal
+                      show={showContribute}
+                      handleShow={handleShowContribute}
+                      cid={data._id}
+                      minContri={data.minContri}
+                    />
+                  </div>
+                </React.Fragment>
+              )
+            })
+          }
         </div>
       </div>
       <ModalForm show={show} handleShow={handleShow} />

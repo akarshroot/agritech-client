@@ -11,6 +11,7 @@ import Dashboard from './pages/user/Dashboard';
 import Wallet from './pages/user/Wallet';
 import Management from './pages/user/management/Management';
 import Campaigns from './pages/user/Campaigns';
+import ExploreCampaigns from './pages/user/ExploreCampaigns';
 import AgriStore from './pages/user/AgriStore';
 import Planning from './pages/user/management/Planning/Planning';
 import Pipeline from './pages/user/management/Pipeline/Pipeline';
@@ -39,6 +40,7 @@ function App() {
               <Route exact path='/management/sales' element={<PrivateBody body={Sales} />} />
               <Route exact path='/wallet' element={<PrivateBody body={Wallet} />} />
               <Route exact path='/campaigns' element={<PrivateBody body={Campaigns} />} />
+              <Route exact path='/campaigns/all' element={<PrivateBody body={ExploreCampaigns} />} />
               <Route exact path='/agristore' element={<PrivateBody body={AgriStore} />} />
 
               <Route exact path='/detailedCampaign' element={<PrivateBody body={CampaignDetails} />}/>
