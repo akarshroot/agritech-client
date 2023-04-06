@@ -179,14 +179,17 @@ function Transaction({ sno, toAddress, date, amount, txhash }) {
 
 
 function Wallet() {
-  const [balance, setBalance] = useState('--')
+  const [balance, setBalance] = useState(-1)
+  const [balanceLoader, setBalanceLoader] = useState(false)
   const { userData, getUserData } = useUser()
   const [transactions, setTransactions] = useState(DummyTransaction)
 
   async function getBalanceFormServer(acc) {
-
+    setBalanceLoader(true)
     const balance = await getBalance(acc)
     setBalance(balance.amount)
+    console.log("set!!", balance.amount);
+    setBalanceLoader(false)
   }
 
   async function buyKCO() {
@@ -220,7 +223,7 @@ function Wallet() {
                   <h3>Balance:</h3>
                 </td>
                 <td>
-                  <h4>{Math.floor(balance)} KCO
+                  <h4>{!balanceLoader ? Math.floor(balance) : "Loading..."} KCO
                     {/* <sub>{balance}</sub> */}
                   </h4>
                 </td>

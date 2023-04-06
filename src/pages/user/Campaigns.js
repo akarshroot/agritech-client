@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import {CampaignWidget} from '../../assets/widgets/Widgets'
+import { CampaignWidget } from '../../assets/widgets/Widgets'
 import useInput from '../../hooks/useInput'
-import {createCampaign, getApproval} from '../../interceptors/web3ServerApi'
-import {useUser} from '../../context/UserContext'
-import {getAllCamps} from '../../interceptors/serverAPIs'
+import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
+import { useUser } from '../../context/UserContext'
+import { getAllCamps } from '../../interceptors/serverAPIs'
 
 
-function ModalForm({show,handleShow}){
+function ModalForm({ show, handleShow }) {
 
   const {userData} = useUser()
   const title = useInput('text','Title Goes Here')
@@ -18,20 +18,20 @@ function ModalForm({show,handleShow}){
   const minContribution = useInput('number','Minimum Amount')
   const password = useInput('password','Password')
 
-  async function handleSubmit(e){
+  async function handleSubmit(e) {
     e.preventDefault()
-    const dataToSend ={
+    const dataToSend = {
       title: title.value,
       deadline: deadline.value,
       target: target.value,
       minContribution: minContribution.value,
       password: password.value,
-      walletAddress:userData.walletAddress,
+      walletAddress: userData.walletAddress,
       userId: userData._id
     }
     console.log("Sending Data", dataToSend)
     const res = await createCampaign(dataToSend);
-    if(res.status === 'Deployed Successfully'){
+    if (res.status === 'Deployed Successfully') {
       alert(res.status)
       title.setData('')
       deadline.setData('')
@@ -45,72 +45,72 @@ function ModalForm({show,handleShow}){
   }
 
 
-  return(
+  return (
     <Modal
-        show={show}
-        onHide={handleShow}
-        backdrop="static"
-        keyboard={false}
-        size='lg'
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Create Campaign</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
+      show={show}
+      onHide={handleShow}
+      backdrop="static"
+      keyboard={false}
+      size='lg'
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Create Campaign</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleSubmit}>
 
 
-            <div className='d-flex flex-column align-items-center'>
-              <fieldset>
-                <label htmlFor='createCampTitle'>Title</label><br/>
-                <input id='createCampTitle' {...title} />
-              </fieldset>
-              <fieldset>
-                <label htmlFor='createCampDeadline'>Deadline</label><br/>
-                <input id='createCampDeadline' {...deadline} />
-              </fieldset>
-              <fieldset>
-                <label htmlFor='createCampTarget'>Target</label><br/>
-                <input id='createCampTarget' {...target} />
-              </fieldset>
-              <fieldset>
-                <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br/>
-                <input id='createCampMinAmount' {...minContribution} />
-              </fieldset>
-              <fieldset>
-                <label htmlFor='createCampPass'>Password</label><br/>
-                <input id='createCampPass' {...password} />
-              </fieldset>
-              <Button className='my-3' type='submit' variant="success">Create</Button>
-            </div>
-                  
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleShow}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <div className='d-flex flex-column align-items-center'>
+            <fieldset>
+              <label htmlFor='createCampTitle'>Title</label><br />
+              <input id='createCampTitle' {...title} />
+            </fieldset>
+            <fieldset>
+              <label htmlFor='createCampDeadline'>Deadline</label><br />
+              <input id='createCampDeadline' {...deadline} />
+            </fieldset>
+            <fieldset>
+              <label htmlFor='createCampTarget'>Target</label><br />
+              <input id='createCampTarget' {...target} />
+            </fieldset>
+            <fieldset>
+              <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
+              <input id='createCampMinAmount' {...minContribution} />
+            </fieldset>
+            <fieldset>
+              <label htmlFor='createCampPass'>Password</label><br />
+              <input id='createCampPass' {...password} />
+            </fieldset>
+            <Button className='my-3' type='submit' variant="success">Create</Button>
+          </div>
+
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleShow}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
   )
 }
 
-function ContributeModal({show,handleShow,cid,minContri}){
+function ContributeModal({ show, handleShow, cid, minContri }) {
 
   const password = useInput('password',"Password")
   const amount = useInput('number',"how much?")
   
   async function handleSubmit(){
     const toSendData = {
-      amount:amount.value,
-      password:password.value,
+      amount: amount.value,
+      password: password.value,
       cid
     }
     const res = await getApproval(toSendData);
     console.log(res)
   }
-  return(
+  return (
     <Modal
         show={show}
         onHide={handleShow}
@@ -156,17 +156,19 @@ function Campaigns() {
   const [campaigns,setCampaigns] = useState([]);
   const [loading,setLoading] = useState(false);
 
-  function handleShow(){
+  function handleShow() {
     setShow(!show)
   }
-  function handleShowContribute(){
+  function handleShowContribute() {
     setShowContribute(!showContribute)
   }
-  useEffect(()=>{
-    if(!userData){
+  useEffect(() => {
+    if (!userData) {
       setLoading(true)
-      getUserData().then(()=>{
-        setLoading(false)
+      getUserData().then(() => {
+        getUserCampaigns().then(() => {
+          setLoading(false)
+        })
       })
     }
     if(!campaigns.length && userData){
@@ -188,7 +190,7 @@ function Campaigns() {
       </div>
       <div>
         <h1 className='display-3 text-start'>Campaigns</h1>
-        <hr/>
+        <hr />
         <div className='row'>
             {loading? <>Loading...</>
                     :

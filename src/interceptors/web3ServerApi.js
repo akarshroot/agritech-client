@@ -5,7 +5,6 @@ const web3Url = '/web3/wallet/'
 
 async function getBalance(acc) {
     const res = await axios.get(web3Url + "getBalance/" + acc)
-    console.log("Got Balance");
     return res.data
 }
 

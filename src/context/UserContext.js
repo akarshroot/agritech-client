@@ -23,6 +23,7 @@ export function UserProvider({ children }) {
     const checkTokenCookie = cookies.get("isLoggedIn");
     const [currentUser, setCurrentUser] = useState()
     const [userData, setUserData] = useState()
+    const [userCampaigns, setUserCampaigns] = useState()
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
@@ -152,6 +153,24 @@ export function UserProvider({ children }) {
         setLoading(false)
     }
 
+    async function getUserCampaigns() {
+        try {
+            setLoading(true)
+            if (!currentUser) return
+            const response = await axios.post("/user/campaigns", { userId: currentUser })
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data)
+                setUserCampaigns(response.data.data)
+            } else {
+                console.log(response)
+                throw response
+            }
+        } catch (error) {
+            throw error
+        }
+        setLoading(false)
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////USER FUNCTIONS END HERE//////////////////////////////
     ////////////////////////////////////////////////////////////
@@ -176,7 +195,9 @@ export function UserProvider({ children }) {
         signup,
         getActiveCampaign,
         checkTokenCookie,
-        getUserData
+        getUserData,
+        getUserCampaigns,
+        userCampaigns
     }
     return (
         <UserContext.Provider value={value}>
