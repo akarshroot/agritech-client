@@ -1,8 +1,9 @@
-import React, { Children, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+/* eslint-disable jsx-a11y/aria-proptypes */
+import React, { useContext, useEffect, useState } from 'react'
+import Button from 'react-bootstrap/Button'
 import './Widgets.css'
 import {getCollectonCampbyId} from '../../interceptors/serverAPIs';
+import CampaignContext from '../../context/CampaignContext';
 
 //Widget renderer
 export function renderWidget(id) {
@@ -32,38 +33,20 @@ export function renderWidget(id) {
 // title: "seeds"
 // voteRequests: []
 // __v: 0
-// id:"642e5f4c5625fa8e2396ec90"
+// _id:"642e5f4c5625fa8e2396ec90"
 // contributors:0
 
 export function CampaignWidget({title,target,contributors,_id,...props}) {
     const [collection, setCollection] = useState(0)
-    const [currentCampaign, setCampaign] = useState({
-        target,
-        contributions: contributors,
-        startDate: new Date("03/10/2023"),
-        endDate: new Date("03/31/2023")
-    })
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
-    const { getActiveCampaign } = useUser()
-
-    async function fetchCampaignData() {
-        try {
-            setError("")
-            setLoading(true)
-            // await getActiveCampaign()
-        } catch (error) {
-            setError(error.message)
-        }
-        setLoading(false)
+    const {changeActiveCampaign} = useContext(CampaignContext)
+    const endDate = new Date("03/31/2023");
+    function handleShowDetails(){
+        changeActiveCampaign(_id)
     }
-
+    
     useEffect(() => {
-        fetchCampaignData()
         getCollectonCampbyId(_id).then((res)=>{
             setCollection(res.raisedAmount)
-            console.log("raisedAmount->>", res.raisedAmount)
-            console.log("currentCampaign->>", currentCampaign)
         })
     }, [])
 
@@ -72,30 +55,30 @@ export function CampaignWidget({title,target,contributors,_id,...props}) {
         <div className='widget-container shadow rounded'>
             <h3>{title}</h3>
             <h4>Campaign Progress</h4>
-            <div className="error-message" hidden={!error}>{error}</div>
+            {/* <div className="error-message" hidden={!error}>{error}</div> */}
             <div className="campaign-progress">
                 <div className="progress" style={{ height: "30px" }}>
                     <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
-                        aria-valuenow={`${parseInt((collection / currentCampaign.target) * 100)}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${parseInt((collection / currentCampaign.target) * 100)}%` }}>
-                        {`${parseInt((collection / currentCampaign.target) * 100)}%`}
+                        aria-valuenow={`${parseInt((collection / target) * 100)}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${parseInt((collection / target) * 100)}%` }}>
+                        {`${parseInt((collection / target) * 100)}%`}
                     </div>
                 </div>
                 <span className="subtext">
-                    ₹{new Intl.NumberFormat("en-IN").format(collection)} of ₹{new Intl.NumberFormat("en-IN").format(currentCampaign.target)} raised
+                   {new Intl.NumberFormat("en-IN").format(collection)} KCO of {new Intl.NumberFormat("en-IN").format(target)} KCO raised
                 </span>
             </div>
             <div className="current-campaign-widget-details">
                 <div className="contributions">
-                    <span className="quantity">{currentCampaign.contributions > 1000 ? `${currentCampaign.contributions / 1000}k+` : currentCampaign.contributions}</span><br />
+                    <span className="quantity">{contributors > 1000 ? `${contributors / 1000}k+` : contributors}</span><br />
                     <span className="subtext">contributions</span>
                 </div>
                 <div className="time-remaining">
-                    <span className="quantity">{parseInt((currentCampaign.endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
+                    <span className="quantity">{parseInt((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
                     <span className="subtext">remaining</span>
                 </div>
             </div>
             <div className="widget-action-center d-flex justify-content-around mt-3">
-                <Link to="/campaigns"><button className="btn btn-outline-success">Details</button></Link>
+                <Button onClick={handleShowDetails} variant='outline-success' >Details</Button>
                 {props.children}
             </div>
         </div>

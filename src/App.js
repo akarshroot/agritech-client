@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css';
 import Home from './pages/public/Home'
 import { UserProvider } from './context/UserContext';
-import Navbar from './layout/PubNavbar';
 import Login from './pages/public/Login';
 import Signup from './pages/public/Signup';
 import PublicBody from './layout/PublicBody';
@@ -16,13 +15,16 @@ import AgriStore from './pages/user/AgriStore';
 import Planning from './pages/user/management/Planning/Planning';
 import Pipeline from './pages/user/management/Pipeline/Pipeline';
 import Inventory from './pages/user/management/Inventory/Inventory';
+import CampaignDetails from './pages/user/management/CampaignDetails';
 import Sales from './pages/user/management/Sales/Sales';
+import {CampaignContextProvider} from './context/CampaignContext';
 
 function App() {
   return (
     <div className="App">
       <Router>
         <UserProvider>
+        <CampaignContextProvider>
             <Routes>
               <Route exact path='/' element={<PublicBody body={Home} />} />
               <Route exact path='/login' element={<PublicBody body={Login} />} />
@@ -38,7 +40,10 @@ function App() {
               <Route exact path='/wallet' element={<PrivateBody body={Wallet} />} />
               <Route exact path='/campaigns' element={<PrivateBody body={Campaigns} />} />
               <Route exact path='/agristore' element={<PrivateBody body={AgriStore} />} />
+
+              <Route exact path='/detailedCampaign' element={<PrivateBody body={CampaignDetails} />}/>
             </Routes>
+        </CampaignContextProvider>
         </UserProvider>
       </Router>
     </div>

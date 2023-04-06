@@ -11,14 +11,7 @@ import {getAllCamps} from '../../interceptors/serverAPIs'
 
 function ModalForm({show,handleShow}){
 
-  // const [createCampaignData,setCreateCampaignData] = useState({
-  //   title:'',
-  //   deadline:3600,
-  //   target:'',
-  //   minContribution:''
-  // })
   const {userData} = useUser()
-  console.log(userData)
   const title = useInput('text','Title Goes Here')
   const deadline = useInput('number','Deadline in seconds')
   const target = useInput('number','Target Amount')
@@ -107,6 +100,7 @@ function ContributeModal({show,handleShow,cid,minContri}){
 
   const password = useInput('password',"Password")
   const amount = useInput('number',"how much?")
+  
   async function handleSubmit(){
     const toSendData = {
       amount:amount.value,
@@ -134,12 +128,12 @@ function ContributeModal({show,handleShow,cid,minContri}){
 
             <div className='d-flex flex-column align-items-center'>
               <fieldset>
-                <label htmlFor='contriCampAmount'>Amount</label><br/>
-                <input id='contriCampAmount' {...amount} />
+                <label htmlFor={'contriCampAmount'+cid}>Amount</label><br/>
+                <input id={'contriCampAmount'+cid} {...amount} />
               </fieldset>
               <fieldset>
-                <label htmlFor='contriCampPass'>Confirm with password</label><br/>
-                <input id='contriCampPass' {...password} />
+                <label htmlFor={'contriCampPassFor'+cid}>Confirm with password</label><br/>
+                <input id={'contriCampPassFor'+cid} {...password} />
               </fieldset>
               <Button className='my-3' type='submit' variant="warning">Contribute</Button>
             </div>
@@ -158,9 +152,8 @@ function ContributeModal({show,handleShow,cid,minContri}){
 function Campaigns() {
   const [showContribute,setShowContribute] = useState(false);
   const [show,setShow] = useState(false);
-
-  const {userData,getUserData} = useUser()
-  const [campaigns,setCampaigns] = useState([])
+  const {userData,getUserData} = useUser();
+  const [campaigns,setCampaigns] = useState([]);
   const [loading,setLoading] = useState(false);
 
   function handleShow(){
@@ -176,10 +169,12 @@ function Campaigns() {
         setLoading(false)
       })
     }
-    getAllCamps().then((res) => {
-      console.log(res)
-      setCampaigns(res)
-    })
+    if(!campaigns.length && userData){
+      getAllCamps().then((res) => {
+        console.log(res)
+        setCampaigns(res)
+      })
+    }
   },[])
 
   return (
@@ -197,11 +192,11 @@ function Campaigns() {
         <div className='row'>
             {loading? <>Loading...</>
                     :
-                    campaigns.map((data,i) => {
+                    campaigns?.map((data,i) => {
                       return(
-                        <>
+                        <React.Fragment key={'campaignsKey'+i}>
                         <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
-                          <CampaignWidget key={'campaignsKey'+i} {...data}>
+                          <CampaignWidget {...data}>
                             <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
                           </CampaignWidget>
                           <ContributeModal 
@@ -211,7 +206,7 @@ function Campaigns() {
                             minContri = {data.minContri}
                             />
                           </div>
-                        </>
+                        </React.Fragment>
                       )
                     })
             }

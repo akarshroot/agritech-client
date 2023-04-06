@@ -8,10 +8,6 @@ function Dashboard() {
     const { currentUser, userData, theme, loading, getUserData } = useUser()
     const [widgets, setWidgets] = useState([
         {
-            category: "campaign",
-            id: "current-campaign"
-        },
-        {
             category: "inventory",
             id: "current-inventory"
         },

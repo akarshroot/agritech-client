@@ -9,10 +9,6 @@ function Management(props) {
   const { theme } = useUser()
   const [widgets, setWidgets] = useState([
     {
-      category: "campaign",
-      id: "current-campaign"
-    },
-    {
       category: "inventory",
       id: "current-inventory"
     },
