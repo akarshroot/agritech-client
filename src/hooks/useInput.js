@@ -15,8 +15,7 @@ export default function useInput(type,placeholder) {
             onChange:handleChange,
             value:data,
             placeholder,
-            required:true,
-            setData
+            required:true
         }
   )
 }

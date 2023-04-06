@@ -161,7 +161,7 @@ export function UserProvider({ children }) {
             checkToken();
         else setLoading(false)
         console.log(checkTokenCookie);
-        // if(currentUser) getUserData(currentUser)
+        // if(!userData) getUserData()
     }, [checkTokenCookie]);
 
 

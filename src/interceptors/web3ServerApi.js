@@ -18,8 +18,19 @@ async function transferKCO(data) {
     return res.data
 }
 
+async function contribute(data) {
+    const res = await axios.post(funUrl + 'contribute', data)
+    return res.data
+}
+async function getApproval(data) {
+    const res = await axios.post(funUrl + 'getApproval', data)
+    return res.data
+}
+
 export {
     getBalance,
     createCampaign,
     transferKCO,
+    contribute,
+    getApproval,
 }

@@ -202,7 +202,7 @@ function Wallet() {
   return (
     <div className='container pt-4'>
       <div className='row align-items-center'>
-        <div className='col-md-6 p-4'>
+        <div className='col-xl-6 p-4'>
 
           <Table>
             <tbody>
@@ -232,7 +232,7 @@ function Wallet() {
             <Button variant='warning' onClick={buyKCO}>Buy More KCO</Button>
           </div>
         </div>
-        <div className='col-md-6 p-4'>
+        <div className='col-xl-6 p-4'>
           <TransferModule />
         </div>
       </div>
