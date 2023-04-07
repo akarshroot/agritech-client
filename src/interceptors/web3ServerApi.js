@@ -23,7 +23,10 @@ async function contribute(data) {
 }
 async function getApproval(data) {
     const res = await axios.post(funUrl + 'getApproval', data)
-    return res.data
+    console.log(res.response.data);
+    if(res.hasOwnProperty("data"))
+        return res.data
+    else throw new Error(res.response.data.message)
 }
 
 export {
