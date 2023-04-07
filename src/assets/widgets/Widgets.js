@@ -47,7 +47,7 @@ export function CampaignWidget({title,target,contributors,_id,...props}) {
     useEffect(() => {
         getCollectonCampbyId(_id).then((res)=>{
             setCollection(res.raisedAmount)
-        })
+        }).catch((err) => alert(err.message))
     }, [])
 
 

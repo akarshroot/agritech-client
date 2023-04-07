@@ -25,7 +25,7 @@ function ExploreCampaigns() {
 
 
     useEffect(() => {
-        if (!campaigns.length && userData) {
+        if (campaigns.length == 0) {
             getAllCamps().then((res) => {
                 console.log(res)
                 setCampaigns(res)

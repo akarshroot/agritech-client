@@ -12,7 +12,8 @@ async function getCampbyId(id) {
 }
 async function getCollectonCampbyId(id) {
     const res = await axios.get(funUrl + "raised/"+ id)
-    return res.data
+    if(res.hasOwnProperty("data")) return res.data
+    else throw new Error("Internal Server Error")
 }
 
 export {
