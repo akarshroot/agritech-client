@@ -15,33 +15,6 @@ import Form from 'react-bootstrap/Form'
 
 */
 
-const DummyTransaction = [
-  {
-    txhash: '82734y52374f5y23rdjty29347805y34djsr312845',
-    amount: 1000,
-    toAddress: '0921384ka9123754892734013892k4214c215nv103',
-    date: new Date().toString()
-  },
-  {
-    txhash: '82734y52374f5y23rdjty29347805y34djsr312845',
-    amount: 100,
-    toAddress: '0921384ka9123754892734013892k4214c215nv103',
-    date: new Date().toString()
-  },
-  {
-    txhash: '82734y52374f5y23rdjty29347805y34djsr312845',
-    amount: 3000,
-    toAddress: '0921384ka9123754892734013892k4214c215nv103',
-    date: new Date().toString()
-  },
-  {
-    txhash: '82734y52374f5y23rdjty29347805y34djsr312845',
-    amount: 6000,
-    toAddress: '0921384ka9123754892734013892k4214c215nv103',
-    date: new Date().toString()
-  },
-]
-
 function TransferModule() {
   const [show, setShow] = useState(false)
   const addressTo = useInput('text', 'where to send')
@@ -60,6 +33,13 @@ function TransferModule() {
       password: password.value
     }
     const res = await transferKCO(data)
+    if(res.status ==='success'){
+      console.log(addressTo.onChange)
+      addressTo.onChange({target:{value:''}})
+      amountTo.onChange({target:{value:''}})
+      password.onChange({target:{value:''}})
+      alert(res.message)
+    }
     console.log(res)
   }
   return (
@@ -81,15 +61,15 @@ function TransferModule() {
   )
 }
 
-function Transaction({ sno, toAddress, date, amount, txhash }) {
+function Transaction({ sno, to, date, amount, txHash }) {
   return (
     <>
       <tr>
         <td>{sno}</td>
-        <td>{toAddress}</td>
+        <td>{to}</td>
         <td>{amount}</td>
         <td>{date}</td>
-        <td>{txhash}</td>
+        <td>{txHash}</td>
       </tr>
     </>
   )
@@ -182,7 +162,6 @@ function Wallet() {
   const [balance, setBalance] = useState(-1)
   const [balanceLoader, setBalanceLoader] = useState(false)
   const { userData, getUserData } = useUser()
-  const [transactions, setTransactions] = useState(DummyTransaction)
 
   async function getBalanceFormServer(acc) {
     setBalanceLoader(true)
@@ -195,7 +174,7 @@ function Wallet() {
   async function buyKCO() {
 
   }
-
+  console.log(userData?.transactions)
   useEffect(() => {
     if(userData)
       getBalanceFormServer(userData.walletAddress)
@@ -252,7 +231,8 @@ function Wallet() {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} />)}
+              {userData && userData.transactions.length? userData.transactions.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+              : <tr><td colSpan='5'>No transactions yet</td></tr>}
             </tbody>
           </Table>
         </div>
