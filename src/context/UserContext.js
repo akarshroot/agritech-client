@@ -94,9 +94,10 @@ export function UserProvider({ children }) {
 
     async function checkToken() {
         setLoading(true)
-        const { data } = await axios.post("refreshToken", {})
-        console.log("Checking refreshtoken " + cookies.get("isLoggedIn") + "-----", data);
-        if (data.error === false) {
+        const response = await axios.post("refreshToken", {})
+        if (response.hasOwnProperty("data")) {
+            const data = response.data
+            console.log("Checking refreshtoken " + cookies.get("isLoggedIn") + "-----", data);
             setCurrentUser(data.userId)
             axios.defaults.headers.common['Authorization'] = `${data['accessToken']}`
             setLoading(false)

@@ -102,14 +102,19 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
   const password = useInput('password', "Password")
   const amount = useInput('number', "how much?")
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault()
     const toSendData = {
       amount: amount.value,
       password: password.value,
       cid
     }
-    const res = await getApproval(toSendData);
-    console.log(res)
+    try {
+      const res = await getApproval(toSendData);
+      console.log(res)
+    } catch (error) {
+      alert(error.message)
+    }
   }
   return (
     <Modal
@@ -194,23 +199,25 @@ function Campaigns() {
         <div className='row'>
           {loading ? <>Loading...</>
             :
-            userCampaigns?.map((data, i) => {
-              return (
-                <React.Fragment key={'campaignsKey' + i}>
-                  <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
-                    <CampaignWidget {...data}>
-                      <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
-                    </CampaignWidget>
-                    <ContributeModal
-                      show={showContribute}
-                      handleShow={handleShowContribute}
-                      cid={data._id}
-                      minContri={data.minContri}
-                    />
-                  </div>
-                </React.Fragment>
-              )
-            })
+            userCampaigns?.length == 0 ? <>No campaigns created yet.</>
+              :
+              userCampaigns?.map((data, i) => {
+                return (
+                  <React.Fragment key={'campaignsKey' + i}>
+                    <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
+                      <CampaignWidget {...data}>
+                        <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
+                      </CampaignWidget>
+                      <ContributeModal
+                        show={showContribute}
+                        handleShow={handleShowContribute}
+                        cid={data._id}
+                        minContri={data.minContri}
+                      />
+                    </div>
+                  </React.Fragment>
+                )
+              })
           }
         </div>
       </div>
