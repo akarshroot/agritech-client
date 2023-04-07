@@ -1,0 +1,13 @@
+.options-bar ul {
+    list-style: none;
+}
+
+.options-bar ul li {
+    cursor: pointer;
+}
+
+.category-content {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}

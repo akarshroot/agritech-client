@@ -171,12 +171,11 @@ function Campaigns() {
   useEffect(() => {
     if (!userData) {
       setLoading(true)
-      getUserData().then(() => {
-        getUserCampaigns().then(() => {
-          setLoading(false)
-        })
-      })
+      getUserData()
     }
+    if(!userCampaigns)
+      getUserCampaigns()
+    setLoading(false)
   }, [])
 
   return (
@@ -194,7 +193,7 @@ function Campaigns() {
         </div>
       </div>
       <div>
-        <h1 className='display-3 text-start'>Your Campaigns</h1>
+        <h1 className='display-6 text-start'>Your Campaigns</h1>
         <hr />
         <div className='row'>
           {loading ? <>Loading...</>

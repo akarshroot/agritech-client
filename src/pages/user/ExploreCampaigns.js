@@ -38,7 +38,7 @@ function ExploreCampaigns() {
         <div className='container'>
             <div className="header d-flex justify-content-around align-items-center">
                 <Button className='h-25' onClick={() => { navigate("/campaigns") }} variant='warning'>&larr;&nbsp; Go Back</Button>
-                <h2 className='display-3'>Explore campaigns across the platform</h2>
+                <h2 className='display-6'>Explore campaigns across the platform</h2>
                 <hr className='style-two' />
             </div>
             <div className='row'>
