@@ -37,6 +37,8 @@ export function renderWidget(id) {
 // contributors:0
 
 export function CampaignWidget({title,target,contributors,_id,...props}) {
+
+    const numberOfContributors = contributors.length
     const [collection, setCollection] = useState(0)
     const {changeActiveCampaign} = useContext(CampaignContext)
     function handleShowDetails(){
@@ -68,7 +70,7 @@ export function CampaignWidget({title,target,contributors,_id,...props}) {
             </div>
             <div className="current-campaign-widget-details">
                 <div className="contributions">
-                    <span className="quantity">{contributors > 1000 ? `${contributors / 1000}k+` : contributors}</span><br />
+                    <span className="quantity">{numberOfContributors > 1000 ? `${numberOfContributors / 1000}k+` : numberOfContributors}</span><br />
                     <span className="subtext">contributors</span>
                 </div>
                 <div className="time-remaining">

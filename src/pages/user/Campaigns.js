@@ -6,7 +6,6 @@ import { CampaignWidget } from '../../assets/widgets/Widgets'
 import useInput from '../../hooks/useInput'
 import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
 import { useUser } from '../../context/UserContext'
-import { getAllCamps } from '../../interceptors/serverAPIs'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -34,14 +33,13 @@ function ModalForm({ show, handleShow }) {
     const res = await createCampaign(dataToSend);
     if (res.status === 'Deployed Successfully') {
       alert(res.status)
-      title.setData('')
-      deadline.setData('')
-      target.setData('')
-      minContribution.setData('')
-      password.setData('')
+      title.onChange('')
+      deadline.onChange('')
+      target.onChange('')
+      minContribution.onChange('')
+      password.onChange('')
       handleShow()
     }
-    console.log(res)
 
   }
 
@@ -111,7 +109,12 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
     }
     try {
       const res = await getApproval(toSendData);
-      console.log(res)
+      if(res.status==='Success'){
+        alert(res.message)
+        amount.onChange('')
+        password.onChange('')
+        handleShow()
+      }
     } catch (error) {
       alert(error.message)
     }
@@ -182,13 +185,13 @@ function Campaigns() {
     <div className='container p-2'>
       <div className='row shadow my-4 justify-content-around'>
         <div className='col-md-3 p-3'>
-          <Button variant="success" onClick={() => { navigate("/campaigns/all") }}>
-            View All Campaigns
-          </Button>
-          <br />
-          <br />
           <Button variant="success" onClick={handleShow}>
             + Create Campaign
+          </Button>
+        </div>
+        <div className='col-md-3 p-3'>
+          <Button variant="success" onClick={() => { navigate("/campaigns/all") }}>
+            View All Campaigns
           </Button>
         </div>
       </div>
@@ -198,7 +201,7 @@ function Campaigns() {
         <div className='row'>
           {loading ? <>Loading...</>
             :
-            userCampaigns?.length == 0 ? <>No campaigns created yet.</>
+            userCampaigns?.length === 0 ? <>No campaigns created yet.</>
               :
               userCampaigns?.map((data, i) => {
                 console.log(data);
