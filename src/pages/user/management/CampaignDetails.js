@@ -109,8 +109,8 @@ function CampaignPrograssBar({raisedAmount,target}){
 }
 
 
-function WithdrawRequests({cid,reason,amount,votes,voters,reciver,isOwner,voteNumber}){
-
+function WithdrawRequests({cid,reason,amount,votes,voters,receiver,isOwner,voteNumber,contributors}){
+  console.log(contributors)
   async function useRequest(){
     const password = await prompt('Enter Password to confirm')
     const dataToSend = {
@@ -156,7 +156,7 @@ function WithdrawRequests({cid,reason,amount,votes,voters,reciver,isOwner,voteNu
           {parseInt(voters)===0? <div>No contributors yet</div>:<CampaignPrograssBar raisedAmount={votes} target={voters} />}
         </div>
         <div>
-          Requested for : <Link to={`/productDetails/${reciver}`}>Product</Link>
+          Requested for : <Link to={`/productDetails/${receiver}`}>Product</Link>
         </div>
         <div className='text-center py-3'>
           {!isOwner 
@@ -174,27 +174,27 @@ function CreateRequestModal({show, handleShow, vid}){
   const reason = useInput('text','Tell them what you want')
   const amount = useInput('number','How much?')
   const password = useInput('password','enter password to confirm')
-  const [reciverId,setReciverId] = useState('')
+  const [receiverId,setreceiverId] = useState('')
   const {activeCampaign} = useContext(CampaignContext)
 
-  function handleOnChangeReciverId(e){
+  function handleOnChangereceiverId(e){
     console.log(e.target.value)
     if(e.target.value !== 'Personaluse'){
       amount.onChange(0)
     }
-    setReciverId(e.target.value)
+    setreceiverId(e.target.value)
   }
 
   async function handleSubmit(e){
     e.preventDefault()
-    if(reciverId==='select'){
+    if(receiverId==='select'){
       alert("select something from the dropdown")
       return
     }
     const dataToSend = {
       reason:reason.value,
       password:password.value,
-      reciverProduct:reciverId,
+      receiverProduct:receiverId,
       amount: amount.value? amount.value:'GetFromProduct',
       campaignId: activeCampaign._id
     }
@@ -223,8 +223,8 @@ function CreateRequestModal({show, handleShow, vid}){
               <input id={'voteCampReason' + vid} {...reason} />
             </fieldset>
             <fieldset className='w-100'>
-              <label htmlFor={'voteCampReciver' + vid}>Where to send to</label><br />
-              <select onChange={handleOnChangeReciverId} value={reciverId} required className='form-control' name='reciver' id={'voteCampReciver' + vid}>
+              <label htmlFor={'voteCampreceiver' + vid}>Where to send to</label><br />
+              <select onChange={handleOnChangereceiverId} value={receiverId} required className='form-control' name='receiver' id={'voteCampreceiver' + vid}>
                 <option value={'select'}>select</option>
                 <option value={'643012889eb15a43565a1d11'}>Item1</option>
                 <option value={'643013419eb15a43565a1d12'}>Item2</option>
@@ -232,7 +232,7 @@ function CreateRequestModal({show, handleShow, vid}){
                 <option value={'Personaluse'} >Personal Wallet</option>
               </select>
             </fieldset>
-            {reciverId === 'Personaluse'
+            {receiverId === 'Personaluse'
             &&(
               <fieldset className='w-100'>
                 <label htmlFor={'voteCampAmount' + vid}>Amount</label><br />

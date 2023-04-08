@@ -33,14 +33,13 @@ function ModalForm({ show, handleShow }) {
     const res = await createCampaign(dataToSend);
     if (res.status === 'Deployed Successfully') {
       alert(res.status)
-      title.setData('')
-      deadline.setData('')
-      target.setData('')
-      minContribution.setData('')
-      password.setData('')
+      title.onChange('')
+      deadline.onChange('')
+      target.onChange('')
+      minContribution.onChange('')
+      password.onChange('')
       handleShow()
     }
-    console.log(res)
 
   }
 
@@ -110,7 +109,12 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
     }
     try {
       const res = await getApproval(toSendData);
-      console.log(res)
+      if(res.status==='Success'){
+        alert(res.message)
+        amount.onChange('')
+        password.onChange('')
+        handleShow()
+      }
     } catch (error) {
       alert(error.message)
     }
