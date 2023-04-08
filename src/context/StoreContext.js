@@ -6,17 +6,21 @@ const StoreContext = React.createContext()
 export function StoreContextProvider({ children }) {
     const [skip, setSkip] = useState(0)
     const [shopContent, setContent] = useState([])
+    const [shopLoading, setShopLoading] = useState(false)
     const [showCart, openCart] = useState(false)
     const [cart, setCart] = useState([])
 
     async function fetchShopContent() {
         try {
+            setShopLoading(true)
             const data = await getShopContent(skip)
             if (data.length > 0) {
                 setContent([...shopContent, ...data])
             }
+            setShopLoading(false)
         } catch (error) {
             alert(error.message)
+            setShopLoading(false)
         }
     }
 
@@ -68,7 +72,8 @@ export function StoreContextProvider({ children }) {
         showCart,
         shopContent,
         setContent,
-        addToCart
+        addToCart,
+        shopLoading
     }
     return (
         <StoreContext.Provider value={values}>

@@ -201,6 +201,7 @@ function Campaigns() {
             userCampaigns?.length == 0 ? <>No campaigns created yet.</>
               :
               userCampaigns?.map((data, i) => {
+                console.log(data);
                 return (
                   <React.Fragment key={'campaignsKey' + i}>
                     <div className='col-sm-6 col-md-4 col-lg-3 p-4'>

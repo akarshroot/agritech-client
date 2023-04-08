@@ -7,12 +7,14 @@ import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import Product from './Product'
 import StoreContext from '../../../context/StoreContext'
 import { Cart } from './Cart'
+import CustomImageLoader from 'react-custom-image-loader.'
+import grains from '../../../assets/icons/grain.png'
 
 function AgriStore() {
 
   const [activeStatus, setActiveStatus] = useState("crop")
 
-  const { showCart, fetchShopContent, shopContent, setContent, handleShow } = useContext(StoreContext)
+  const { showCart, fetchShopContent, shopContent, shopLoading, handleShow } = useContext(StoreContext)
 
   useEffect(() => {
     // setLoading(true)
@@ -48,7 +50,13 @@ function AgriStore() {
             })
           }
         </div>
-        <Button variant='warning' onClick={fetchShopContent}>Load More</Button>
+        <Button variant='warning' onClick={fetchShopContent} disabled={shopLoading}>{shopLoading ? "Loading..." : "Load More"}</Button>
+        {
+          shopLoading ? 
+          <div className='d-flex w-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'}/></div>
+          :
+          <></>
+        }
       </div>
     </div>
   )

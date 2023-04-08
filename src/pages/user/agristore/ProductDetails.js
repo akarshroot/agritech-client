@@ -6,6 +6,8 @@ import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import StoreContext from '../../../context/StoreContext'
 import { Cart } from './Cart'
+import CustomImageLoader from 'react-custom-image-loader.'
+import grains from '../../../assets/icons/grain.png'
 
 function ProductDetails(props) {
 
@@ -70,7 +72,7 @@ function ProductDetails(props) {
                         </div>
                     </div>
                 </div>
-            </> : <>Loading...</>}
+            </> : <div className='d-flex w-100 vh-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'}/></div>}
         </div>
     )
 }
