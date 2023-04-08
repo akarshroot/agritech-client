@@ -1,73 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './AgriStore.css'
 import { useUser } from '../../../context/UserContext'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import Product from './Product'
-
-export function Cart({ show, handleShow, shopContent }) {
-  const { cart, setCart } = useUser()
-
-  return (
-    <Modal
-      show={show}
-      onHide={handleShow}
-      backdrop="static"
-      keyboard={false}
-      size='md'
-    >
-      <Modal.Header closeButton>
-        <Modal.Title>Your saved items</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <ul className='list-group'>
-          {
-            cart?.map((product) => {
-              const productDetails = shopContent.find((item)=> {return item._id == product})
-              return (
-                <li className='list-group-item' key={product}>{productDetails.title}</li>
-            )
-            })
-          }
-        </ul>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleShow}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  )
-}
+import StoreContext from '../../../context/StoreContext'
+import { Cart } from './Cart'
 
 function AgriStore() {
 
   const [activeStatus, setActiveStatus] = useState("crop")
-  const [skip, setSkip] = useState(0)
-  const [shopContent, setContent] = useState([])
-  const [loading, setLoading] = useState(false)
-  const { getShopContent, cart, setCart } = useUser()
-  const [showCart, openCart] = useState(false)
 
-  async function fetchShopContent() {
-    try {
-      const data = await getShopContent(skip)
-      if (data.length > 0) {
-        setContent([...shopContent, ...data])
-      }
-    } catch (error) {
-      alert(error.message)
-    }
-  }
-
-  function handleShow() {
-    openCart(!showCart)
-  }
-
-  useEffect(() => {
-    setSkip(shopContent.length)
-  }, [shopContent])
+  const { showCart, fetchShopContent, shopContent, setContent, handleShow } = useContext(StoreContext)
 
   useEffect(() => {
     // setLoading(true)
@@ -91,9 +36,7 @@ function AgriStore() {
               <li onClick={(e) => { e.target.classList.add("active"); setActiveStatus("service") }} className={`list-group-item ${activeStatus == "service" ? "active" : ""}`}>Service</li>
             </ul>
           </div>
-          <div className="cart">
-            <Button variant="warning" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;<b>({cart.length})</b></Button>
-          </div>
+          <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
         </div>
         <hr className='style-two' />
         <div className="category-content">
@@ -107,7 +50,6 @@ function AgriStore() {
         </div>
         <Button variant='warning' onClick={fetchShopContent}>Load More</Button>
       </div>
-      <Cart show={showCart} handleShow={handleShow} shopContent={shopContent}/>
     </div>
   )
 }

@@ -24,7 +24,6 @@ export function UserProvider({ children }) {
     const [currentUser, setCurrentUser] = useState()
     const [userData, setUserData] = useState()
     const [userCampaigns, setUserCampaigns] = useState()
-    const [cart, setCart] = useState([])
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
@@ -181,13 +180,6 @@ export function UserProvider({ children }) {
     //////////////////////////SHOP FUNCTIONS START HERE//////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
 
-    async function getShopContent(skip, category) {
-        const response = await axios.get("/store/products/all?skip=" + skip + `${category ? "&category=" + category : ""}`)
-        if (response.hasOwnProperty("data"))
-            return response.data.data
-        else throw response.data.data
-
-    }
 
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////SHOP FUNCTIONS END HERE//////////////////////////////
@@ -216,9 +208,6 @@ export function UserProvider({ children }) {
         getUserData,
         getUserCampaigns,
         userCampaigns,
-        getShopContent,
-        cart,
-        setCart
     }
     return (
         <UserContext.Provider value={value}>

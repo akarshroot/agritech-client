@@ -70,7 +70,7 @@ export function CampaignWidget({title,target,contributors,_id,...props}) {
             <div className="current-campaign-widget-details">
                 <div className="contributions">
                     <span className="quantity">{contributors > 1000 ? `${contributors / 1000}k+` : contributors}</span><br />
-                    <span className="subtext">contributions</span>
+                    <span className="subtext">contributors</span>
                 </div>
                 <div className="time-remaining">
                     <span className="quantity">{parseInt((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />

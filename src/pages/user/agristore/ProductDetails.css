@@ -1,0 +1,11 @@
+.product-details-container {
+    min-height: 100vh;
+}
+
+.product-details-img {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    max-height: 500px;
+    border-right: 1px solid gray;
+}
