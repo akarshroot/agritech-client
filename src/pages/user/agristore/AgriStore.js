@@ -49,7 +49,6 @@ function AgriStore() {
                       setActiveStatus(category.toLowerCase())
                       setContent([])
                       setSkip(0)
-                      setCart([])
                     }} className={`list-group-item ${activeStatus == category.toLowerCase() ? "active" : ""}`}>{category}</li>
                   )
                 })
@@ -64,7 +63,7 @@ function AgriStore() {
             shopContent?.map((product) => {
               if (product.category.includes(activeStatus))
                 return (
-                  <Product key={product._id} {...product} />
+                  <Product key={product._id} product={product} />
                 )
             })
           }
