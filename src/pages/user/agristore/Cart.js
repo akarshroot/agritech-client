@@ -7,7 +7,8 @@ import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import StoreContext from '../../../context/StoreContext'
 
 export function Cart() {
-    const { cart, setCart, showCart, openCart, shopContent } = useContext(StoreContext)
+    const { cart, setCart, showCart, openCart, shopContent, INR, cartTotal } = useContext(StoreContext)
+    const { theme } = useUser()
 
     function handleShow() {
         openCart(!showCart)
@@ -15,7 +16,7 @@ export function Cart() {
 
     return (
         <>
-            <div className="cart">
+            <div className={`cart theme-${theme}`}>
                 <Button variant="warning" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;<b>({cart.length})</b></Button>
             </div>
             <Modal
@@ -29,17 +30,18 @@ export function Cart() {
                     <Modal.Title>Your saved items</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <ul className='list-group'>
+                    <ul className={`list-group theme-${theme}`}>
                         {
                             cart.length == 0 ? <>No items added.</>
-                            :
-                            cart.map((product) => {
-                                const productDetails = shopContent.find((item) => {return item._id == product })
-                                return (
-                                    <li className='list-group-item' key={product}>{productDetails.title}</li>
-                                )
-                            })
+                                :
+                                cart.map((product) => {
+                                    const productDetails = shopContent.find((item) => { return item._id == product })
+                                    return (
+                                        <li className='list-group-item w-100 d-flex justify-content-between' key={product}><div>{productDetails.title}</div><div>{INR.format(productDetails.price)}</div></li>
+                                    )
+                                })
                         }
+                        <li className='list-group-item w-100 d-flex justify-content-between active'><div>Total</div><div>{INR.format(cartTotal)}</div></li>
                     </ul>
                 </Modal.Body>
                 <Modal.Footer>

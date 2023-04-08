@@ -5,6 +5,7 @@
     border-radius: 12px;
     border: 2px solid var(--c1);
     margin: 10px;
+    /* box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px; */
 }
 
 .product-container h5 {
@@ -22,4 +23,13 @@
 
 .price {
     font-size: x-large;
+}
+
+.star-product {
+    border: 2px solid goldenrod;
+    border-radius: 5px;
+    background-color: gold;
+    color: brown;
+    padding: 2px;
+    margin: 5px;
 }

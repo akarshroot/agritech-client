@@ -9,11 +9,19 @@ export function StoreContextProvider({ children }) {
     const [shopLoading, setShopLoading] = useState(false)
     const [showCart, openCart] = useState(false)
     const [cart, setCart] = useState([])
+    const [categories, setCategories] = useState([])
+    const [cartTotal, setCartTotal] = useState(0)
 
-    async function fetchShopContent() {
+
+    const INR = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+    });
+
+    async function fetchShopContent(e, category) {
         try {
             setShopLoading(true)
-            const data = await getShopContent(skip)
+            const data = await getShopContent(skip, category)
             if (data.length > 0) {
                 setContent([...shopContent, ...data])
             }
@@ -24,18 +32,37 @@ export function StoreContextProvider({ children }) {
         }
     }
 
+    async function getCategories() {
+        try {
+            setShopLoading(true)
+            const response = await axios.get("/store/category/")
+            if (response.hasOwnProperty("data")) {
+                setShopLoading(false)
+                setCategories(response.data.data)
+            }
+            else {
+                setShopLoading(false)
+                throw response.data
+            }
+        } catch (error) {
+            alert(error.message)
+            setShopLoading(false)
+        }
+    }
+
     function handleShow() {
         openCart(!showCart)
     }
 
-    function addToCart(_id) {
+    function addToCart(_id, price) {
         setCart([...cart, _id])
+        setCartTotal(cartTotal + price)
     }
 
     useEffect(() => {
         setSkip(shopContent.length)
     }, [shopContent])
-    
+
 
     async function getShopContent(skip, category) {
         const response = await axios.get("/store/products/all?skip=" + skip + `${category ? "&category=" + category : ""}`)
@@ -73,7 +100,11 @@ export function StoreContextProvider({ children }) {
         shopContent,
         setContent,
         addToCart,
-        shopLoading
+        shopLoading,
+        getCategories,
+        categories,
+        INR,
+        cartTotal,
     }
     return (
         <StoreContext.Provider value={values}>
