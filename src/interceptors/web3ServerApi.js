@@ -2,6 +2,7 @@ import axios from "axios";
 
 const funUrl = '/web3/fundingContracts/'
 const web3Url = '/web3/wallet/'
+const voteURL = '/web3/votingContracts/'
 
 async function getBalance(acc) {
     const res = await axios.get(web3Url + "getBalance/" + acc)
@@ -26,8 +27,22 @@ async function getApproval(data) {
     console.log(res.response.data);
     if(res.hasOwnProperty("data"))
         return res.data
-    else throw new Error(res.response.data.message)
+        else throw new Error(res.response.data.message)
 }
+
+async function createVoteReq(data) {
+    const res = await axios.post(voteURL + 'makeRequest', data)
+    return res.data
+}
+async function voteForReq(data) {
+    const res = await axios.post(voteURL + 'vote', data)
+    return res.data
+}
+async function useReq(data) {
+    const res = await axios.post(voteURL + 'useRequestedMoney', data)
+    return res.data
+}
+
 
 export {
     getBalance,
@@ -35,4 +50,7 @@ export {
     transferKCO,
     contribute,
     getApproval,
+    createVoteReq,
+    voteForReq,
+    useReq,
 }
