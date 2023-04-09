@@ -43,7 +43,7 @@ function Management(props) {
           widgets.map((widget) => {
             return (
               <>
-                <div className={`widget ${loading ? "skeleton-widget" : "no-skeleton-widget"}`}>
+                <div key={widget.id} className={`widget ${loading ? "skeleton-widget" : "no-skeleton-widget"}`}>
                   {
                     loading ? <></> :
                       <>

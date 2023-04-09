@@ -179,12 +179,33 @@ export function UserProvider({ children }) {
     ////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////
-    //////////////////////////SHOP FUNCTIONS START HERE//////////////////////////////
+    //////////////////////////WALLET FUNCTIONS START HERE//////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
 
+    async function getOrderId(purchaseData) {
+        try {
+            const response = await axios.post("/wallet/order/create", purchaseData)
+            if(response.hasOwnProperty("data"))
+                return response.data.data
+            else throw response
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function verifyPayment(paymentData) {
+        try {
+            const response = await axios.post("/wallet/payment/verify", paymentData)
+            if(response.hasOwnProperty("data"))
+                return response.data.data
+            else throw response
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////SHOP FUNCTIONS END HERE//////////////////////////////
+    //////////////////////////WALLET FUNCTIONS END HERE//////////////////////////////
     ////////////////////////////////////////////////////////////
 
     useEffect(() => {
@@ -210,6 +231,8 @@ export function UserProvider({ children }) {
         getUserData,
         getUserCampaigns,
         userCampaigns,
+        getOrderId,
+        verifyPayment
     }
     return (
         <UserContext.Provider value={value}>

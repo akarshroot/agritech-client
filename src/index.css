@@ -17,6 +17,8 @@ body {
   --black-text: #0a0a0a;
   --error-text: #c62828;
   --error-background: #fbe9e7;
+  --warning-text: goldenrod;
+  --warning-background: #ffcc0057;
   --gradient: linear-gradient(to right, #d99e38, #ffcb74);
 }
 
@@ -29,6 +31,8 @@ body {
   --black-text: #0a0a0a;
   --error-text: #c62828;
   --error-background: #fbe9e7;
+  --warning-text: goldenrod;
+  --warning-background: #ffeca257;
   --gradient: linear-gradient(to right, #d99e38, #ffcb74);
 }
 
@@ -48,6 +52,15 @@ body {
   background-color: var(--error-background);
   color: var(--error-text);
   border: 1px solid var(--error-text);
+  margin: 5px;
+}
+
+.warning-message {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--warning-background);
+  color: var(--warning-text);
+  border: 1px solid var(--warning-text);
   margin: 5px;
 }
 
