@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import CampaignContext from '../../../context/CampaignContext'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
@@ -7,8 +7,10 @@ import Form from 'react-bootstrap/Form'
 import useInput from '../../../hooks/useInput'
 import {Link, Navigate} from 'react-router-dom'
 import {useUser} from '../../../context/UserContext'
+import StoreContext from '../../../context/StoreContext'
 import {ContributeModal} from '../Campaigns'
-import {createVoteReq, useReq, voteForReq} from '../../../interceptors/web3ServerApi'
+import {createVoteReq, getTransactionsForCamp, usevoteReq, voteForReq} from '../../../interceptors/web3ServerApi'
+import './CampaignDetails.css'
 
 
 function CreatorDetails({isOwner,imgUrl,name,email,walletAddress,openModal}){
@@ -94,7 +96,7 @@ function CampaignPrograssBar({raisedAmount,target}){
   return (
     <div className="campaign-progress my-4">
         <div className="progress" style={{ height: "30px" }}>
-            <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" 
+            <div className="progress-bar bg-success progress-bar-striped progress-bar-animated" 
                 role="progressbar"
                 aria-valuenow={progress}
                 aria-valuemin="0"
@@ -109,21 +111,29 @@ function CampaignPrograssBar({raisedAmount,target}){
 }
 
 
-function WithdrawRequests({cid,reason,amount,votes,voters,receiver,isOwner,voteNumber,contributors}){
-  console.log(contributors)
+function WithdrawRequests({cid,reason,amount,votes,voters,receiver,isOwner,voteNumber}){
+
   async function useRequest(){
     const password = await prompt('Enter Password to confirm')
+    if(!password){
+      return
+    }
     const dataToSend = {
       voteNumber,
       password,
       cid
     }
     console.log(dataToSend)
-    const res = await useReq(dataToSend)
+    const res = await usevoteReq(dataToSend)
     alert(res.message)
   }
+  
+  
   async function voteRequest(e){
     const password = await prompt('enter Password to Confirm')
+    if(!password){
+      return
+    }
     console.log(e.target.value)
     const dataToSend = {
       voteNumber,
@@ -138,7 +148,14 @@ function WithdrawRequests({cid,reason,amount,votes,voters,receiver,isOwner,voteN
   return(
     <div className='col-md-4'>
       <div className='m-2 p-2 shadow rounded text-start'>
-        <h3>{reason}</h3>
+        <div className='d-flex justify-content-between'>
+          <div className='w-75'>
+            <h3>{reason}</h3>
+          </div>
+          <div className='display-4 text-success'>
+              {voteNumber}
+          </div> 
+        </div>
         <hr/>
         <Table>
           <tbody>
@@ -156,7 +173,7 @@ function WithdrawRequests({cid,reason,amount,votes,voters,receiver,isOwner,voteN
           {parseInt(voters)===0? <div>No contributors yet</div>:<CampaignPrograssBar raisedAmount={votes} target={voters} />}
         </div>
         <div>
-          Requested for : <Link to={`/productDetails/${receiver}`}>Product</Link>
+          Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
         </div>
         <div className='text-center py-3'>
           {!isOwner 
@@ -169,32 +186,68 @@ function WithdrawRequests({cid,reason,amount,votes,voters,receiver,isOwner,voteN
   )
 }
 
+function SelectFromCartOptions({setProd,product, hide}){
+  function changeSelectId(){
+    setProd(product)
+    hide()
+  }
+  return(
+    <div onClick={changeSelectId} value={product.id} className='row align-items-center p-3 m-0 border rounded custom-Options'>
+      {product.imgUrl && (
+        <div className='col-2'>
+          <img src={product.imgUrl} alt='Product' />
+        </div>
+      )}
+      <div className='col-10 d-flex flex-column justify-content-center'>
+        <div><h4>{product.title}</h4></div>
+        {product.price && <div>{product.price} KCO</div>}
+      </div>
+    </div>
+  )
+}
+
 function CreateRequestModal({show, handleShow, vid}){
+
+  const productSelect = {
+    title:'<--Select-->',
+    imgUrl:'',
+    _id:'select',
+    price:''
+  }
+  const productPersonal = {
+    title:'Personal Wallet',
+    imgUrl:'',
+    _id:'personalUse',
+    price:''
+  }
 
   const reason = useInput('text','Tell them what you want')
   const amount = useInput('number','How much?')
   const password = useInput('password','enter password to confirm')
-  const [receiverId,setreceiverId] = useState('')
+  const [dropdown,setDropdown] = useState(false)
+  const [receiverProduct,setReceiverProduct] = useState(productSelect)
   const {activeCampaign} = useContext(CampaignContext)
+  const {cart} = useContext(StoreContext)
 
-  function handleOnChangereceiverId(e){
-    console.log(e.target.value)
-    if(e.target.value !== 'Personaluse'){
-      amount.onChange(0)
-    }
-    setreceiverId(e.target.value)
+  function handleDropdown(){
+    setDropdown(!dropdown)
+  }
+
+  function closeModal(){
+    setDropdown(false)
+    handleShow()
   }
 
   async function handleSubmit(e){
     e.preventDefault()
-    if(receiverId==='select'){
+    if(receiverProduct._id==='select'){
       alert("select something from the dropdown")
       return
     }
     const dataToSend = {
       reason:reason.value,
       password:password.value,
-      receiverProduct:receiverId,
+      receiverProduct:receiverProduct._id,
       amount: amount.value? amount.value:'GetFromProduct',
       campaignId: activeCampaign._id
     }
@@ -202,11 +255,10 @@ function CreateRequestModal({show, handleShow, vid}){
     alert(res.message)
   }
 
-
   return(
     <Modal
       show={show}
-      onHide={handleShow}
+      onHide={closeModal}
       backdrop="static"
       keyboard={false}
       size='md'
@@ -223,16 +275,55 @@ function CreateRequestModal({show, handleShow, vid}){
               <input id={'voteCampReason' + vid} {...reason} />
             </fieldset>
             <fieldset className='w-100'>
-              <label htmlFor={'voteCampreceiver' + vid}>Where to send to</label><br />
-              <select onChange={handleOnChangereceiverId} value={receiverId} required className='form-control' name='receiver' id={'voteCampreceiver' + vid}>
-                <option value={'select'}>select</option>
-                <option value={'643012889eb15a43565a1d11'}>Item1</option>
-                <option value={'643013419eb15a43565a1d12'}>Item2</option>
-                <option value={'64301d589eb15a43565a1d13'}>Item3</option>
-                <option value={'Personaluse'} >Personal Wallet</option>
-              </select>
+              <label htmlFor={'voteCampreceiver' + vid}>Select Product (from Cart)</label><br />
+              <div className='form-control position-relative bg-light custom-Options' name='receiver' id={'voteCampreceiver' + vid}>
+                <div onClick={handleDropdown}>
+                  <div className='row p-0 m-0 rounded '>
+                    {receiverProduct.imgUrl && (
+                      <div className='col-4'>
+                        <img height='40px' width='40px' src={receiverProduct.imgUrl} alt='Product' />
+                      </div>
+                    )}
+                    <div className='col-8 d-flex flex-column justify-content-center'>
+                      <div>{receiverProduct.title}</div>
+                      {receiverProduct.price && <div>{receiverProduct.price} KCO</div>}
+                    </div>
+                  </div>
+                </div>
+                {dropdown && (
+                  <div className='position-absolute border rounded w-100 options-Bg'>
+                    <SelectFromCartOptions 
+                            setProd={setReceiverProduct} 
+                            hide={handleDropdown}
+                            product={productSelect}
+                    />
+                    {cart.length>0?
+                      (
+                        cart.map(({product},i) => {
+                          // return <option 
+                          //         key={'cartSelectKey'+i} 
+                          //         value={product._id}>
+                          //           {product.title}
+                          //         </option>
+                          return <SelectFromCartOptions 
+                            key={'cartSelectKey'+i}
+                            hide={handleDropdown}
+                            setProd={setReceiverProduct} 
+                            product={product}
+                          />
+                        })
+                        )
+                        : <div className='text-center'>---your cart is Empty---</div>
+                    }
+                    <SelectFromCartOptions 
+                            setProd={setReceiverProduct} 
+                            hide={handleDropdown}
+                            product={productPersonal}/>
+                  </div>
+                  )}
+              </div>
             </fieldset>
-            {receiverId === 'Personaluse'
+            {receiverProduct._id === 'personalUse'
             &&(
               <fieldset className='w-100'>
                 <label htmlFor={'voteCampAmount' + vid}>Amount</label><br />
@@ -250,11 +341,49 @@ function CreateRequestModal({show, handleShow, vid}){
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleShow}>
+        <Button variant="secondary" onClick={closeModal}>
           Close
         </Button>
       </Modal.Footer>
     </Modal>
+  )
+}
+
+function Transaction({ sno, receiverId, createdAt, amount, txHash}) { 
+  return (
+    <>
+      <tr>
+        <td>{sno}</td>
+        <td>{receiverId}</td>
+        <td>{amount}</td>
+        <td>{createdAt}</td>
+        <td>{txHash}</td>
+      </tr>
+    </>
+  )
+}
+function TransactionsHistory({tx}){
+  return(
+    <div>
+      <div>
+        <legend>Campaign Transactions</legend>
+        <Table striped bordered size="sm">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>To</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>TransactionHash</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tx.length? tx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+            : <tr><td colSpan='5'>No transactions yet</td></tr>}
+          </tbody>
+        </Table>
+      </div>
+    </div>
   )
 }
 
@@ -284,7 +413,12 @@ function CampaignVotesinfo({isOwner}){
             <div className='row'>
               {voteRequests?.map((data,i) => {
                 return (
-                  <WithdrawRequests isOwner={isOwner} key={'votesContainerKey'+i} cid={activeCampaign._id} voters={activeCampaign.contributors.length} {...data}/>
+                  <WithdrawRequests 
+                    isOwner={isOwner} 
+                    key={'votesContainerKey'+i} 
+                    cid={activeCampaign._id} 
+                    voters={activeCampaign.contributors.length} 
+                    {...data}/>
                 )
               })}
             </div>
@@ -299,14 +433,22 @@ function CampaignVotesinfo({isOwner}){
 
 export default function CampaignDetails() {
   
-  const {activeCampaign} = useContext(CampaignContext)
-  const {userData} = useUser()
+  const {activeCampaign,changeActiveCampaign} = useContext(CampaignContext)
+  const {userData,loadingUser,getUserData} = useUser()
   const [show,setShow] = useState(false);
   function handleShow(){
     setShow(!show)
   }
-  if(!activeCampaign){
-    return <Navigate to='/campaigns' replace />
+  useEffect(()=>{
+    if(loadingUser || !userData){
+      getUserData()
+    }
+    if(!activeCampaign){
+      changeActiveCampaign()
+    }
+  },[])
+  if(!activeCampaign || !userData || loadingUser){
+    return <div>Loading...</div>
   }
   const contributeModalData={
     show,
@@ -315,12 +457,19 @@ export default function CampaignDetails() {
     minContri:activeCampaign.minContri
   }
   const isOwner =  userData._id===activeCampaign.manager._id
+
+  console.log(activeCampaign)
+
   return (
     <div className='container py-2'>
         <CreatorDetails {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
         <CampaignInfo {...activeCampaign} />
         <CampaignVotesinfo isOwner={isOwner} />
         <ContributeModal {...contributeModalData} />
+        {activeCampaign.campaignTransactions && isOwner
+        ?<TransactionsHistory tx={activeCampaign.campaignTransactions} />
+        :<div className='p-4 display-3'>Only owner can see the transactions</div>
+        }
     </div>
   )
 }

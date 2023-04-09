@@ -9,8 +9,13 @@ export function CampaignContextProvider({children}) {
     const [activeCampaign,setActiveCampaign] = useState(null)
     const navigate = useNavigate()
     async function changeActiveCampaign(id){
-        const res = await getCampbyId(id)
+        let idtoUse = id
+        if(!idtoUse){
+            idtoUse = localStorage.getItem("activeCamp")
+        }
+        const res = await getCampbyId(idtoUse)
         setActiveCampaign(res)
+        localStorage.setItem('activeCamp',idtoUse)
         navigate('/detailedCampaign',{replace:true})
     }
     const values = {

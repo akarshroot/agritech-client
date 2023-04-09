@@ -1,0 +1,9 @@
+.Camplink{
+    color: cornflowerblue;
+    text-decoration: underline;
+}
+.Camplink:hover{
+    cursor: pointer;
+    color: purple;
+    text-decoration: none;
+}

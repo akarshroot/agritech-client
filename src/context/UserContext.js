@@ -197,7 +197,7 @@ export function UserProvider({ children }) {
 
 
     const value = {
-        loading,
+        loadingUser:loading,
         currentUser,
         userData,
         theme,

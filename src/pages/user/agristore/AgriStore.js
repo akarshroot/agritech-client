@@ -49,7 +49,7 @@ function AgriStore() {
                       setActiveStatus(category.toLowerCase())
                       setContent([])
                       setSkip(0)
-                    }} className={`list-group-item ${activeStatus == category.toLowerCase() ? "active" : ""}`}>{category}</li>
+                    }} className={`list-group-item ${activeStatus === category.toLowerCase() ? "active" : ""}`}>{category}</li>
                   )
                 })
               }

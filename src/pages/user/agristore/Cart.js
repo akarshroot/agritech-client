@@ -5,7 +5,6 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import StoreContext from '../../../context/StoreContext'
-import { Rings } from 'react-loader-spinner'
 
 export function Cart() {
     const { cart, setCart, showCart, openCart, INR, cartTotal, setCartTotal, cartLoading, deleteCartItem } = useContext(StoreContext)

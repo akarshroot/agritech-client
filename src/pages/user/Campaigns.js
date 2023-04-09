@@ -190,7 +190,7 @@ function Campaigns() {
           </Button>
         </div>
         <div className='col-md-3 p-3'>
-          <Button variant="success" onClick={() => { navigate("/campaigns/all") }}>
+          <Button variant="success" onClick={() => { navigate("/campaigns/all",{replace:true}) }}>
             View All Campaigns
           </Button>
         </div>
@@ -204,7 +204,6 @@ function Campaigns() {
             userCampaigns?.length === 0 ? <>No campaigns created yet.</>
               :
               userCampaigns?.map((data, i) => {
-                console.log(data);
                 return (
                   <React.Fragment key={'campaignsKey' + i}>
                     <div className='col-sm-6 col-md-4 col-lg-3 p-4'>

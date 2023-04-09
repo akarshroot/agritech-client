@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useUser } from '../../context/UserContext'
-import { getBalance, transferKCO } from '../../interceptors/web3ServerApi'
+import { getBalance, getTransactions, transferKCO } from '../../interceptors/web3ServerApi'
+import CampaignContext from '../../context/CampaignContext'
 import useInput from '../../hooks/useInput'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import './Wallet.css'
 /*
 
 {
@@ -61,14 +63,22 @@ function TransferModule() {
   )
 }
 
-function Transaction({ sno, to, date, amount, txHash }) {
+function Transaction({ sno, receiverId, createdAt, amount, txHash, camp ,changeActiveCamp}) {
+  function checkCampaign(){
+    console.log(receiverId)
+    changeActiveCamp(receiverId)
+  }
+
   return (
     <>
       <tr>
         <td>{sno}</td>
-        <td>{to}</td>
+        {camp
+        ?<td><span onClick={checkCampaign} className='Camplink'>{receiverId}</span></td>
+        :<td>{receiverId}</td>
+        }
         <td>{amount}</td>
-        <td>{date}</td>
+        <td>{createdAt}</td>
         <td>{txHash}</td>
       </tr>
     </>
@@ -161,7 +171,10 @@ function Transaction({ sno, to, date, amount, txHash }) {
 function Wallet() {
   const [balance, setBalance] = useState(-1)
   const [balanceLoader, setBalanceLoader] = useState(false)
+  const [walletTx,setWalletTx] = useState([])
+  const [campsTx,setCampsTx] = useState([])
   const { userData, getUserData } = useUser()
+  const {changeActiveCampaign} = useContext(CampaignContext)
 
   async function getBalanceFormServer(acc) {
     setBalanceLoader(true)
@@ -174,12 +187,16 @@ function Wallet() {
   async function buyKCO() {
 
   }
-  console.log(userData?.transactions)
   useEffect(() => {
-    if(userData)
-      getBalanceFormServer(userData.walletAddress)
-    else getUserData()
-  }, [userData])
+    if(userData){
+    getBalanceFormServer(userData.walletAddress)
+    getTransactions().then(e => {
+      console.log(e)
+      setWalletTx(e.wallet)
+      setCampsTx(e.camps)
+    })
+    }else getUserData()
+  }, [])
 
   return (
     <div className='container pt-4'>
@@ -220,6 +237,7 @@ function Wallet() {
       </div>
       <div>
         <div>
+          <legend>Wallet Transactions</legend>
           <Table striped bordered size="sm">
             <thead>
               <tr>
@@ -231,7 +249,27 @@ function Wallet() {
               </tr>
             </thead>
             <tbody>
-              {userData && userData.transactions.length? userData.transactions.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+              {userData && walletTx.length? walletTx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+              : <tr><td colSpan='5'>No transactions yet</td></tr>}
+            </tbody>
+          </Table>
+        </div>
+      </div>
+      <div>
+        <div>
+          <legend>Contributions</legend>
+          <Table striped bordered size="sm">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>To</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>TransactionHash</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userData && campsTx.length? campsTx.map((e, i) => <Transaction key={'contributionsHashKey' + i} camp='true' changeActiveCamp={changeActiveCampaign} sno={i + 1} {...e} />)
               : <tr><td colSpan='5'>No transactions yet</td></tr>}
             </tbody>
           </Table>

@@ -9,6 +9,12 @@ async function getBalance(acc) {
     return res.data
 }
 
+async function getTransactions() {
+    const res = await axios.get(web3Url + "transactions")
+    return res.data
+}
+
+
 async function createCampaign(data) {
     const res = await axios.post(funUrl + 'deployContract/', data)
     return res.data
@@ -42,7 +48,7 @@ async function voteForReq(data) {
     const res = await axios.post(voteURL + 'vote', data)
     return res.data
 }
-async function useReq(data) {
+async function usevoteReq(data) {
     const res = await axios.post(voteURL + 'useRequestedMoney', data)
     return res.data
 }
@@ -56,5 +62,6 @@ export {
     getApproval,
     createVoteReq,
     voteForReq,
-    useReq,
+    usevoteReq,
+    getTransactions,
 }
