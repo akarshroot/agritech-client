@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useUser } from '../../../context/UserContext'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import './ProductDetails.css'
 import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import StoreContext from '../../../context/StoreContext'
 import { Cart } from './Cart'
+import CustomImageLoader from 'react-custom-image-loader.'
+import grains from '../../../assets/icons/grain.png'
 
 function ProductDetails(props) {
 
@@ -13,22 +15,19 @@ function ProductDetails(props) {
     const [loading, setLoading] = useState(false)
     const [productId, setProductId] = useState()
 
-    const { showCart, shopContent, setContent, handleShow, getProductData, addToCart } = useContext(StoreContext)
+    const { showCart, shopContent, setContent, handleShow, getProductData, addToCart, INR } = useContext(StoreContext)
 
 
     const params = useParams()
     const navigate = useNavigate()
 
-    const INR = new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-    });
 
     async function fetchProductDetails(prodId) {
         try {
             setLoading(true)
             const data = await getProductData(prodId)
             setProductData(data)
+            data.recent = true
             setContent([data])
             setLoading(false)
         } catch (error) {
@@ -53,14 +52,16 @@ function ProductDetails(props) {
                 <div className="d-flex p-3 product-details-container w-100">
                     <div className="product-details-img w-50 p-3" style={{ backgroundImage: `url(${productData.imgUrl})` }}></div>
                     <div className="product-details d-flex flex-column align-items-start p-3 m-3">
+                        <div className="category-path mb-3">PRODUCTS / {productData.category.map((category)=> {if(category != "all" || productData.category.length == 1) return (<Link className='link' to={`/agristore?category=${category}`}>{category.toUpperCase()}</Link>)})}</div>
                         <h3 className="product-title">{productData.title}</h3>
                         <span>Sold By: {productData.soldBy}</span><span>Rating: {productData.rating}/5</span>
                         <div className="w-100">
                             <hr />
                         </div>
                         <h3>{INR.format(productData.price)}</h3>
-                        <div className="d-flex justify-content-around">
-                            <Button variant="danger" onClick={() => { addToCart(productId) }}>Add to cart</Button>
+                        <span>Quantity: {productData.quantity && productData.quantity}</span>
+                        <div className="d-flex justify-content-around mt-3">
+                            <Button variant="danger" onClick={() => { addToCart(productId, productData.price) }}>Add to cart</Button>
                             &nbsp;
                             &nbsp;
                             <Button variant="success">Buy Now</Button>
@@ -70,7 +71,7 @@ function ProductDetails(props) {
                         </div>
                     </div>
                 </div>
-            </> : <>Loading...</>}
+            </> : <div className='d-flex w-100 vh-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'}/></div>}
         </div>
     )
 }

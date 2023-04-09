@@ -11,3 +11,8 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+.list-group .active {
+    background-color: var(--c2) !important;
+    border: 1px solid var(--c1) !important;
+}

@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import axios from 'axios'
 // import { io } from 'socket.io-client'
 // import { SOCKET_URL as socketURL } from './config'
+import CustomImageLoader from 'react-custom-image-loader.'
+import grains from '../assets/icons/grain.png'
 
 const UserContext = React.createContext()
 
@@ -212,7 +214,7 @@ export function UserProvider({ children }) {
     return (
         <UserContext.Provider value={value}>
             {
-                loading ? <>Loading...</>
+                loading ? <> <div className='d-flex w-100 vh-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'}/></div></>
                     :
                     children
             }

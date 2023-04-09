@@ -41,7 +41,6 @@ export function CampaignWidget({title,target,contributors,_id,...props}) {
     const numberOfContributors = contributors.length
     const [collection, setCollection] = useState(0)
     const {changeActiveCampaign} = useContext(CampaignContext)
-    const endDate = new Date("03/31/2023");
     function handleShowDetails(){
         changeActiveCampaign(_id)
     }
@@ -75,7 +74,7 @@ export function CampaignWidget({title,target,contributors,_id,...props}) {
                     <span className="subtext">contributors</span>
                 </div>
                 <div className="time-remaining">
-                    <span className="quantity">{parseInt((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
+                    <span className="quantity">{parseInt(((new Date(props.dateCreated).getTime() + props.deadline*1000) - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
                     <span className="subtext">remaining</span>
                 </div>
             </div>
