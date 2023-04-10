@@ -184,6 +184,7 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
           handleBuyModal()
           getBalanceFormServer(userData.walletAddress)
         } catch (error) {
+          console.log(error)
           alert(error)
         }
       },
