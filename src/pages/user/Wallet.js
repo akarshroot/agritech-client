@@ -161,7 +161,7 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
       currency: "INR",
     }
     const orderData = await getOrderId(purchaseData);
-    console.log(orderData);
+    console.log(orderData.id);
     const options = {
       key: process.env.REACT_APP_RAZORPAY_ID,
       amount: orderData.amountDue, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
