@@ -458,7 +458,7 @@ export default function CampaignDetails() {
   }
   const isOwner =  userData._id===activeCampaign.manager._id
 
-  console.log(activeCampaign)
+  console.log(isOwner)
 
   return (
     <div className='container py-2'>

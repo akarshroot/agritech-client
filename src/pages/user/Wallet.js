@@ -10,15 +10,6 @@ import Form from 'react-bootstrap/Form'
 import './Wallet.css'
 import StoreContext from '../../context/StoreContext'
 
-/*
-
-{
-  date: date,
-  amountTransfered: Number,
-  transfersTo: address,
-}
-
-*/
 
 function TransferModule() {
   const [show, setShow] = useState(false)
@@ -88,96 +79,14 @@ function Transaction({ sno, receiverId, createdAt, amount, txHash, camp, changeA
   )
 }
 
-// function AddKCOModal({ show, handleShow }) {
-//   return (
-//     <>
-//       <Modal
-//         show={show}
-//         onHide={handleShow}
-//         backdrop="static"
-//         keyboard={false}
-//         size='lg'
-//         centered
-//       >
-//         <Modal.Header closeButton>
-//           <Modal.Title>Create Campaign</Modal.Title>
-//         </Modal.Header>
-//         <Modal.Body>
-//           <Form onSubmit={handleSubmit}>
-
-
-//             <div className='d-flex flex-column align-items-center'>
-//               <fieldset>
-//                 <label htmlFor='createCampTitle'>Title</label><br />
-//                 <input id='createCampTitle' {...title} />
-//               </fieldset>
-//               <fieldset>
-//                 <label htmlFor='createCampDeadline'>Deadline</label><br />
-//                 <input id='createCampDeadline' {...deadline} />
-//               </fieldset>
-//               <fieldset>
-//                 <label htmlFor='createCampTarget'>Target</label><br />
-//                 <input id='createCampTarget' {...target} />
-//               </fieldset>
-//               <fieldset>
-//                 <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
-//                 <input id='createCampMinAmount' {...minContribution} />
-//               </fieldset>
-//               <fieldset>
-//                 <label htmlFor='createCampPass'>Password</label><br />
-//                 <input id='createCampPass' {...password} />
-//               </fieldset>
-//               <Button className='my-3' type='submit' variant="success">Create</Button>
-//             </div>
-
-//           </Form>
-//         </Modal.Body>
-//         <Modal.Footer>
-//           <Button variant="secondary" onClick={handleShow}>
-//             Close
-//           </Button>
-//         </Modal.Footer>
-//       </Modal>
-
-
-//       <div className="wallet-modal">
-//         <div className="wallet-modal-overlay"></div>
-//         <div className="wallet-modal-body">
-//           <button style={{ float: "right" }} onClick={() => { toggleAddBalanceModal(!addBalanceModalIsOpen) }}>X</button>
-//           <div className="add-balance-content">
-//             <p>Enter amount of CursorCoins you wish to add:</p>
-//             <div className="bounty-input">
-//               <input style={{ width: "260px" }} placeholder="Eg. 1000" type="number" step="0.01" min="0.01" name='amount' value={addBalanceInputs.amount} onChange={(e) => {
-//                 inputEvent(e)
-//               }} />
-//             </div>
-//             <div className="bounty-input">
-//               <p>Select your preferred currency of payment.</p>
-//               <select style={{ width: "100px" }} type="" name='currency' value={addBalanceInputs.currency} onChange={inputEvent}>
-//                 <option value="INR">INR</option>
-//                 <option value="USD">USD</option>
-//               </select>
-//             </div>
-//             <span className='wallet-modal-subtext'>&#128712; Note that 1 CursorCoin = 1 USD</span>
-//             <div className="bounty-input">
-//               <input type="text" style={{ width: "fit-content" }} readOnly={true} value={`${addBalanceInputs.amount === "" ? "0" : parseFloat(addBalanceInputs.amount)?.toFixed(2)} CC = ` + (addBalanceInputs.currency === "USD" ? `$${addBalanceInputs.amount == '' ? 0 : (addBalanceInputs.amount)}` : `₹${addBalanceInputs.amount == '' ? 0 : ((addBalanceInputs.amount) * USD_INR_CONVERSION_FACTOR).toFixed(2)}`)} />
-//             </div>
-//             <button class="button-6" role="button" onClick={() => beginPayment(addBalanceInputs.currency, addBalanceInputs.amount, userData, toastContainer)}>Proceed to Pay {addBalanceInputs?.actualAmount}</button>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   )
-// }
-
-
 function Wallet() {
-  const [balance, setBalance] = useState(-1)
+  const [balance, setBalance] = useState()
   const amountRef = useRef()
   const currencyRef = useRef()
   const [amount, setAmount] = useState(1)
   const [amountToKCO, setAmountToKCO] = useState(0)
 
+  const password = useInput('password','Confirm with pass');
   const [balanceLoader, setBalanceLoader] = useState(false)
   const [walletTx, setWalletTx] = useState([])
   const [campsTx, setCampsTx] = useState([])
@@ -222,7 +131,10 @@ function Wallet() {
           const data = {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
-            walletAddress: userData.walletAddress
+            razorpay_signature: response.razorpay_signature,
+            walletAddress: userData.walletAddress,
+            amount,
+            password:password.value
           }
           await verifyPayment(data)
           handleBuyModal()
@@ -245,12 +157,9 @@ function Wallet() {
     const rzp = new window.Razorpay(options);
     rzp.open()
   }
-
   useEffect(() => {
-    setAmountToKCO(amount != "Invalid amount" ? amount - 1 : amount)
-  }, [amount])
-
-
+    setAmountToKCO(amount !== "Invalid amount" ? amount - 1 : amount)
+  },[amount])
   useEffect(() => {
     if (userData) {
       getBalanceFormServer(userData.walletAddress)
@@ -260,7 +169,7 @@ function Wallet() {
         setCampsTx(e.camps)
       })
     } else getUserData()
-  }, [])
+  }, [userData])
 
   return (
     <div className="container pt-4">
@@ -283,8 +192,7 @@ function Wallet() {
                   <h3>Balance:</h3>
                 </td>
                 <td>
-                  <h4>{!balanceLoader ? Math.floor(balance) : "Loading..."} KCO
-                    {/* <sub>{balance}</sub> */}
+                  <h4>{!balanceLoader ? balance: "Loading..."} KCO
                   </h4>
                 </td>
               </tr>
@@ -304,22 +212,26 @@ function Wallet() {
                 <Modal.Title>Buy KCO</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Form className='d-flex flex-column align-items-center'>
-                  <div className={'alert alert-warning theme-' + theme} hidden={!(amountToKCO == "Invalid amount" || amountToKCO == 0)}>&#9432; Minimum 1 KCO must be bought <br /> Therefore minimum amount is {INR.format(2)}</div>
-                  <div className='d-flex justify-content-center align-items-center'>
+                <Form className='form-control'>
+                  <div className={'alert alert-warning theme-' + theme} hidden={!(amountToKCO === "Invalid amount" || amountToKCO === 0)}>&#9432; Minimum 1 KCO must be bought <br /> Therefore minimum amount is {INR.format(2)}</div>
+                  <div className='d-flex flex-column justify-content-center align-items-center'>
                     <fieldset className='m-1'>
                       <label htmlFor='amountKCO'>Amount</label><br />
-                      <input id='amountKCO' type='number' min={2} onChange={(e) => { e.target.value < 2 ? setAmount("Invalid amount") : setAmount(e.target.value) }} ref={amountRef} />
+                      <input className='form-control' id='amountKCO' type='number' min={2} onChange={(e) => { e.target.value < 2 ? setAmount("Invalid amount") : setAmount(e.target.value) }} ref={amountRef} />
                     </fieldset>
                     <fieldset className='m-1'>
                       <label htmlFor='currency'>Currency</label><br />
-                      <input id='currency' ref={currencyRef} value={"INR"} disabled={true} />
+                      <input className='form-control' id='currency' ref={currencyRef} value={"INR"} disabled={true} />
+                    </fieldset>
+                    <fieldset className='m-1'>
+                      <label htmlFor='passwordToPurchase'>Password</label><br />
+                      <input id='passwordToPurchase' {...password} />
                     </fieldset>
                   </div>
                   <div className='d-flex justify-content-center align-items-center'>
                     <fieldset className='m-1 d-flex align-items-center'>
                       <Button variant='warning' className='m-1' disabled>&#61;</Button>
-                      <input ref={currencyRef} value={amountToKCO == "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"} disabled={true} />
+                      <input ref={currencyRef} value={amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"} disabled={true} />
                     </fieldset>
                   </div>
                 </Form>
