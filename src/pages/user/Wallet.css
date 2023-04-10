@@ -7,3 +7,6 @@
     color: purple;
     text-decoration: none;
 }
+.AddressClass:hover{
+    cursor: pointer;
+}

@@ -7,6 +7,7 @@ import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import Spinner from 'react-bootstrap/Spinner'
 import './Wallet.css'
 import StoreContext from '../../context/StoreContext'
 
@@ -16,12 +17,14 @@ function TransferModule() {
   const addressTo = useInput('text', 'where to send')
   const amountTo = useInput('number', 'how much to send')
   const password = useInput('password', 'Enter password')
+  const [loading,setLoading] = useState(false);
   const { userData } = useUser()
 
   function handleShow() { setShow(!show) }
 
   async function transfer(e) {
     e.preventDefault()
+    setLoading(true)
     const data = {
       addressFrom: userData.walletAddress,
       addressTo: addressTo.value,
@@ -36,6 +39,7 @@ function TransferModule() {
       password.onChange({ target: { value: '' } })
       alert(res.message)
     }
+    setLoading(false)
     console.log(res)
   }
   return (
@@ -52,17 +56,23 @@ function TransferModule() {
         <label htmlFor='transferInputPassword'>Password:</label>
         <input id='transferInputPassword' className='form-control' {...password} />
       </fieldset>
-      <Button type='submit' onClick={handleShow} variant='outline-success' >Transfer KCO</Button>
+      {
+        loading
+        ?<Button variant='disabled'>Transfering... <Spinner variant='secondary'/> </Button>
+        :<Button type='submit' onClick={handleShow} variant='outline-success'>Transfer KCO</Button>
+      }
     </Form>
   )
 }
 
-function Transaction({ sno, receiverId, createdAt, amount, txHash, camp, changeActiveCamp }) {
-  function checkCampaign() {
-    console.log(receiverId)
-    changeActiveCamp(receiverId)
-  }
+function Transaction({ showHashes,sno, receiverId, userId, createdAt, amount, txHash, camp, changeActiveCampaign }) {
+  
+  const recivedPaid = receiverId === userId
 
+  function checkCampaign() {
+    changeActiveCampaign(receiverId)
+  }
+  const formattedDate = new Date(createdAt).toISOString().replace(/T/, ' ').replace(/\..+/, '').split(' ')
   return (
     <>
       <tr>
@@ -71,44 +81,78 @@ function Transaction({ sno, receiverId, createdAt, amount, txHash, camp, changeA
           ? <td><span onClick={checkCampaign} className='Camplink'>{receiverId}</span></td>
           : <td>{receiverId}</td>
         }
-        <td>{amount}</td>
-        <td>{createdAt}</td>
-        <td>{txHash}</td>
+        <td
+          className={`text-${userId && (recivedPaid? 'success':'danger')}`}
+        >{userId && (recivedPaid? '+':'-')}{amount}</td>
+        <td>
+          <h6 className='d-inline'>on:</h6> {formattedDate[0]}
+          <br/>
+          <h6 className='d-inline'>at:</h6> {formattedDate[1]}
+        </td>
+        {showHashes && <td>{txHash}</td>}
       </tr>
     </>
   )
 }
 
-function Wallet() {
-  const [balance, setBalance] = useState()
+function TransactionHistory({label,userId,tx,links}){
+  const { changeActiveCampaign } = useContext(CampaignContext)
+  const [showHashes,setShowHashes] = useState(false)
+
+  function hideShowHashes(){setShowHashes(!showHashes)}
+  let options={
+    showHashes,
+    userId
+  }
+  if(links){
+    options = {
+      ...options,
+      changeActiveCampaign,
+      camp:true
+    }
+  }
+
+  return(
+    <div className='col-12 table-responsive'>
+      <legend>{label}</legend>
+      <p onClick={hideShowHashes} className='text-end Camplink'>{!showHashes? 'Show':'Hide'} hashes</p>
+      <Table className='w-100' striped bordered>
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>To/From</th>
+            <th>Amount</th>
+            <th>Time</th>
+            {showHashes && <th>TransactionHash</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {userId && tx.length ? tx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} {...options} />)
+            : <tr><td colSpan='5'>No transactions yet</td></tr>}
+        </tbody>
+      </Table>
+    </div>
+  )
+}
+
+function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,userData,setShowBuyModal,openBuyModal}){
   const amountRef = useRef()
   const currencyRef = useRef()
-  const [amount, setAmount] = useState(1)
-  const [amountToKCO, setAmountToKCO] = useState(0)
-
   const password = useInput('password','Confirm with pass');
-  const [balanceLoader, setBalanceLoader] = useState(false)
-  const [walletTx, setWalletTx] = useState([])
-  const [campsTx, setCampsTx] = useState([])
-  const { userData, getUserData, theme, getOrderId, verifyPayment } = useUser()
-  const { changeActiveCampaign } = useContext(CampaignContext)
+  const [amount, setAmount] = useState(1)
 
-  const [openBuyModal, setBuyModal] = useState(false)
-
+  
+  const [amountToKCO, setAmountToKCO] = useState(0)
   const { INR } = useContext(StoreContext)
+
+  useEffect(() => {
+    setAmountToKCO(amount !== "Invalid amount" ? amount - 1 : amount)
+  },[amount])
 
   function handleBuyModal() {
     setAmount(1)
     setAmountToKCO(0)
-    setBuyModal(!openBuyModal)
-  }
-
-  async function getBalanceFormServer(acc) {
-    setBalanceLoader(true)
-    const balance = await getBalance(acc)
-    setBalance(balance.amount)
-    console.log("set!!", balance.amount);
-    setBalanceLoader(false)
+    setShowBuyModal(!openBuyModal)
   }
 
   async function buyKCO() {
@@ -157,35 +201,130 @@ function Wallet() {
     const rzp = new window.Razorpay(options);
     rzp.open()
   }
-  useEffect(() => {
-    setAmountToKCO(amount !== "Invalid amount" ? amount - 1 : amount)
-  },[amount])
+
+  return (
+    <Modal
+      show={openBuyModal}
+      onHide={handleBuyModal}
+      backdrop="static"
+      keyboard={false}
+      size='md'
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Buy KCO</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form className='form-control'>
+          <div className={'alert alert-warning theme-' + theme} hidden={!(amountToKCO === "Invalid amount" || amountToKCO === 0)}>&#9432; Minimum 1 KCO must be bought <br /> Therefore minimum amount is {INR.format(2)}</div>
+          <div className='d-flex flex-column justify-content-center align-items-center'>
+            <fieldset className='m-1'>
+              <label htmlFor='amountKCO'>Amount</label><br />
+              <input className='form-control' id='amountKCO' type='number' min={2} onChange={(e) => { e.target.value < 2 ? setAmount("Invalid amount") : setAmount(e.target.value) }} ref={amountRef} />
+            </fieldset>
+            <fieldset className='m-1'>
+              <label htmlFor='currency'>Currency</label><br />
+              <input className='form-control' id='currency' ref={currencyRef} value={"INR"} disabled={true} />
+            </fieldset>
+            <fieldset className='m-1'>
+              <label htmlFor='passwordToPurchase'>Password</label><br />
+              <input id='passwordToPurchase' {...password} />
+            </fieldset>
+          </div>
+          <div className='d-flex justify-content-center align-items-center'>
+            <fieldset className='m-1 d-flex align-items-center'>
+              <Button variant='warning' className='m-1' disabled>&#61;</Button>
+              <input ref={currencyRef} value={amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"} disabled={true} />
+            </fieldset>
+          </div>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="danger" onClick={handleBuyModal}>
+          Cancel
+        </Button>
+        <Button className='my-3' type='submit' variant="success" disabled={amountToKCO === "Invalid amount" || amountToKCO+'' === '0'} onClick={buyKCO}>Buy</Button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
+
+function Wallet() {
+
+  const [balance, setBalance] = useState()
+  const [balanceLoader, setBalanceLoader] = useState(false)
+
+  const [walletTx, setWalletTx] = useState([])
+  const [campsTx, setCampsTx] = useState([])
+
+  const { userData, getUserData, theme, getOrderId, verifyPayment } = useUser()
+
+  const [showAddress,setShowAddress] = useState(false)
+  const [openBuyModal,setShowBuyModal] = useState(false)
+
+  function hideShowAddress(){setShowAddress(!showAddress)}
+
+  async function getBalanceFormServer(acc) {
+    setBalanceLoader(true)
+    const balance = await getBalance(acc)
+    setBalance(balance.amount)
+    console.log("set!!", balance.amount);
+    setBalanceLoader(false)
+  }
+  
   useEffect(() => {
     if (userData) {
       getBalanceFormServer(userData.walletAddress)
       getTransactions().then(e => {
         console.log(e)
-        setWalletTx(e.wallet)
-        setCampsTx(e.camps)
+        setWalletTx(e.wallet.reverse())
+        setCampsTx(e.camps.reverse())
       })
     } else getUserData()
-  }, [userData])
+  }, [getUserData, userData])
+
+  const buyModalOptions ={
+    theme,
+    getOrderId,
+    verifyPayment,
+    userData,
+    openBuyModal,
+    setShowBuyModal,
+    getBalanceFormServer,
+  }
 
   return (
-    <div className="container pt-4">
+    <div className="container py-4">
       <div className='row align-items-center'>
         <div className='col-xl-6 p-4'>
 
           <Table>
             <tbody>
-              <tr>
-                <td>
-                  <h3>Address:</h3>
-                </td>
-                <td>
-                  <h5>{userData?.walletAddress}</h5>
-                </td>
-              </tr>
+              {
+                showAddress
+                ?(
+                  <tr>
+                    <td>
+                      <h3>Address:</h3>
+                    </td>
+                    <td>
+                      <h5 className='AddressClass' title='Copy' onClick={() => {navigator.clipboard.writeText(userData?.walletAddress)}} >{userData?.walletAddress}
+                        <sub className='text-end'>
+                          <p onClick={hideShowAddress} className='Camplink mt-2'>Hide Address</p>
+                        </sub>
+                      </h5>
+                    </td>
+                  </tr>)
+                :(
+                  <tr>
+                    <td>
+                      <h3>Address:</h3>
+                    </td>
+                    <td>
+                      <p onClick={hideShowAddress} className='Camplink'>Show Address</p>
+                    </td>
+                  </tr>
+                )
+              }
 
               <tr>
                 <td>
@@ -200,94 +339,22 @@ function Wallet() {
             </tbody>
           </Table>
           <div>
-            <Button variant='warning' onClick={handleBuyModal}>Buy More KCO</Button>
-            <Modal
-              show={openBuyModal}
-              onHide={handleBuyModal}
-              backdrop="static"
-              keyboard={false}
-              size='md'
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>Buy KCO</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form className='form-control'>
-                  <div className={'alert alert-warning theme-' + theme} hidden={!(amountToKCO === "Invalid amount" || amountToKCO === 0)}>&#9432; Minimum 1 KCO must be bought <br /> Therefore minimum amount is {INR.format(2)}</div>
-                  <div className='d-flex flex-column justify-content-center align-items-center'>
-                    <fieldset className='m-1'>
-                      <label htmlFor='amountKCO'>Amount</label><br />
-                      <input className='form-control' id='amountKCO' type='number' min={2} onChange={(e) => { e.target.value < 2 ? setAmount("Invalid amount") : setAmount(e.target.value) }} ref={amountRef} />
-                    </fieldset>
-                    <fieldset className='m-1'>
-                      <label htmlFor='currency'>Currency</label><br />
-                      <input className='form-control' id='currency' ref={currencyRef} value={"INR"} disabled={true} />
-                    </fieldset>
-                    <fieldset className='m-1'>
-                      <label htmlFor='passwordToPurchase'>Password</label><br />
-                      <input id='passwordToPurchase' {...password} />
-                    </fieldset>
-                  </div>
-                  <div className='d-flex justify-content-center align-items-center'>
-                    <fieldset className='m-1 d-flex align-items-center'>
-                      <Button variant='warning' className='m-1' disabled>&#61;</Button>
-                      <input ref={currencyRef} value={amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"} disabled={true} />
-                    </fieldset>
-                  </div>
-                </Form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="danger" onClick={handleBuyModal}>
-                  Cancel
-                </Button>
-                <Button className='my-3' type='submit' variant="success" disabled={amountToKCO == "Invalid amount" || amountToKCO == 0} onClick={buyKCO}>Buy</Button>
-              </Modal.Footer>
-            </Modal>
+            <Button variant='warning' onClick={setShowBuyModal}>Buy More KCO</Button>
+            <AddKCOModal {...buyModalOptions} />
           </div>
         </div>
         <div className='col-xl-6 p-4'>
           <TransferModule />
         </div>
       </div>
-      <div>
-        <div>
-          <legend>Wallet Transactions</legend>
-          <Table striped bordered size="sm">
-            <thead>
-              <tr>
-                <th>S.No</th>
-                <th>To</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>TransactionHash</th>
-              </tr>
-            </thead>
-            <tbody>
-              {userData && walletTx.length ? walletTx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} />)
-                : <tr><td colSpan='5'>No transactions yet</td></tr>}
-            </tbody>
-          </Table>
-        </div>
-      </div>
-      <div>
-        <div>
-          <legend>Contributions</legend>
-          <Table striped bordered size="sm">
-            <thead>
-              <tr>
-                <th>S.No</th>
-                <th>To</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>TransactionHash</th>
-              </tr>
-            </thead>
-            <tbody>
-              {userData && campsTx.length ? campsTx.map((e, i) => <Transaction key={'contributionsHashKey' + i} camp='true' changeActiveCamp={changeActiveCampaign} sno={i + 1} {...e} />)
-                : <tr><td colSpan='5'>No transactions yet</td></tr>}
-            </tbody>
-          </Table>
-        </div>
+
+      <div className='row flex-column rounded shadow'>
+        {userData && (
+        <>
+          <TransactionHistory label={'Wallet Transactions'} userId={userData._id} tx={walletTx} />
+          <TransactionHistory label={'Your Contributions'} links={true} userId={userData._id} tx={campsTx} />
+        </>
+        )}
       </div>
     </div>
   )
