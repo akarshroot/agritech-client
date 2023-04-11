@@ -1,7 +1,7 @@
 .bg-login {
     background-image: url(../../assets/backgrounds/plantation.jpg);
-    width: 100dvw;
-    height: 100dvh;
+    width: 100vw;
+    height: 100vh;
     position: absolute;
     top:0;
     left: 0;
@@ -13,8 +13,8 @@
 
 .bg-overlay {
     background-color: rgba(0, 0, 0, 0.75);
-    width: 100dvw;
-    height: 100dvh;
+    width: 100vw;
+    height: 100vh;
     position: absolute;
     top:0;
     left:0;
@@ -27,11 +27,9 @@
     height: 100vh;
     position: absolute;
     top: 0%;
-    left: 50%;
-    translate: -50%;
+    margin-left: 50%;
+    transform: translateX(-50%);
 }
 .login-container {
     background-color: var(--c2);
-    
-
 }

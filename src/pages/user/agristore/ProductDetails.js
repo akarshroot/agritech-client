@@ -61,7 +61,7 @@ function ProductDetails(props) {
                         <h3>{INR.format(productData.price)}</h3>
                         <span>Quantity: {productData.quantity && productData.quantity}</span>
                         <div className="d-flex justify-content-around mt-3">
-                            <Button variant="danger" onClick={() => { addToCart(productId, productData.price) }}>Add to cart</Button>
+                            <Button variant="danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>
                             &nbsp;
                             &nbsp;
                             <Button variant="success">Buy Now</Button>

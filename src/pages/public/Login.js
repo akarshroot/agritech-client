@@ -33,7 +33,7 @@ function Login() {
         <>
         <div className="bg-login"></div>
         <div className="bg-overlay"></div>
-        <div className="container login-body d-flex justify-content-center align-items-center">
+        <div className="login-body d-flex justify-content-start align-items-center">
             <div className='row'>
                 <div className={`login-container col-12 p-4 rounded theme-${theme}`}>
                     <h1 className='display-3'>Login</h1>
