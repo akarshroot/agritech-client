@@ -1,11 +1,12 @@
 import React from 'react'
 import icon from '../icons/currencyIcon.svg'
+import './CurrencyIconComponent'
 
 export default function CurrencyIconComponent(size) {
-  console.log(icon)
+  
   return (
-    <span>
-      
+    <span height={size+"px"} width={size+"px"}>
+      <img className='iconImg' src={icon} alt='coinIcon'/>
     </span>
   )
 }

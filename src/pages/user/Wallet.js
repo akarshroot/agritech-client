@@ -333,7 +333,7 @@ function Wallet() {
                   <h3>Balance:</h3>
                 </td>
                 <td>
-                  <h4>{!balanceLoader ? balance: "Loading..."} KCO
+                  <h4> <CurrencyIconComponent size='56' /> {!balanceLoader ? balance: "Loading..."} KCO
                   </h4>
                 </td>
               </tr>
