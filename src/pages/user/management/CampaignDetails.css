@@ -1,0 +1,13 @@
+.options-Bg{
+    background-color: white;
+    max-height: 50dvh;
+    overflow-x: scroll;
+}
+.custom-Options:hover{
+    cursor: pointer;
+    background-color: gray;
+}
+.custom-Options img {
+    height: 56px;
+    aspect-ratio: 1;
+}

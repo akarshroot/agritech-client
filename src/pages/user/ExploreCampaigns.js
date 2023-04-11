@@ -25,7 +25,7 @@ function ExploreCampaigns() {
 
 
     useEffect(() => {
-        if (campaigns.length == 0) {
+        if (campaigns.length === 0) {
             getAllCamps().then((res) => {
                 console.log(res)
                 setCampaigns(res)
@@ -37,7 +37,7 @@ function ExploreCampaigns() {
     return (
         <div className='container'>
             <div className="header d-flex justify-content-around align-items-center">
-                <Button className='h-25' onClick={() => { navigate("/campaigns") }} variant='warning'>&larr;&nbsp; Go Back</Button>
+                <Button className='h-25' onClick={() => { navigate("/campaigns",{replace:true}) }} variant='warning'>&larr;&nbsp; Go Back</Button>
                 <h2 className='display-6'>Explore campaigns across the platform</h2>
                 <hr className='style-two' />
             </div>

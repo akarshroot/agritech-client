@@ -9,3 +9,7 @@
     max-height: 500px;
     border-right: 1px solid gray;
 }
+
+.product-title {
+    text-align: left;
+}

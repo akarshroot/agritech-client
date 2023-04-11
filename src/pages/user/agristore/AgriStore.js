@@ -1,27 +1,36 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './AgriStore.css'
-import { useUser } from '../../../context/UserContext'
-import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/esm/Button'
-import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import Product from './Product'
 import StoreContext from '../../../context/StoreContext'
 import { Cart } from './Cart'
+import CustomImageLoader from 'react-custom-image-loader.'
+import grains from '../../../assets/icons/grain.png'
+import { useSearchParams } from 'react-router-dom'
+import { useUser } from '../../../context/UserContext'
 
 function AgriStore() {
 
-  const [activeStatus, setActiveStatus] = useState("crop")
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [activeStatus, setActiveStatus] = useState(searchParams.get("category") ? searchParams.get("category") : "all")
 
-  const { showCart, fetchShopContent, shopContent, setContent, handleShow } = useContext(StoreContext)
+  const { showCart, fetchShopContent, shopContent, setContent, shopLoading, handleShow, categories, getCategories, setSkip, setCart } = useContext(StoreContext)
+  const { theme } = useUser()
 
   useEffect(() => {
     // setLoading(true)
-    fetchShopContent()
+    fetchShopContent("", activeStatus)
+  }, [activeStatus])
+
+  useEffect(() => {
+    getCategories()
+    setActiveStatus(searchParams.get("category") ? searchParams.get("category") : "all")
   }, [])
 
 
+
   return (
-    <div className='agristore-container p-3'>
+    <div className={`agristore-container p-3 theme-${theme}`}>
       <div className="header">
         {/* <h2 className='display-6'>AgriStore</h2> */}
         {/* <hr className='style-two' /> */}
@@ -31,9 +40,19 @@ function AgriStore() {
           <div className='d-flex align-items-center'>
             <h5>Shop By:&nbsp;&nbsp;</h5>
             <ul className='d-flex list-group list-group-horizontal'>
-              <li onClick={(e) => { e.target.classList.add("active"); setActiveStatus("crop") }} className={`list-group-item ${activeStatus == "crop" ? "active" : ""}`}>Crop</li>
-              <li onClick={(e) => { e.target.classList.add("active"); setActiveStatus("infra") }} className={`list-group-item ${activeStatus == "infra" ? "active" : ""}`}>Infrastructure</li>
-              <li onClick={(e) => { e.target.classList.add("active"); setActiveStatus("service") }} className={`list-group-item ${activeStatus == "service" ? "active" : ""}`}>Service</li>
+              {
+                categories?.map((category, i) => {
+                  return (
+                    <li key={i} onClick={(e) => {
+                      e.target.classList.add("active")
+                      setSearchParams({ category: category.toLowerCase() })
+                      setActiveStatus(category.toLowerCase())
+                      setContent([])
+                      setSkip(0)
+                    }} className={`list-group-item ${activeStatus === category.toLowerCase() ? "active" : ""}`}>{category}</li>
+                  )
+                })
+              }
             </ul>
           </div>
           <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
@@ -42,13 +61,20 @@ function AgriStore() {
         <div className="category-content">
           {
             shopContent?.map((product) => {
-              return (
-                <Product key={product._id} {...product} />
-              )
+              if (product.category.includes(activeStatus))
+                return (
+                  <Product key={product._id} product={product} />
+                )
             })
           }
         </div>
-        <Button variant='warning' onClick={fetchShopContent}>Load More</Button>
+        <Button variant='warning' onClick={() => { fetchShopContent("", activeStatus) }} disabled={shopLoading}>{shopLoading ? "Loading..." : "Load More"}</Button>
+        {
+          shopLoading ?
+            <div className='d-flex w-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'} /></div>
+            :
+            <></>
+        }
       </div>
     </div>
   )

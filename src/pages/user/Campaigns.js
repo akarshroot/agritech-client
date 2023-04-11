@@ -7,6 +7,7 @@ import useInput from '../../hooks/useInput'
 import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
 import { useUser } from '../../context/UserContext'
 import { useNavigate } from 'react-router-dom'
+import Spinner from 'react-bootstrap/esm/Spinner'
 
 
 function ModalForm({ show, handleShow }) {
@@ -99,9 +100,11 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
 
   const password = useInput('password', "Password")
   const amount = useInput('number', "how much?")
+  const [loading,setLoading] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
+    setLoading(true)
     const toSendData = {
       amount: amount.value,
       password: password.value,
@@ -117,6 +120,8 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
       }
     } catch (error) {
       alert(error.message)
+    }finally{
+      setLoading(false)
     }
   }
   return (
@@ -127,14 +132,12 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
       keyboard={false}
       size='md'
     >
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title>Contribute</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <h4>Minimum contribution is '{minContri}' KCO</h4>
         <Form onSubmit={handleSubmit}>
-
-
           <div className='d-flex flex-column align-items-center'>
             <fieldset>
               <label htmlFor={'contriCampAmount' + cid}>Amount</label><br />
@@ -144,16 +147,20 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
               <label htmlFor={'contriCampPassFor' + cid}>Confirm with password</label><br />
               <input id={'contriCampPassFor' + cid} {...password} />
             </fieldset>
-            <Button className='my-3' type='submit' variant="warning">Contribute</Button>
-          </div>
+            {
+              loading
+              ?<Button className='my-3' variant="disabled">Contributing... <Spinner variant='secondary'/></Button>
+              :(
+                <div className='d-flex justify-content-around'>
+                  <Button className='m-3' type='submit' variant="warning">Contribute</Button>
+                  <Button className='m-3' variant="secondary" onClick={handleShow}>Close</Button>
+                </div>
+              )
+            }
 
+          </div>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleShow}>
-          Close
-        </Button>
-      </Modal.Footer>
     </Modal>
   )
 }
@@ -190,7 +197,7 @@ function Campaigns() {
           </Button>
         </div>
         <div className='col-md-3 p-3'>
-          <Button variant="success" onClick={() => { navigate("/campaigns/all") }}>
+          <Button variant="success" onClick={() => { navigate("/campaigns/all",{replace:true}) }}>
             View All Campaigns
           </Button>
         </div>
