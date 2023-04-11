@@ -96,8 +96,6 @@ function Transaction({ showHashes,sno, receiverId, userId, createdAt, amount, tx
   )
 }
 
-<<<<<<< HEAD
-=======
 function TransactionHistory({label,userId,tx,links}){
   const { changeActiveCampaign } = useContext(CampaignContext)
   const [showHashes,setShowHashes] = useState(false)
@@ -251,7 +249,6 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
     </Modal>
   )
 }
->>>>>>> 9cf02f1235c248458c3807c8968f73b744ac2b72
 
 function Wallet() {
 
@@ -336,12 +333,7 @@ function Wallet() {
                   <h3>Balance:</h3>
                 </td>
                 <td>
-<<<<<<< HEAD
-                  <h4> <CurrencyIconComponent size={56} /> {!balanceLoader ? Math.floor(balance) : "Loading..."} KCO
-                    {/* <sub>{balance}</sub> */}
-=======
                   <h4>{!balanceLoader ? balance: "Loading..."} KCO
->>>>>>> 9cf02f1235c248458c3807c8968f73b744ac2b72
                   </h4>
                 </td>
               </tr>
