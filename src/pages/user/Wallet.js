@@ -155,12 +155,18 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
     setShowBuyModal(!openBuyModal)
   }
 
-  async function buyKCO() {
+  async function buyKCO(e) {
+    e.preventDefault()
     const purchaseData = {
       amount: amount,
       currency: "INR",
+      password:password.value
     }
     const orderData = await getOrderId(purchaseData);
+    if(orderData.error){
+      alert(orderData.message)
+      return
+    }
     console.log(orderData.id);
     const options = {
       key: process.env.REACT_APP_RAZORPAY_ID,
@@ -215,7 +221,7 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
         <Modal.Title>Buy KCO</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form className='form-control'>
+        <Form onSubmit={buyKCO} className='form-control'>
           <div className={'alert alert-warning theme-' + theme} hidden={!(amountToKCO === "Invalid amount" || amountToKCO === 0)}>&#9432; Minimum 1 KCO must be bought <br /> Therefore minimum amount is {INR.format(2)}</div>
           <div className='d-flex flex-column justify-content-center align-items-center'>
             <fieldset className='m-1'>
@@ -228,23 +234,24 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
             </fieldset>
             <fieldset className='m-1'>
               <label htmlFor='passwordToPurchase'>Password</label><br />
-              <input id='passwordToPurchase' {...password} />
+              <input id='passwordToPurchase' required {...password} />
             </fieldset>
           </div>
           <div className='d-flex justify-content-center align-items-center'>
             <fieldset className='m-1 d-flex align-items-center'>
-              <Button variant='warning' className='m-1' disabled>&#61;</Button>
-              <input ref={currencyRef} value={amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"} disabled={true} />
+              <div ref={currencyRef} disabled={true}>
+              {amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"}
+              </div>
             </fieldset>
+          </div>
+          <div className='text-end'>
+            <Button className='mx-2' variant="danger" onClick={handleBuyModal}>
+              Cancel
+            </Button>
+            <Button className='my-3' type='submit' variant="success" disabled={amountToKCO === "Invalid amount" || amountToKCO+'' === '0'} >Buy {amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"} </Button>
           </div>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="danger" onClick={handleBuyModal}>
-          Cancel
-        </Button>
-        <Button className='my-3' type='submit' variant="success" disabled={amountToKCO === "Invalid amount" || amountToKCO+'' === '0'} onClick={buyKCO}>Buy</Button>
-      </Modal.Footer>
     </Modal>
   )
 }

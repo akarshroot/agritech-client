@@ -185,6 +185,9 @@ export function UserProvider({ children }) {
     async function getOrderId(purchaseData) {
         try {
             const response = await axios.post("/wallet/order/create", purchaseData)
+            if(response.data.error){
+                return response.data
+            }
             if(response.hasOwnProperty("data"))
                 return response.data.data
             else throw response
