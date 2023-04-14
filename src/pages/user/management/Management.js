@@ -17,16 +17,8 @@ function Management(props) {
       id: "current-pipeline"
     },
     {
-      title: "Transaction History",
-      id: "transaction-history"
-    },
-    {
-      title: "Order Details",
-      id: "current-order"
-    },
-    {
-      title: "Order History",
-      id: "order-history"
+      title: "Current Plan",
+      id: "current-plan"
     }
   ])
 
@@ -42,16 +34,14 @@ function Management(props) {
         {
           widgets.map((widget) => {
             return (
-              <>
-                <div key={widget.id} className={`widget ${loading ? "skeleton-widget" : "no-skeleton-widget"}`}>
-                  {
-                    loading ? <></> :
-                      <>
-                        {renderWidget(widget.id, widget.data)}
-                      </>
-                  }
-                </div>
-              </>
+              <div key={widget.id} className={`widget ${loading ? "skeleton-widget" : "no-skeleton-widget"}`}>
+                {
+                  loading ? <></> :
+                    <>
+                      {renderWidget(widget.id, widget.data)}
+                    </>
+                }
+              </div>
             )
           })
         }
