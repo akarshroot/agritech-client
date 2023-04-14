@@ -82,7 +82,7 @@ function Transaction({ showHashes,sno, receiverId, userId, createdAt, amount, tx
           : <td>{receiverId}</td>
         }
         <td
-          className={`text-${userId && (recivedPaid? 'success':'danger')}`}
+          className={` text-${userId && (recivedPaid? 'success':'danger')}`}
         >{userId && (recivedPaid? '+':'-')}{amount}</td>
         <td>
           <h6 className='d-inline'>on:</h6> {formattedDate[0]}

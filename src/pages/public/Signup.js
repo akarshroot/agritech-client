@@ -36,7 +36,7 @@ function Signup() {
         <>
             <div className="bg-signup"></div>
             <div className="bg-overlay"></div>
-            <div className={`signup-container theme-${theme}`}>
+            <div className={`bg-success bg-opacity-50 text-light signup-container theme-${theme}`}>
                 <h1>SIGN UP</h1>
                 <div className="error-message" hidden={!error}>{error}</div>
                 <form onSubmit={(e) => processSignup(e)} id="signup">
@@ -45,9 +45,9 @@ function Signup() {
                     <input ref={phno} placeholder="Phone Number" className='form-input' type="number" id="phno" required /><br/>
                     <input ref={password} placeholder="Password" className='form-input' type="password" id="password" required /><br/>
                     <input ref={repassword} placeholder="Re-type password" className='form-input' type="password" id="re-password" required /><br/>
-                    <input className='form-input' type="submit" value={loading ? "Please Wait..." : "Signup"} disabled={loading} />
+                    <input className='form-input  btn btn-success' type="submit" value={loading ? "Please Wait..." : "Signup"} disabled={loading} />
                 </form>
-                <span>Already a member? <Link to="/login">Login here</Link></span>
+                <span>Already a member? <Link to="/login" className='text-light '>Login here</Link></span>
             </div>
         </>
     )
