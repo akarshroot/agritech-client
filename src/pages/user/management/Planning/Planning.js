@@ -5,7 +5,8 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import './Planning.css'
 import ManagementContext from '../../../../context/ManagementContext';
@@ -62,9 +63,32 @@ function Planning() {
         }
         console.log(planData);
         const data = await createPlan(planData)
-        alert(data.message)
+
+        if (data.error)
+            toast.error(data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        else {
+            toast.success(data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
         handlePlanModalClose()
-        window.location.reload()
+        setTimeout(()=>{window.location.reload()}, 2000)
     }
 
     function addItem(e) {
@@ -93,14 +117,59 @@ function Planning() {
 
     async function deletePlan(planId) {
         const data = await deleteUserPlan(planId)
-        alert(data.message)
-        window.location.reload()
+        if (data.error)
+            toast.error(data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        else {
+            toast.success(data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+
+        setTimeout(()=>{window.location.reload()}, 2000)
     }
 
     async function executePlan(planId) {
         const data = await executeUserPlan(planId)
-        alert(data.message)
-        window.location.reload()
+        if (data.error)
+            toast.error(data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        else {
+            toast.success(data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+        setTimeout(()=>{window.location.reload()}, 2000)
     }
 
     useEffect(() => {
@@ -109,6 +178,20 @@ function Planning() {
 
     return (
         <div className={`planning-container theme-${theme}`}>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+
+
             <div className="planning-header">
                 <Button className="link m-2" onClick={() => navigate("/management")} variant='warning'>&larr; Go back</Button>
                 <div className="m-2">
@@ -223,7 +306,7 @@ function Planning() {
                     }
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

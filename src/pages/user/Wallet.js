@@ -11,6 +11,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import './Wallet.css'
 import StoreContext from '../../context/StoreContext'
 import QRCode from 'qrcode'
+import { ToastContainer, toast } from 'react-toastify'
 
 function TransferModule() {
   const [show, setShow] = useState(false)
@@ -37,7 +38,17 @@ function TransferModule() {
       addressTo.onChange({ target: { value: '' } })
       amountTo.onChange({ target: { value: '' } })
       password.onChange({ target: { value: '' } })
-      alert(res.message)
+
+      toast.success(res.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
     setLoading(false)
     console.log(res)
@@ -164,8 +175,17 @@ function AddKCOModal({ theme, getOrderId, verifyPayment, getBalanceFormServer, u
     }
     const orderData = await getOrderId(purchaseData);
     if (orderData.error) {
-      alert(orderData.message)
-      return
+
+      toast.success(orderData.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      }); return
     }
     console.log(orderData.id);
     const options = {
@@ -191,7 +211,16 @@ function AddKCOModal({ theme, getOrderId, verifyPayment, getBalanceFormServer, u
           getBalanceFormServer(userData.walletAddress)
         } catch (error) {
           console.log(error)
-          alert(error)
+          toast.error(error, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         }
       },
       prefill: {
@@ -312,6 +341,19 @@ function Wallet() {
 
   return (
     <div className="container py-4">
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className='row align-items-center'>
         <div className='col-xl-6 p-4'>
 
@@ -327,8 +369,8 @@ function Wallet() {
                     <h5 hidden={!showAddress} className='AddressClass' title='Copy' onClick={() => { navigator.clipboard.writeText(userData?.walletAddress) }} >{userData?.walletAddress}
                     </h5>
                     <sub className='text-center lead'>
-                      <p onClick={hideShowAddress} className='Camplink m-4'>{!showAddress ? "Show":"Hide"} Address</p>
-                      <p onClick={()=> {renderQR(); toggleQR(!showQR)}} className='Camplink m-4'>{!showQR ? "Show":"Hide"} QR</p>
+                      <p onClick={hideShowAddress} className='Camplink m-4'>{!showAddress ? "Show" : "Hide"} Address</p>
+                      <p onClick={() => { renderQR(); toggleQR(!showQR) }} className='Camplink m-4'>{!showQR ? "Show" : "Hide"} QR</p>
                     </sub>
                   </td>
                 </tr>
