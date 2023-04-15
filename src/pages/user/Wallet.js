@@ -19,7 +19,7 @@ function TransferModule() {
   const amountTo = useInput('number', 'how much to send')
   const password = useInput('password', 'Enter password')
   const [loading, setLoading] = useState(false);
-  const { userData } = useUser()
+  const { userData,getUserData } = useUser()
 
   function handleShow() { setShow(!show) }
 
@@ -41,7 +41,7 @@ function TransferModule() {
 
       toast.success(res.message, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -49,9 +49,9 @@ function TransferModule() {
         progress: undefined,
         theme: "light",
       });
+      setTimeout(getUserData,2500)
     }
     setLoading(false)
-    console.log(res)
   }
   return (
     <Form onSubmit={transfer} className='shadow p-3 text-start'>
@@ -76,7 +76,7 @@ function TransferModule() {
   )
 }
 
-function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, txHash, camp, changeActiveCampaign }) {
+export function Transaction({showHashes, sno, receiverId, userId, createdAt, amount, txHash, camp, changeActiveCampaign }) {
 
   const recivedPaid = receiverId === userId
 
@@ -92,8 +92,7 @@ function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, t
           ? <td><span onClick={checkCampaign} className='Camplink'>{receiverId}</span></td>
           : <td>{receiverId}</td>
         }
-        <td
-          className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}
+        <td className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}
         >{userId && (recivedPaid ? '+' : '-')}{amount}</td>
         <td>
           <h6 className='d-inline'>on:</h6> {formattedDate[0]}
@@ -106,7 +105,7 @@ function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, t
   )
 }
 
-function TransactionHistory({ label, userId, tx, links }) {
+export function TransactionHistory({ label, userId, tx, links }) {
   const { changeActiveCampaign } = useContext(CampaignContext)
   const [showHashes, setShowHashes] = useState(false)
 

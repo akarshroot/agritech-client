@@ -8,6 +8,7 @@ import { useUser } from '../../context/UserContext';
 import ManagementContext from '../../context/ManagementContext';
 import Table from 'react-bootstrap/esm/Table';
 import { useNavigate } from 'react-router-dom';
+import {TransactionHistory as TransactionHistoryComp,Transaction} from '../../pages/user/Wallet'
 import {getTransactions} from '../../interceptors/web3ServerApi';
 
 //Widget renderer
@@ -165,18 +166,61 @@ export function PipelineWidget(props) {
     )
 }
 
-export function TransactionHistory(props) {
-    const [tx,setTx] = useState()
+export function EachHistory({sno, receiverId, userId, amount }) {
 
+    const recivedPaid = receiverId === userId
+    return (
+        <>
+        <tr>
+            <td>{sno}</td>
+           <td>{receiverId}</td>
+            <td className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}
+            >{userId && (recivedPaid ? '+' : '-')}{amount}</td>
+        </tr>
+        </>
+    )
+    }
+
+export function TransactionHistory(props) {
+    const [tx,setTx] = useState([])
+    const [txLen,setTxLen] = useState(0)
+    const {currentUser} = useUser()
     useEffect(()=>{
         getTransactions().then(e => {
-            setTx(e)
+            setTxLen(e.wallet.length)
+            if(e.wallet.length>3){
+                setTx(e.wallet.reverse().slice(0,3))
+            }else{
+                setTx(e.wallet.reverse())
+            }
         })
     },[])
     return (
-        <div className='widget-container'>
-            <h4>Transaction History</h4>
-
+        <div className='p-2 widget-container'>
+            <h4>
+                Transaction History
+            </h4>
+            <hr className='style-two'/>
+            <div className='table-responsive'>
+                <Table className='w-100' striped bordered>
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>To/From</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {currentUser && tx.length ? tx.map((e, i) => i<=3 && <EachHistory userId={currentUser} key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+                        : <tr><td colSpan='5'>No transactions yet</td></tr>}
+                    <tr hidden={txLen<=3} > 
+                        <td colSpan={3} className='text-end'>
+                            ...more
+                        </td>
+                    </tr>
+                    </tbody>
+                </Table>
+            </div>
         </div>
     )
 }
