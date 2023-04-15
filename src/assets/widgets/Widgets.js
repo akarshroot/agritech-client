@@ -7,7 +7,7 @@ import CampaignContext from '../../context/CampaignContext';
 import { useUser } from '../../context/UserContext';
 import ManagementContext from '../../context/ManagementContext';
 import Table from 'react-bootstrap/esm/Table';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {getTransactions} from '../../interceptors/web3ServerApi';
 
 //Widget renderer
@@ -218,7 +218,9 @@ export function TransactionHistory(props) {
                         : <tr><td colSpan='5'>No transactions yet</td></tr>}
                     <tr hidden={txLen<=3} > 
                         <td colSpan={3} className='text-end'>
-                            ...more
+                            <Link to='/wallet'>
+                                ...more
+                            </Link>
                         </td>
                     </tr>
                     </tbody>
@@ -276,10 +278,12 @@ export function ContributionHistory(props) {
                     </thead>
                     <tbody>
                     {currentUser && tx.length ? tx.map((e, i) => i<=3 && <EachHistoryContri key={'transactionHashKey' + i} sno={i + 1} {...e} />)
-                        : <tr><td colSpan='5'>No transactions yet</td></tr>}
+                        : <tr><td colSpan='5'>No Contributions yet</td></tr>}
                     <tr hidden={txLen<=3} > 
                         <td colSpan={3} className='text-end'>
-                            ...more
+                            <Link to='/wallet'>
+                                ...more
+                            </Link>
                         </td>
                     </tr>
                     </tbody>
