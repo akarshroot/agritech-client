@@ -18,10 +18,12 @@ function ModalForm({ show, handleShow }) {
   const deadline = useInput('number', 'Deadline in seconds')
   const target = useInput('number', 'Target Amount')
   const minContribution = useInput('number', 'Minimum Amount')
+  const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
   const password = useInput('password', 'Password')
 
   async function handleSubmit(e) {
     e.preventDefault()
+    setCreateCampaignLoading(true)
     const dataToSend = {
       title: title.value,
       deadline: deadline.value,
@@ -50,6 +52,7 @@ function ModalForm({ show, handleShow }) {
       minContribution.onChange('')
       password.onChange('')
       handleShow()
+      setCreateCampaignLoading(false)
     }
 
   }
@@ -106,7 +109,10 @@ function ModalForm({ show, handleShow }) {
                 <label htmlFor='createCampPass'>Password</label><br />
                 <input id='createCampPass' {...password} />
               </fieldset>
-              <Button className='my-3' type='submit' variant="success">Create</Button>
+              <Button className='my-3' type='submit' variant="success" disabled={createCampaignLoading}>{createCampaignLoading ? <>
+                Creating...
+                <div class="spinner-border" role="status"></div>
+              </> : "Create"}</Button>
             </div>
 
           </Form>
@@ -231,7 +237,6 @@ function Campaigns() {
   const { userData, getUserData, getUserCampaigns, userCampaigns } = useUser();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
-
   function handleShow() {
     setShow(!show)
   }
