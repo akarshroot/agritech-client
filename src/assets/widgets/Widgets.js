@@ -8,6 +8,7 @@ import { useUser } from '../../context/UserContext';
 import ManagementContext from '../../context/ManagementContext';
 import Table from 'react-bootstrap/esm/Table';
 import { useNavigate } from 'react-router-dom';
+import {getTransactions} from '../../interceptors/web3ServerApi';
 
 //Widget renderer
 export function renderWidget(id, props) {
@@ -30,17 +31,6 @@ export function renderWidget(id, props) {
             return <></>
     }
 }
-
-// address: "0xdd14b2dbf4C9cdB97e8cea3236f4a67039671156"
-// deadline: 3600
-// manager: "642bc93214d2e343d7e8301b"
-// minContri: 100
-// target: 10000
-// title: "seeds"
-// voteRequests: []
-// __v: 0
-// _id:"642e5f4c5625fa8e2396ec90"
-// contributors:0
 
 export function CampaignWidget({ title, target, contributors, _id, ...props }) {
     const numberOfContributors = contributors.length
@@ -176,6 +166,13 @@ export function PipelineWidget(props) {
 }
 
 export function TransactionHistory(props) {
+    const [tx,setTx] = useState()
+
+    useEffect(()=>{
+        getTransactions().then(e => {
+            setTx(e)
+        })
+    },[])
     return (
         <div className='widget-container'>
             <h4>Transaction History</h4>
