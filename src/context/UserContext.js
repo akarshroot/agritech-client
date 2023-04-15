@@ -207,6 +207,21 @@ export function UserProvider({ children }) {
         }
     }
 
+    async function getProductData(prodId) {
+        try {
+            const response = await axios.get("/store/products/" + prodId)
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data)
+                return response.data.data
+            } else {
+                console.log(response)
+                throw response
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////WALLET FUNCTIONS END HERE//////////////////////////////
     ////////////////////////////////////////////////////////////
