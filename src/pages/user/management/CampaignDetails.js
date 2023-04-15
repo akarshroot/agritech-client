@@ -179,7 +179,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
 
       <Modal show={prompt} onHide={handlePrompt}>
         <Modal.Header closeButton>
-          <Modal.Title>Use item from inventory</Modal.Title>
+          <Modal.Title>Authenticate</Modal.Title>
         </Modal.Header>
         <Modal.Body className='d-flex justify-content-center'>
           <input placeholder='Password' onChange={(e) => { handleChange(e) }} type="password" name='password' className='form-input' />
