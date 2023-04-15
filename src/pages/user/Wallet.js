@@ -10,14 +10,14 @@ import Form from 'react-bootstrap/Form'
 import Spinner from 'react-bootstrap/Spinner'
 import './Wallet.css'
 import StoreContext from '../../context/StoreContext'
-
+import QRCode from 'qrcode'
 
 function TransferModule() {
   const [show, setShow] = useState(false)
   const addressTo = useInput('text', 'where to send')
   const amountTo = useInput('number', 'how much to send')
   const password = useInput('password', 'Enter password')
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { userData } = useUser()
 
   function handleShow() { setShow(!show) }
@@ -58,15 +58,15 @@ function TransferModule() {
       </fieldset>
       {
         loading
-        ?<Button variant='disabled'>Transfering... <Spinner variant='secondary'/> </Button>
-        :<Button type='submit' onClick={handleShow} variant='outline-success'>Transfer KCO</Button>
+          ? <Button variant='disabled'>Transfering... <Spinner variant='secondary' /> </Button>
+          : <Button type='submit' onClick={handleShow} variant='outline-success'>Transfer KCO</Button>
       }
     </Form>
   )
 }
 
-function Transaction({ showHashes,sno, receiverId, userId, createdAt, amount, txHash, camp, changeActiveCampaign }) {
-  
+function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, txHash, camp, changeActiveCampaign }) {
+
   const recivedPaid = receiverId === userId
 
   function checkCampaign() {
@@ -82,11 +82,11 @@ function Transaction({ showHashes,sno, receiverId, userId, createdAt, amount, tx
           : <td>{receiverId}</td>
         }
         <td
-          className={`text-${userId && (recivedPaid? 'success':'danger')}`}
-        >{userId && (recivedPaid? '+':'-')}{amount}</td>
+          className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}
+        >{userId && (recivedPaid ? '+' : '-')}{amount}</td>
         <td>
           <h6 className='d-inline'>on:</h6> {formattedDate[0]}
-          <br/>
+          <br />
           <h6 className='d-inline'>at:</h6> {formattedDate[1]}
         </td>
         {showHashes && <td>{txHash}</td>}
@@ -95,27 +95,27 @@ function Transaction({ showHashes,sno, receiverId, userId, createdAt, amount, tx
   )
 }
 
-function TransactionHistory({label,userId,tx,links}){
+function TransactionHistory({ label, userId, tx, links }) {
   const { changeActiveCampaign } = useContext(CampaignContext)
-  const [showHashes,setShowHashes] = useState(false)
+  const [showHashes, setShowHashes] = useState(false)
 
-  function hideShowHashes(){setShowHashes(!showHashes)}
-  let options={
+  function hideShowHashes() { setShowHashes(!showHashes) }
+  let options = {
     showHashes,
     userId
   }
-  if(links){
+  if (links) {
     options = {
       ...options,
       changeActiveCampaign,
-      camp:true
+      camp: true
     }
   }
 
-  return(
+  return (
     <div className='col-12 table-responsive'>
       <legend>{label}</legend>
-      <p onClick={hideShowHashes} className='text-end Camplink'>{!showHashes? 'Show':'Hide'} hashes</p>
+      <p onClick={hideShowHashes} className='text-end Camplink'>{!showHashes ? 'Show' : 'Hide'} hashes</p>
       <Table className='w-100' striped bordered>
         <thead>
           <tr>
@@ -135,19 +135,19 @@ function TransactionHistory({label,userId,tx,links}){
   )
 }
 
-function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,userData,setShowBuyModal,openBuyModal}){
+function AddKCOModal({ theme, getOrderId, verifyPayment, getBalanceFormServer, userData, setShowBuyModal, openBuyModal }) {
   const amountRef = useRef()
   const currencyRef = useRef()
-  const password = useInput('password','Confirm with pass');
+  const password = useInput('password', 'Confirm with pass');
   const [amount, setAmount] = useState(1)
 
-  
+
   const [amountToKCO, setAmountToKCO] = useState(0)
   const { INR } = useContext(StoreContext)
 
   useEffect(() => {
     setAmountToKCO(amount !== "Invalid amount" ? amount - 1 : amount)
-  },[amount])
+  }, [amount])
 
   function handleBuyModal() {
     setAmount(1)
@@ -160,10 +160,10 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
     const purchaseData = {
       amount: amount,
       currency: "INR",
-      password:password.value
+      password: password.value
     }
     const orderData = await getOrderId(purchaseData);
-    if(orderData.error){
+    if (orderData.error) {
       alert(orderData.message)
       return
     }
@@ -184,7 +184,7 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
             razorpay_signature: response.razorpay_signature,
             walletAddress: userData.walletAddress,
             amount,
-            password:password.value
+            password: password.value
           }
           await verifyPayment(data)
           handleBuyModal()
@@ -240,7 +240,7 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
           <div className='d-flex justify-content-center align-items-center'>
             <fieldset className='m-1 d-flex align-items-center'>
               <div ref={currencyRef} disabled={true}>
-              {amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"}
+                {amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"}
               </div>
             </fieldset>
           </div>
@@ -248,7 +248,7 @@ function AddKCOModal({theme, getOrderId, verifyPayment,getBalanceFormServer,user
             <Button className='mx-2' variant="danger" onClick={handleBuyModal}>
               Cancel
             </Button>
-            <Button className='my-3' type='submit' variant="success" disabled={amountToKCO === "Invalid amount" || amountToKCO+'' === '0'} >Buy {amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"} </Button>
+            <Button className='my-3' type='submit' variant="success" disabled={amountToKCO === "Invalid amount" || amountToKCO + '' === '0'} >Buy {amountToKCO === "Invalid amount" ? `${amountToKCO}` : amountToKCO + " KCO"} </Button>
           </div>
         </Form>
       </Modal.Body>
@@ -266,10 +266,12 @@ function Wallet() {
 
   const { userData, getUserData, theme, getOrderId, verifyPayment } = useUser()
 
-  const [showAddress,setShowAddress] = useState(false)
-  const [openBuyModal,setShowBuyModal] = useState(false)
+  const [showAddress, setShowAddress] = useState(false)
+  const [openBuyModal, setShowBuyModal] = useState(false)
+  const canvasRef = useRef()
+  const [showQR, toggleQR] = useState(false)
 
-  function hideShowAddress(){setShowAddress(!showAddress)}
+  function hideShowAddress() { setShowAddress(!showAddress) }
 
   async function getBalanceFormServer(acc) {
     setBalanceLoader(true)
@@ -278,7 +280,14 @@ function Wallet() {
     console.log("set!!", balance.amount);
     setBalanceLoader(false)
   }
-  
+
+  function renderQR() {
+    QRCode.toCanvas(canvasRef.current, userData.walletAddress, function (error) {
+      if (error) console.error(error)
+      console.log('success!');
+    })
+  }
+
   useEffect(() => {
     if (userData) {
       getBalanceFormServer(userData.walletAddress)
@@ -286,11 +295,12 @@ function Wallet() {
         console.log(e)
         setWalletTx(e.wallet.reverse())
         setCampsTx(e.camps.reverse())
+
       })
     } else getUserData()
-  }, [getUserData, userData])
+  }, [getUserData, userData, canvasRef])
 
-  const buyModalOptions ={
+  const buyModalOptions = {
     theme,
     getOrderId,
     verifyPayment,
@@ -308,30 +318,20 @@ function Wallet() {
           <Table>
             <tbody>
               {
-                showAddress
-                ?(
-                  <tr>
-                    <td>
-                      <h3>Address:</h3>
-                    </td>
-                    <td>
-                      <h5 className='AddressClass' title='Copy' onClick={() => {navigator.clipboard.writeText(userData?.walletAddress)}} >{userData?.walletAddress}
-                        <sub className='text-end'>
-                          <p onClick={hideShowAddress} className='Camplink mt-2'>Hide Address</p>
-                        </sub>
-                      </h5>
-                    </td>
-                  </tr>)
-                :(
-                  <tr>
-                    <td>
-                      <h3>Address:</h3>
-                    </td>
-                    <td>
-                      <p onClick={hideShowAddress} className='Camplink'>Show Address</p>
-                    </td>
-                  </tr>
-                )
+                <tr>
+                  <td>
+                    <h3>Address:</h3>
+                  </td>
+                  <td>
+                    <canvas hidden={!showQR} ref={canvasRef}></canvas>
+                    <h5 hidden={!showAddress} className='AddressClass' title='Copy' onClick={() => { navigator.clipboard.writeText(userData?.walletAddress) }} >{userData?.walletAddress}
+                    </h5>
+                    <sub className='text-center lead'>
+                      <p onClick={hideShowAddress} className='Camplink m-4'>{!showAddress ? "Show":"Hide"} Address</p>
+                      <p onClick={()=> {renderQR(); toggleQR(!showQR)}} className='Camplink m-4'>{!showQR ? "Show":"Hide"} QR</p>
+                    </sub>
+                  </td>
+                </tr>
               }
 
               <tr>
@@ -339,7 +339,7 @@ function Wallet() {
                   <h3>Balance:</h3>
                 </td>
                 <td>
-                  <h4>{!balanceLoader ? balance: "Loading..."} KCO
+                  <h4>{!balanceLoader ? balance : "Loading..."} KCO
                   </h4>
                 </td>
               </tr>
@@ -358,10 +358,10 @@ function Wallet() {
 
       <div className='row flex-column rounded shadow'>
         {userData && (
-        <>
-          <TransactionHistory label={'Wallet Transactions'} userId={userData._id} tx={walletTx} />
-          <TransactionHistory label={'Your Contributions'} links={true} userId={userData._id} tx={campsTx} />
-        </>
+          <>
+            <TransactionHistory label={'Wallet Transactions'} userId={userData._id} tx={walletTx} />
+            <TransactionHistory label={'Your Contributions'} links={true} userId={userData._id} tx={campsTx} />
+          </>
         )}
       </div>
     </div>

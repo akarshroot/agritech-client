@@ -61,10 +61,10 @@ function Planning() {
             requirements: requirements
         }
         console.log(planData);
-        // const data = await createPlan(planData)
-        // alert(data.message)
-        // handlePlanModalClose()
-        // window.location.reload()
+        const data = await createPlan(planData)
+        alert(data.message)
+        handlePlanModalClose()
+        window.location.reload()
     }
 
     function addItem(e) {
@@ -100,7 +100,7 @@ function Planning() {
     async function executePlan(planId) {
         const data = await executeUserPlan(planId)
         alert(data.message)
-        // window.location.reload()
+        window.location.reload()
     }
 
     useEffect(() => {
@@ -166,7 +166,7 @@ function Planning() {
                         <Button variant="secondary" onClick={handlePlanModalClose}>
                             Discard
                         </Button>
-                        <Button type='submit' form="create-plan" variant="success">
+                        <Button type='submit' form="create-plan" variant="success" >
                             Create
                         </Button>
                     </Modal.Footer>
@@ -207,13 +207,13 @@ function Planning() {
                                                     <tbody>
                                                         <tr><th>Duration</th><th>Estimated Cost</th></tr>
                                                         <tr><td>{plan.duration}</td><td>₹{new Intl.NumberFormat("en-IN").format(plan.estCost)}</td></tr>
-                                                        <tr><th>Estimated Revenue</th><th>Estimated Profit</th></tr>
-                                                        <tr><td>₹{new Intl.NumberFormat("en-IN").format(plan.estRevenue)}</td><td>₹{new Intl.NumberFormat("en-IN").format(plan.estRevenue - plan.estCost)}</td></tr>
+                                                        <tr><th>Estimated Revenue</th><th>Estimated {plan.estRevenue - plan.estCost > 0 ? "Profit" : "Loss"}</th></tr>
+                                                        <tr><td>₹{new Intl.NumberFormat("en-IN").format(plan.estRevenue)}</td><td>₹{new Intl.NumberFormat("en-IN").format(Math.abs(plan.estRevenue - plan.estCost))}</td></tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <div className="action-center">
-                                                <button className="button-28" onClick={() => executePlan(plan._id)} disabled={!plan.executing}>Execute Plan</button>
+                                                <button className="button-28" onClick={() => executePlan(plan._id)} disabled={plan.executing}>Execute Plan</button>
                                                 <button className="button-28 delete-plan" onClick={() => deletePlan(plan._id)} disabled={plan.executing}>Delete Plan</button>
                                             </div>
                                         </div>

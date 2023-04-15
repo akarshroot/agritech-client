@@ -148,11 +148,13 @@ export function CurrentPlan(props) {
     useEffect(() => {
         if (!userData) getUserData()
         else {
-            setPercentage((new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart)))
-            userData.currentPlan.requirements.forEach((item) => {
-                if (item.category == 'crop') setCrops((prev) => prev + 1)
-                else setSupplements((prev) => prev + 1)
-            })
+            if (userData.currentPlan) {
+                setPercentage((new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart)))
+                userData.currentPlan.requirements.forEach((item) => {
+                    if (item.category == 'crop') setCrops((prev) => prev + 1)
+                    else setSupplements((prev) => prev + 1)
+                })
+            }
         }
     }, [currentUser])
 
@@ -162,39 +164,42 @@ export function CurrentPlan(props) {
                 <h4>Current Plan</h4>
                 <hr className="style-two" />
             </div>
-            <div className="campaign-progress">
-                <span>{percentage < 1 ? "Just Started!" : ""}</span>
-                <div className="progress" style={{ height: "30px" }}>
-                    <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
-                        aria-valuenow={`${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}%` }}>
-                        <span>{percentage}%</span>
+            {userData && userData.currentPlan &&
+                <>
+                    <div className="campaign-progress">
+                        <span>{percentage < 1 ? "Just Started!" : ""}</span>
+                        <div className="progress" style={{ height: "30px" }}>
+                            <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
+                                aria-valuenow={`${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}%` }}>
+                                <span>{percentage}%</span>
+                            </div>
+                        </div>
+                        <div className="current-campaign-widget-details">
+                            <div className="contributions">
+                                <span className="quantity">{INR.format(userData?.currentPlan.estCost)}</span><br />
+                                <span className="subtext">cost</span>
+                            </div>
+                            <div className="time-remaining">
+                                <span className="quantity">{INR.format(userData?.currentPlan.estRevenue)}</span><br />
+                                <span className="subtext">revenue</span>
+                            </div>
+                        </div>
+                        <div className="current-campaign-widget-details">
+                            <div className="contributions">
+                                <span className="quantity">{crops}</span><br />
+                                <span className="subtext">crops</span>
+                            </div>
+                            <div className="time-remaining">
+                                <span className="quantity">{supplements}</span><br />
+                                <span className="subtext">supplements</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className="current-campaign-widget-details">
-                    <div className="contributions">
-                        <span className="quantity">{INR.format(userData?.currentPlan.estCost)}</span><br />
-                        <span className="subtext">cost</span>
-                    </div>
-                    <div className="time-remaining">
-                        <span className="quantity">{INR.format(userData?.currentPlan.estRevenue)}</span><br />
-                        <span className="subtext">revenue</span>
-                    </div>
-                </div>
-                <div className="current-campaign-widget-details">
-                    <div className="contributions">
-                        <span className="quantity">{crops}</span><br />
-                        <span className="subtext">crops</span>
-                    </div>
-                    <div className="time-remaining">
-                        <span className="quantity">{supplements}</span><br />
-                        <span className="subtext">supplements</span>
-                    </div>
-                </div>
-            </div>
-            <span className="subtext">
-                Expected Profit: <b>{INR.format(userData?.currentPlan.estRevenue - userData?.currentPlan.estCost)}</b>
-            </span>
-
+                    <span className="subtext">
+                        Expected {userData?.currentPlan.estRevenue - userData?.currentPlan.estCost > 0 ? "Profit": "Loss"}: <b>{INR.format(Math.abs(userData?.currentPlan.estRevenue - userData?.currentPlan.estCost))}</b>
+                    </span>
+                </>
+            }
         </div>
     )
 }
