@@ -18,6 +18,10 @@ function Dashboard() {
         {
             title: "Transaction History",
             id: "transaction-history"
+        },
+        {
+            title: "Contribution History",
+            id: "contribution-history"
         }
     ])
 

@@ -8,7 +8,6 @@ import { useUser } from '../../context/UserContext';
 import ManagementContext from '../../context/ManagementContext';
 import Table from 'react-bootstrap/esm/Table';
 import { useNavigate } from 'react-router-dom';
-import {TransactionHistory as TransactionHistoryComp,Transaction} from '../../pages/user/Wallet'
 import {getTransactions} from '../../interceptors/web3ServerApi';
 
 //Widget renderer
@@ -166,6 +165,8 @@ export function PipelineWidget(props) {
     )
 }
 
+
+
 export function EachHistory({sno, receiverId, userId, amount }) {
 
     const recivedPaid = receiverId === userId
@@ -179,7 +180,7 @@ export function EachHistory({sno, receiverId, userId, amount }) {
         </tr>
         </>
     )
-    }
+}
 
 export function TransactionHistory(props) {
     const [tx,setTx] = useState([])
@@ -225,11 +226,13 @@ export function TransactionHistory(props) {
     )
 }
 
+
+
+
 export function CurrentOrder(props) {
     return (
         <div className='widget-container'>
             <h4>Order Details</h4>
-
         </div>
     )
 }
