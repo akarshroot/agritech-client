@@ -18,7 +18,7 @@ function Pipeline() {
   useEffect(() => {
       if (!userData) getUserData()
       else {
-          setPercentage((new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart)))
+          setPercentage((new Date() - new Date(userData?.currentPlan?.executionStart)) * 100 / (new Date(userData?.currentPlan?.executionEnd) - new Date(userData?.currentPlan?.executionStart)))
       }
   }, [currentUser])
 
@@ -37,7 +37,7 @@ function Pipeline() {
         <hr className="style-two" />
       </div>
       {
-        userData?.currentPlan.requirements.map((item) => {
+        userData?.currentPlan?.requirements.map((item) => {
           if (item.category === 'crop') {
             return (
               <div className="crop p-1 d-flex flex-column justify-content-start" key={item._id}>
@@ -46,11 +46,11 @@ function Pipeline() {
                 <span hidden={percentage >= 1}>Just Started!</span>
                 <div className="progress mt-2" style={{ height: "30px" }}>
                     <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
-                        aria-valuenow={`${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}%` }}>
+                        aria-valuenow={`${(new Date() - new Date(userData?.currentPlan?.executionStart)) * 100 / (new Date(userData?.currentPlan?.executionEnd) - new Date(userData?.currentPlan?.executionStart))}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${(new Date() - new Date(userData?.currentPlan?.executionStart)) * 100 / (new Date(userData?.currentPlan?.executionEnd) - new Date(userData?.currentPlan?.executionStart))}%` }}>
                         <span>{percentage}%</span>
                     </div>
                 </div>
-                <div className='mt-2 alert alert-warning'>Harvest Month: {new Date(userData?.currentPlan.executionEnd).toLocaleString('default', { month: 'long' })}</div>
+                <div className='mt-2 alert alert-warning'>Harvest Month: {new Date(userData?.currentPlan?.executionEnd).toLocaleString('default', { month: 'long' })}</div>
                 <div className="current-campaign-widget-details mt-2">
                   <div className="contributions">
                     <span className="quantity"><b>{INR.format(item.estCost)}</b></span><br />

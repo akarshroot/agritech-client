@@ -8,6 +8,7 @@ import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
 import { useUser } from '../../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import Spinner from 'react-bootstrap/esm/Spinner'
+import { ToastContainer, toast } from 'react-toastify'
 
 
 function ModalForm({ show, handleShow }) {
@@ -33,7 +34,16 @@ function ModalForm({ show, handleShow }) {
     console.log("Sending Data", dataToSend)
     const res = await createCampaign(dataToSend);
     if (res.status === 'Deployed Successfully') {
-      alert(res.status)
+      toast.success(res.status, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       title.onChange('')
       deadline.onChange('')
       target.onChange('')
@@ -46,53 +56,68 @@ function ModalForm({ show, handleShow }) {
 
 
   return (
-    <Modal
-      show={show}
-      onHide={handleShow}
-      backdrop="static"
-      keyboard={false}
-      size='lg'
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title>Create Campaign</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit}>
+    <>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <Modal
+        show={show}
+        onHide={handleShow}
+        backdrop="static"
+        keyboard={false}
+        size='lg'
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create Campaign</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
 
 
-          <div className='d-flex flex-column align-items-center'>
-            <fieldset>
-              <label htmlFor='createCampTitle'>Title</label><br />
-              <input id='createCampTitle' {...title} />
-            </fieldset>
-            <fieldset>
-              <label htmlFor='createCampDeadline'>Deadline</label><br />
-              <input id='createCampDeadline' {...deadline} />
-            </fieldset>
-            <fieldset>
-              <label htmlFor='createCampTarget'>Target</label><br />
-              <input id='createCampTarget' {...target} />
-            </fieldset>
-            <fieldset>
-              <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
-              <input id='createCampMinAmount' {...minContribution} />
-            </fieldset>
-            <fieldset>
-              <label htmlFor='createCampPass'>Password</label><br />
-              <input id='createCampPass' {...password} />
-            </fieldset>
-            <Button className='my-3' type='submit' variant="success">Create</Button>
-          </div>
+            <div className='d-flex flex-column align-items-center'>
+              <fieldset>
+                <label htmlFor='createCampTitle'>Title</label><br />
+                <input id='createCampTitle' {...title} />
+              </fieldset>
+              <fieldset>
+                <label htmlFor='createCampDeadline'>Deadline</label><br />
+                <input id='createCampDeadline' {...deadline} />
+              </fieldset>
+              <fieldset>
+                <label htmlFor='createCampTarget'>Target</label><br />
+                <input id='createCampTarget' {...target} />
+              </fieldset>
+              <fieldset>
+                <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
+                <input id='createCampMinAmount' {...minContribution} />
+              </fieldset>
+              <fieldset>
+                <label htmlFor='createCampPass'>Password</label><br />
+                <input id='createCampPass' {...password} />
+              </fieldset>
+              <Button className='my-3' type='submit' variant="success">Create</Button>
+            </div>
 
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleShow}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleShow}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   )
 }
 
@@ -100,7 +125,7 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
 
   const password = useInput('password', "Password")
   const amount = useInput('number', "how much?")
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -112,56 +137,92 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
     }
     try {
       const res = await getApproval(toSendData);
-      if(res.status==='Success'){
-        alert(res.message)
+      if (res.status === 'Success') {
+
+        toast.success(res.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         amount.onChange('')
         password.onChange('')
         handleShow()
       }
     } catch (error) {
-      alert(error.message)
-    }finally{
+
+      toast.error(error.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
       setLoading(false)
     }
   }
   return (
-    <Modal
-      show={show}
-      onHide={handleShow}
-      backdrop="static"
-      keyboard={false}
-      size='md'
-    >
-      <Modal.Header>
-        <Modal.Title>Contribute</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <h4>Minimum contribution is '{minContri}' KCO</h4>
-        <Form onSubmit={handleSubmit}>
-          <div className='d-flex flex-column align-items-center'>
-            <fieldset>
-              <label htmlFor={'contriCampAmount' + cid}>Amount</label><br />
-              <input id={'contriCampAmount' + cid} {...amount} />
-            </fieldset>
-            <fieldset>
-              <label htmlFor={'contriCampPassFor' + cid}>Confirm with password</label><br />
-              <input id={'contriCampPassFor' + cid} {...password} />
-            </fieldset>
-            {
-              loading
-              ?<Button className='my-3' variant="disabled">Contributing... <Spinner variant='secondary'/></Button>
-              :(
-                <div className='d-flex justify-content-around'>
-                  <Button className='m-3' type='submit' variant="warning">Contribute</Button>
-                  <Button className='m-3' variant="secondary" onClick={handleShow}>Close</Button>
-                </div>
-              )
-            }
+    <>
 
-          </div>
-        </Form>
-      </Modal.Body>
-    </Modal>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <Modal
+        show={show}
+        onHide={handleShow}
+        backdrop="static"
+        keyboard={false}
+        size='md'
+      >
+        <Modal.Header>
+          <Modal.Title>Contribute</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Minimum contribution is '{minContri}' KCO</h4>
+          <Form onSubmit={handleSubmit}>
+            <div className='d-flex flex-column align-items-center'>
+              <fieldset>
+                <label htmlFor={'contriCampAmount' + cid}>Amount</label><br />
+                <input id={'contriCampAmount' + cid} {...amount} />
+              </fieldset>
+              <fieldset>
+                <label htmlFor={'contriCampPassFor' + cid}>Confirm with password</label><br />
+                <input id={'contriCampPassFor' + cid} {...password} />
+              </fieldset>
+              {
+                loading
+                  ? <Button className='my-3' variant="disabled">Contributing... <Spinner variant='secondary' /></Button>
+                  : (
+                    <div className='d-flex justify-content-around'>
+                      <Button className='m-3' type='submit' variant="warning">Contribute</Button>
+                      <Button className='m-3' variant="secondary" onClick={handleShow}>Close</Button>
+                    </div>
+                  )
+              }
+
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </>
+
   )
 }
 
@@ -183,7 +244,7 @@ function Campaigns() {
       setLoading(true)
       getUserData()
     }
-    if(!userCampaigns)
+    if (!userCampaigns)
       getUserCampaigns()
     setLoading(false)
   }, [])
@@ -197,7 +258,7 @@ function Campaigns() {
           </Button>
         </div>
         <div className='col-md-3 p-3'>
-          <Button variant="success" onClick={() => { navigate("/campaigns/all",{replace:true}) }}>
+          <Button variant="success" onClick={() => { navigate("/campaigns/all", { replace: true }) }}>
             View All Campaigns
           </Button>
         </div>
