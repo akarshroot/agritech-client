@@ -34,7 +34,7 @@ function Dashboard() {
         else {
             getUserCampaigns()
         }
-    }, [currentUser])
+    }, [currentUser, userCampaigns])
 
     return (
         <>
@@ -67,7 +67,7 @@ function Dashboard() {
                         })
                     }
                     <div className="widget">
-                        <CampaignWidget _id={campaignWidget?._id} contributors={campaignWidget?.contributors} />
+                        <CampaignWidget title={campaignWidget?.title} target={campaignWidget?.target} _id={campaignWidget?._id} contributors={campaignWidget?.contributors} deadline={campaignWidget?.deadline} dateCreated={campaignWidget?.dateCreated} />
                     </div>
                 </div>
             </div>

@@ -260,11 +260,11 @@ export function ContributionHistory(props) {
     const {currentUser} = useUser()
     useEffect(()=>{
         getTransactions().then(e => {
-            setTxLen(e.camp.length)
-            if(e.camp.length>3){
+            setTxLen(e.camp?.length)
+            if(e.camp?.length>3){
                 setTx(e.camp.reverse().slice(0,3))
             }else{
-                setTx(e.camp.reverse())
+                setTx(e.camp?.reverse())
             }
         })
     },[])
@@ -284,9 +284,9 @@ export function ContributionHistory(props) {
                     </tr>
                     </thead>
                     <tbody>
-                    {currentUser && tx.length ? tx.map((e, i) => i<=3 && <EachHistoryContri key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+                    {currentUser && tx?.length ? tx.map((e, i) => i<=3 && <EachHistoryContri key={'transactionHashKey' + i} sno={i + 1} {...e} />)
                         : <tr><td colSpan='5'>No Contributions yet</td></tr>}
-                    <tr hidden={txLen<=3} > 
+                    <tr hidden={!txLen || txLen<=3} > 
                         <td colSpan={3} className='text-end'>
                             <Link to='/wallet'>
                                 ...more

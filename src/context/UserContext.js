@@ -25,7 +25,7 @@ export function UserProvider({ children }) {
     const checkTokenCookie = cookies.get("isLoggedIn");
     const [currentUser, setCurrentUser] = useState()
     const [userData, setUserData] = useState()
-    const [userCampaigns, setUserCampaigns] = useState([])
+    const [userCampaigns, setUserCampaigns] = useState()
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
