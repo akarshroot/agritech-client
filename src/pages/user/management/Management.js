@@ -25,7 +25,7 @@ function Management(props) {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
-    }, 2234);
+    }, 200);
   }, [])
 
   return (

@@ -5,6 +5,9 @@ import './Widgets.css'
 import { getCollectonCampbyId } from '../../interceptors/serverAPIs';
 import CampaignContext from '../../context/CampaignContext';
 import { useUser } from '../../context/UserContext';
+import ManagementContext from '../../context/ManagementContext';
+import Table from 'react-bootstrap/esm/Table';
+import { useNavigate } from 'react-router-dom';
 
 //Widget renderer
 export function renderWidget(id, props) {
@@ -40,7 +43,6 @@ export function renderWidget(id, props) {
 // contributors:0
 
 export function CampaignWidget({ title, target, contributors, _id, ...props }) {
-
     const numberOfContributors = contributors.length
     const [collection, setCollection] = useState(0)
     const { changeActiveCampaign } = useContext(CampaignContext)
@@ -90,19 +92,85 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
 }
 
 export function InventoryWidget(props) {
+
+    const { currentUser, userData, getUserData } = useUser()
+    const { inventory, inventoryTotal, INR, getUserInventory } = useContext(ManagementContext)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!userData) getUserData()
+        if (!inventory) getUserInventory()
+    }, [currentUser])
+
     return (
         <div className='widget-container'>
             <h4>Current Inventory</h4>
-
+            <hr hidden={inventory && inventory.length > 3} className="style-two" />
+            {
+                inventory && inventory.length > 0 ?
+                    <Table striped bordered className='rounded'>
+                        <thead>
+                            <tr>
+                                <th>Quantity</th>
+                                <th>Item</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                inventory.map((item, idx) => {
+                                    if (idx < 3)
+                                        return (
+                                            <tr>
+                                                <td>{item.quantity}</td>
+                                                <td>{item.item}</td>
+                                                <td>{INR.format(item.estCost)}</td>
+                                            </tr>
+                                        )
+                                })
+                            }
+                            <tr hidden={inventory.length <= 3}><td></td><td></td><td onClick={() => navigate("/management/inventory")} style={{ cursor: "pointer" }}>+ {inventory.length - 3} more</td></tr>
+                            <tr><th colSpan={2}>Total</th><td>{INR.format(inventoryTotal)}</td></tr>
+                        </tbody>
+                    </Table>
+                    :
+                    <>
+                        <hr className="style-two" />
+                        No inventory added yet.
+                    </>
+            }
         </div>
     )
 }
 
 export function PipelineWidget(props) {
-    return (
-        <div className='widget-container'>
-            <h4>Crops Sown</h4>
+    const { currentUser, userData, getUserData } = useUser()
 
+    useEffect(() => {
+        if (!userData) getUserData()
+    }, [currentUser])
+
+    return (
+        <div className='widget-container d-flex flex-column justify-content-start'>
+            <h4>Crops Sown</h4>
+            <hr className="style-two" />
+            <div className="list list-group">
+                {
+                    userData && userData.currentPlan?.requirements?.map((item) => {
+                        if (item.category == 'crop') {
+                            return (
+                                <>
+                                    <div className="list-group-item">
+                                        {item.item}<br />
+                                        <span className="subtext">Quantity: {item.quantity}</span>
+                                    </div>
+
+                                </>
+                            )
+                        }
+                    })
+                }
+            </div>
         </div>
     )
 }
@@ -174,29 +242,29 @@ export function CurrentPlan(props) {
                                 <span>{percentage}%</span>
                             </div>
                         </div>
-                        <div className="current-campaign-widget-details">
-                            <div className="contributions">
+                        <div className="current-campaign-widget-details mt-2">
+                            <div className="contributions col">
                                 <span className="quantity">{INR.format(userData?.currentPlan.estCost)}</span><br />
                                 <span className="subtext">cost</span>
                             </div>
-                            <div className="time-remaining">
+                            <div className="time-remaining col">
                                 <span className="quantity">{INR.format(userData?.currentPlan.estRevenue)}</span><br />
                                 <span className="subtext">revenue</span>
                             </div>
                         </div>
                         <div className="current-campaign-widget-details">
-                            <div className="contributions">
+                            <div className="contributions col">
                                 <span className="quantity">{crops}</span><br />
                                 <span className="subtext">crops</span>
                             </div>
-                            <div className="time-remaining">
+                            <div className="time-remaining col">
                                 <span className="quantity">{supplements}</span><br />
                                 <span className="subtext">supplements</span>
                             </div>
                         </div>
                     </div>
-                    <span className="subtext">
-                        Expected {userData?.currentPlan.estRevenue - userData?.currentPlan.estCost > 0 ? "Profit": "Loss"}: <b>{INR.format(Math.abs(userData?.currentPlan.estRevenue - userData?.currentPlan.estCost))}</b>
+                    <span className="subtext mt-2">
+                        Expected {userData?.currentPlan.estRevenue - userData?.currentPlan.estCost > 0 ? "Profit" : "Loss"}: <b>{INR.format(Math.abs(userData?.currentPlan.estRevenue - userData?.currentPlan.estCost))}</b>
                     </span>
                 </>
             }

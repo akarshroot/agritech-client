@@ -40,23 +40,24 @@ function Pipeline() {
         userData?.currentPlan.requirements.map((item) => {
           if (item.category === 'crop') {
             return (
-              <div className="crop p-1 d-flex flex-column justify-content-around" key={item._id}>
-                <h4>{item.item}</h4>
+              <div className="crop p-1 d-flex flex-column justify-content-start" key={item._id}>
+                <h4 className='mt-2'>{item.item}</h4>
                 <hr className="style-two" />
-                <div className="progress" style={{ height: "30px" }}>
+                <span hidden={percentage >= 1}>Just Started!</span>
+                <div className="progress mt-2" style={{ height: "30px" }}>
                     <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
                         aria-valuenow={`${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}%` }}>
                         <span>{percentage}%</span>
                     </div>
                 </div>
-                <div>Harvest Month: {new Date(userData?.currentPlan.executionEnd).toLocaleString('default', { month: 'long' })}</div>
-                <div className="current-campaign-widget-details">
+                <div className='mt-2 alert alert-warning'>Harvest Month: {new Date(userData?.currentPlan.executionEnd).toLocaleString('default', { month: 'long' })}</div>
+                <div className="current-campaign-widget-details mt-2">
                   <div className="contributions">
-                    <span className="quantity"><b>{item.estCost}</b></span><br />
+                    <span className="quantity"><b>{INR.format(item.estCost)}</b></span><br />
                     <span className="subtext">Cost Price</span>
                   </div>
                   <div className="time-remaining">
-                    <span className="quantity"><b>{item.estSale}</b></span><br />
+                    <span className="quantity"><b>{INR.format(item.estSale)}</b></span><br />
                     <span className="subtext">Sale Value</span>
                   </div>
                 </div>
