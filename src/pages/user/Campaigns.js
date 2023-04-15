@@ -171,7 +171,6 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
   }
   return (
     <>
-
       <ToastContainer
         position="top-right"
         autoClose={5000}
