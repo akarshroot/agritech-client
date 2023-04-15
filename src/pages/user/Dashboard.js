@@ -18,14 +18,6 @@ function Dashboard() {
         {
             title: "Transaction History",
             id: "transaction-history"
-        },
-        {
-            title: "Order Details",
-            id: "current-order"
-        },
-        {
-            title: "Order History",
-            id: "order-history"
         }
     ])
 
