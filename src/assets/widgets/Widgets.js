@@ -8,7 +8,8 @@ import { useUser } from '../../context/UserContext';
 import ManagementContext from '../../context/ManagementContext';
 import Table from 'react-bootstrap/esm/Table';
 import { useNavigate } from 'react-router-dom';
-import {getTransactions} from '../../interceptors/web3ServerApi';
+import { TransactionHistory as TransactionHistoryComp, Transaction } from '../../pages/user/Wallet'
+import { getTransactions } from '../../interceptors/web3ServerApi';
 
 //Widget renderer
 export function renderWidget(id, props) {
@@ -33,7 +34,7 @@ export function renderWidget(id, props) {
 }
 
 export function CampaignWidget({ title, target, contributors, _id, ...props }) {
-    const numberOfContributors = contributors.length
+    const numberOfContributors = contributors?.length
     const [collection, setCollection] = useState(0)
     const { changeActiveCampaign } = useContext(CampaignContext)
     function handleShowDetails() {
@@ -41,42 +42,53 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
     }
 
     useEffect(() => {
-        getCollectonCampbyId(_id).then((res) => {
-            setCollection(res.raisedAmount)
-        }).catch((err) => alert(err.message))
+        if (_id)
+            getCollectonCampbyId(_id).then((res) => {
+                setCollection(res.raisedAmount)
+            }).catch((err) => alert(err.message))
     }, [])
 
 
     return (
         <div className='widget-container shadow rounded'>
-            <h3>{title}</h3>
-            <h4>Campaign Progress</h4>
-            {/* <div className="error-message" hidden={!error}>{error}</div> */}
-            <div className="campaign-progress">
-                <div className="progress" style={{ height: "30px" }}>
-                    <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
-                        aria-valuenow={`${parseInt((collection / target) * 100)}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${parseInt((collection / target) * 100)}%` }}>
-                        {`${parseInt((collection / target) * 100)}%`}
+
+            {(title && target && contributors && _id) ?
+                <>
+                    <h3>{title}</h3>
+                    <h4>Campaign Progress</h4>
+                    {/* <div className="error-message" hidden={!error}>{error}</div> */}
+                    <div className="campaign-progress">
+                        <div className="progress" style={{ height: "30px" }}>
+                            <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
+                                aria-valuenow={`${parseInt((collection / target) * 100)}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${parseInt((collection / target) * 100)}%` }}>
+                                {`${parseInt((collection / target) * 100)}%`}
+                            </div>
+                        </div>
+                        <span className="subtext">
+                            {new Intl.NumberFormat("en-IN").format(collection)} KCO of {new Intl.NumberFormat("en-IN").format(target)} KCO raised
+                        </span>
                     </div>
-                </div>
-                <span className="subtext">
-                    {new Intl.NumberFormat("en-IN").format(collection)} KCO of {new Intl.NumberFormat("en-IN").format(target)} KCO raised
-                </span>
-            </div>
-            <div className="current-campaign-widget-details">
-                <div className="contributions">
-                    <span className="quantity">{numberOfContributors > 1000 ? `${numberOfContributors / 1000}k+` : numberOfContributors}</span><br />
-                    <span className="subtext">contributors</span>
-                </div>
-                <div className="time-remaining">
-                    <span className="quantity">{parseInt(((new Date(props.dateCreated).getTime() + props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
-                    <span className="subtext">remaining</span>
-                </div>
-            </div>
-            <div className="widget-action-center d-flex justify-content-around mt-3">
-                <Button onClick={handleShowDetails} variant='outline-success' >Details</Button>
-                {props.children}
-            </div>
+                    <div className="current-campaign-widget-details">
+                        <div className="contributions">
+                            <span className="quantity">{numberOfContributors > 1000 ? `${numberOfContributors / 1000}k+` : numberOfContributors}</span><br />
+                            <span className="subtext">contributors</span>
+                        </div>
+                        <div className="time-remaining">
+                            <span className="quantity">{parseInt(((new Date(props.dateCreated).getTime() + props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
+                            <span className="subtext">remaining</span>
+                        </div>
+                    </div>
+                    <div className="widget-action-center d-flex justify-content-around mt-3">
+                        <Button onClick={handleShowDetails} variant='outline-success' >Details</Button>
+                        {props.children}
+                    </div>
+                </>
+                :
+                <h4>
+                    No campaigns yet.
+                </h4>
+            }
+
         </div>
     )
 }
@@ -111,7 +123,7 @@ export function InventoryWidget(props) {
                                 inventory.map((item, idx) => {
                                     if (idx < 3)
                                         return (
-                                            <tr>
+                                            <tr key={idx}>
                                                 <td>{item.quantity}</td>
                                                 <td>{item.item}</td>
                                                 <td>{INR.format(item.estCost)}</td>
@@ -165,60 +177,58 @@ export function PipelineWidget(props) {
     )
 }
 
-
-
-export function EachHistory({sno, receiverId, userId, amount }) {
+export function EachHistory({ sno, receiverId, userId, amount }) {
 
     const recivedPaid = receiverId === userId
     return (
         <>
-        <tr>
-            <td>{sno}</td>
-           <td>{receiverId}</td>
-            <td className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}
-            >{userId && (recivedPaid ? '+' : '-')}{amount}</td>
-        </tr>
+            <tr>
+                <td>{sno}</td>
+                <td>{receiverId}</td>
+                <td className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}
+                >{userId && (recivedPaid ? '+' : '-')}{amount}</td>
+            </tr>
         </>
     )
 }
 
 export function TransactionHistory(props) {
-    const [tx,setTx] = useState([])
-    const [txLen,setTxLen] = useState(0)
-    const {currentUser} = useUser()
-    useEffect(()=>{
+    const [tx, setTx] = useState([])
+    const [txLen, setTxLen] = useState(0)
+    const { currentUser } = useUser()
+    useEffect(() => {
         getTransactions().then(e => {
             setTxLen(e.wallet.length)
-            if(e.wallet.length>3){
-                setTx(e.wallet.reverse().slice(0,3))
-            }else{
+            if (e.wallet.length > 3) {
+                setTx(e.wallet.reverse().slice(0, 3))
+            } else {
                 setTx(e.wallet.reverse())
             }
         })
-    },[])
+    }, [])
     return (
         <div className='p-2 widget-container'>
             <h4>
                 Transaction History
             </h4>
-            <hr className='style-two'/>
+            <hr className='style-two' />
             <div className='table-responsive'>
                 <Table className='w-100' striped bordered>
                     <thead>
-                    <tr>
-                        <th>S.No</th>
-                        <th>To/From</th>
-                        <th>Amount</th>
-                    </tr>
+                        <tr>
+                            <th>S.No</th>
+                            <th>To/From</th>
+                            <th>Amount</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {currentUser && tx.length ? tx.map((e, i) => i<=3 && <EachHistory userId={currentUser} key={'transactionHashKey' + i} sno={i + 1} {...e} />)
-                        : <tr><td colSpan='5'>No transactions yet</td></tr>}
-                    <tr hidden={txLen<=3} > 
-                        <td colSpan={3} className='text-end'>
-                            ...more
-                        </td>
-                    </tr>
+                        {currentUser && tx.length ? tx.map((e, i) => i <= 3 && <EachHistory userId={currentUser} key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+                            : <tr><td colSpan='5'>No transactions yet</td></tr>}
+                        <tr hidden={txLen <= 3} >
+                            <td colSpan={3} className='text-end'>
+                                ...more
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
             </div>
@@ -226,13 +236,11 @@ export function TransactionHistory(props) {
     )
 }
 
-
-
-
 export function CurrentOrder(props) {
     return (
         <div className='widget-container'>
             <h4>Order Details</h4>
+
         </div>
     )
 }

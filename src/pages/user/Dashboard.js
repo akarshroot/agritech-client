@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { renderWidget } from '../../assets/widgets/Widgets'
+import { CampaignWidget, renderWidget } from '../../assets/widgets/Widgets'
 import { useUser } from '../../context/UserContext'
 import './Dashboard.css'
 
 function Dashboard() {
 
-    const { currentUser, userData, theme, loading, getUserData } = useUser()
+    const { currentUser, userData, theme, loading, getUserData, getUserCampaigns, userCampaigns } = useUser()
+    const [campaignWidget, setCampaignWidget] = useState({})
     const [widgets, setWidgets] = useState([
         {
             category: "inventory",
@@ -22,12 +23,18 @@ function Dashboard() {
         {
             title: "Contribution History",
             id: "contribution-history"
-        }
+        },
     ])
 
     useEffect(() => {
-        if(!userData) getUserData()
-    })
+        if (!userData) getUserData()
+        if (userCampaigns) {
+            setCampaignWidget(userCampaigns.reverse()[0])
+        }
+        else {
+            getUserCampaigns()
+        }
+    }, [currentUser])
 
     return (
         <>
@@ -59,6 +66,9 @@ function Dashboard() {
                             )
                         })
                     }
+                    <div className="widget">
+                        <CampaignWidget _id={campaignWidget?._id} contributors={campaignWidget?.contributors} />
+                    </div>
                 </div>
             </div>
         </>

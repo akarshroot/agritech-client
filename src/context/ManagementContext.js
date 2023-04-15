@@ -79,6 +79,7 @@ export function ManagementContextProvider({ children }) {
 
     async function getUserInventory() {
         try {
+            if(!currentUser) return
             const response = await axios.get("/management/inventory/all?user=" + currentUser)
             if (response.hasOwnProperty("data")) {
                 setInventory(response.data.data)
