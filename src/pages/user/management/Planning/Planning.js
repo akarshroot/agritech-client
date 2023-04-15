@@ -112,7 +112,7 @@ function Planning() {
 
     async function fetchUserPlans() {
         const plans = await getUserPlans()
-        setUserPlans(plans.data)
+        setUserPlans(plans.data.reverse())
     }
 
     async function deletePlan(planId) {
