@@ -21,6 +21,8 @@ export function renderWidget(id, props) {
             return <PipelineWidget {...props} />
         case "transaction-history":
             return <TransactionHistory {...props} />
+        case "contribution-history":
+            return <ContributionHistory {...props} />
         case "current-order":
             return <CurrentOrder {...props} />
         case "order-history":
@@ -227,6 +229,65 @@ export function TransactionHistory(props) {
 }
 
 
+export function EachHistoryContri({sno, receiverId, amount }) {
+    const {changeActiveCampaign} = useContext(CampaignContext)
+    function checkCampaign() {
+        changeActiveCampaign(receiverId)
+    }
+    return (
+        <>
+        <tr>
+            <td>{sno}</td>
+            <td><span onClick={checkCampaign} className='Camplink'>{receiverId}</span></td>
+            <td>{amount}</td>
+        </tr>
+        </>
+    )
+}
+
+export function ContributionHistory(props) {
+    const [tx,setTx] = useState([])
+    const [txLen,setTxLen] = useState(0)
+    const {currentUser} = useUser()
+    useEffect(()=>{
+        getTransactions().then(e => {
+            setTxLen(e.camp.length)
+            if(e.camp.length>3){
+                setTx(e.camp.reverse().slice(0,3))
+            }else{
+                setTx(e.camp.reverse())
+            }
+        })
+    },[])
+    return (
+        <div className='p-2 widget-container'>
+            <h4>
+                Contribution History
+            </h4>
+            <hr className='style-two'/>
+            <div className='table-responsive'>
+                <Table className='w-100' striped bordered>
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>To/From</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {currentUser && tx.length ? tx.map((e, i) => i<=3 && <EachHistoryContri key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+                        : <tr><td colSpan='5'>No transactions yet</td></tr>}
+                    <tr hidden={txLen<=3} > 
+                        <td colSpan={3} className='text-end'>
+                            ...more
+                        </td>
+                    </tr>
+                    </tbody>
+                </Table>
+            </div>
+        </div>
+    )
+}
 
 
 export function CurrentOrder(props) {
