@@ -65,6 +65,7 @@
 .right {
     width: 50%;
     padding-top: 20px;
+    min-width: 300px;
 }
 
 .left .section-text {
@@ -80,4 +81,17 @@
     flex-direction: column;
     justify-content: center;
     height: 100%;
+}
+
+@media screen and (max-width: 400px) {
+    .left .section-text {
+        margin-left: 10px;
+    }
+
+    .right .section-text {
+        margin-left: 10px;
+    }
+    .home-container h1 {
+        font-size: 40px;
+    }
 }

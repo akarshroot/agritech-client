@@ -185,6 +185,9 @@ export function UserProvider({ children }) {
     async function getOrderId(purchaseData) {
         try {
             const response = await axios.post("/wallet/order/create", purchaseData)
+            if(response.data.error){
+                return response.data
+            }
             if(response.hasOwnProperty("data"))
                 return response.data.data
             else throw response
@@ -201,6 +204,21 @@ export function UserProvider({ children }) {
             else throw response
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async function getProductData(prodId) {
+        try {
+            const response = await axios.get("/store/products/" + prodId)
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data)
+                return response.data.data
+            } else {
+                console.log(response)
+                throw response
+            }
+        } catch (error) {
+            throw error
         }
     }
 

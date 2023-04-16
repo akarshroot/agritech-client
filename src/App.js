@@ -21,6 +21,7 @@ import Sales from './pages/user/management/Sales/Sales';
 import { CampaignContextProvider } from './context/CampaignContext';
 import ProductDetails from './pages/user/agristore/ProductDetails';
 import { StoreContextProvider } from './context/StoreContext';
+import { ManagementContextProvider } from './context/ManagementContext';
 
 function App() {
   return (
@@ -29,26 +30,28 @@ function App() {
         <UserProvider>
           <CampaignContextProvider>
             <StoreContextProvider>
-              <Routes>
-                <Route exact path='/' element={<PublicBody body={Home} />} />
-                <Route exact path='/login' element={<PublicBody body={Login} />} />
-                <Route exact path='/signup' element={<PublicBody body={Signup} />} />
-                <Route exact path='/dashboard' element={<PrivateBody body={Dashboard} />} />
+              <ManagementContextProvider>
+                <Routes>
+                  <Route exact path='/' element={<PublicBody body={Home} />} />
+                  <Route exact path='/login' element={<PublicBody body={Login} />} />
+                  <Route exact path='/signup' element={<PublicBody body={Signup} />} />
+                  <Route exact path='/dashboard' element={<PrivateBody body={Dashboard} />} />
 
-                <Route exact path='/management' element={<PrivateBody body={Management} />} />
-                <Route exact path='/management/planning' element={<PrivateBody body={Planning} />} />
-                <Route exact path='/management/pipeline' element={<PrivateBody body={Pipeline} />} />
-                <Route exact path='/management/inventory' element={<PrivateBody body={Inventory} />} />
+                  <Route exact path='/management' element={<PrivateBody body={Management} />} />
+                  <Route exact path='/management/planning' element={<PrivateBody body={Planning} />} />
+                  <Route exact path='/management/pipeline' element={<PrivateBody body={Pipeline} />} />
+                  <Route exact path='/management/inventory' element={<PrivateBody body={Inventory} />} />
 
-                <Route exact path='/management/sales' element={<PrivateBody body={Sales} />} />
-                <Route exact path='/wallet' element={<PrivateBody body={Wallet} />} />
-                <Route exact path='/campaigns' element={<PrivateBody body={Campaigns} />} />
-                <Route exact path='/campaigns/all' element={<PrivateBody body={ExploreCampaigns} />} />
-                <Route exact path='/agristore' element={<PrivateBody body={AgriStore} />} />
+                  <Route exact path='/management/sales' element={<PrivateBody body={Sales} />} />
+                  <Route exact path='/wallet' element={<PrivateBody body={Wallet} />} />
+                  <Route exact path='/campaigns' element={<PrivateBody body={Campaigns} />} />
+                  <Route exact path='/campaigns/all' element={<PrivateBody body={ExploreCampaigns} />} />
+                  <Route exact path='/agristore' element={<PrivateBody body={AgriStore} />} />
 
-                <Route exact path='/agristore/product/:id' element={<PrivateBody body={ProductDetails} />} />
-                <Route exact path='/detailedCampaign' element={<PrivateBody body={CampaignDetails} />} />
-              </Routes>
+                  <Route exact path='/agristore/product/:id' element={<PrivateBody body={ProductDetails} />} />
+                  <Route exact path='/detailedCampaign' element={<PrivateBody body={CampaignDetails} />} />
+                </Routes>
+              </ManagementContextProvider>
             </StoreContextProvider>
           </CampaignContextProvider>
         </UserProvider>

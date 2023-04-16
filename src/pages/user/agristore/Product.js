@@ -20,7 +20,7 @@ function Product(props) {
             <div onClick={() => { navigate("/agristore/product/" + props.product._id) }} style={{ backgroundImage: `url(${props.product.imgUrl})` }} alt={props.product.title} className='product-image' />
             <h5 onClick={() => { navigate("/agristore/product/" + props.product._id) }}>{props.product.title}</h5>
             <hr className='style-two' />
-            <span>Price: <span className="price">{INR.format(props.product.price)}</span>/-</span>
+            <span>Price: <span className="price">{INR.format(props.product.price).replace("₹", "KCO ")}</span>/-</span>
             <hr className='style-two' />
             <div className="d-flex justify-content-around">
                 <Button variant="danger" onClick={() => { addToCart(props.product) }}>Add to cart</Button>

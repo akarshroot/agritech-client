@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { renderWidget } from '../../assets/widgets/Widgets'
+import { CampaignWidget, renderWidget } from '../../assets/widgets/Widgets'
 import { useUser } from '../../context/UserContext'
 import './Dashboard.css'
 
 function Dashboard() {
 
-    const { currentUser, userData, theme, loading, getUserData } = useUser()
+    const { currentUser, userData, theme, loading, getUserData, getUserCampaigns, userCampaigns } = useUser()
+    const [campaignWidget, setCampaignWidget] = useState({})
     const [widgets, setWidgets] = useState([
         {
             category: "inventory",
@@ -20,18 +21,20 @@ function Dashboard() {
             id: "transaction-history"
         },
         {
-            title: "Order Details",
-            id: "current-order"
+            title: "Contribution History",
+            id: "contribution-history"
         },
-        {
-            title: "Order History",
-            id: "order-history"
-        }
     ])
 
     useEffect(() => {
-        if(!userData) getUserData()
-    })
+        if (!userData) getUserData()
+        if (userCampaigns) {
+            setCampaignWidget(userCampaigns.reverse()[0])
+        }
+        else {
+            getUserCampaigns()
+        }
+    }, [currentUser, userCampaigns])
 
     return (
         <>
@@ -63,6 +66,9 @@ function Dashboard() {
                             )
                         })
                     }
+                    <div className="widget">
+                        <CampaignWidget title={campaignWidget?.title} target={campaignWidget?.target} _id={campaignWidget?._id} contributors={campaignWidget?.contributors} deadline={campaignWidget?.deadline} dateCreated={campaignWidget?.dateCreated} />
+                    </div>
                 </div>
             </div>
         </>
