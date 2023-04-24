@@ -37,11 +37,13 @@ function Login() {
             <div className={`p-5 bg-success bg-opacity-50 text-light login-container theme-${theme}`}>
                 <h1>LOGIN</h1>
                 <div className="error-message" hidden={!error}>{error}</div>
-                <form onSubmit={(e) => processLogin(e)} id="login">
-                    <input ref={email} placeholder="Email" className='form-control' type="email" id="email" required /><br/>
-                    <input ref={password} placeholder="Password" className='form-control' type="password" id="password" required /><br/>
-                    <input className='form-input btn btn-success' type="submit" value={loading ? "Please Wait..." : "Login"} disabled={loading} />
-                </form>
+                <div className='row justify-content-center'>
+                    <form className='col-md-4' onSubmit={(e) => processLogin(e)} id="login">
+                        <input ref={email} placeholder="Email" className='form-control' type="email" id="email" required /><br/>
+                        <input ref={password} placeholder="Password" className='form-control' type="password" id="password" required /><br/>
+                        <input className='form-input btn btn-success' type="submit" value={loading ? "Please Wait..." : "Login"} disabled={loading} />
+                    </form>
+                </div>
                 <span>Not a member? <Link to="/signup" className='text-light '>Create an account</Link> today!</span>
             </div>
         </div>
