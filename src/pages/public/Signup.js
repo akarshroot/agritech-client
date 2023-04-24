@@ -62,11 +62,11 @@ function Signup() {
                 <h1>SIGN UP</h1>
                 <div className="error-message" hidden={!error}>{error}</div>
                 <form onSubmit={(e) => processSignup(e)} id="signup">
-                    <input ref={name} placeholder="Full Name" className='form-input' type="text" id="name" required /><br/>
-                    <input ref={email} placeholder="Email" className='form-input' type="email" id="email" required /><br/>
-                    <input ref={phno} placeholder="Phone Number" className='form-input' type="number" id="phno" required /><br/>
-                    <input ref={password} placeholder="Password" className='form-input' type="password" id="password" required /><br/>
-                    <input ref={repassword} placeholder="Re-type password" className='form-input' type="password" id="re-password" required /><br/>
+                    <input ref={name} placeholder="Full Name" className='form-control' type="text" id="name" required /><br/>
+                    <input ref={email} placeholder="Email" className='form-control' type="email" id="email" required /><br/>
+                    <input ref={phno} placeholder="Phone Number" className='form-control' type="number" id="phno" required /><br/>
+                    <input ref={password} placeholder="Password" className='form-control' type="password" id="password" required /><br/>
+                    <input ref={repassword} placeholder="Re-type password" className='form-control' type="password" id="re-password" required /><br/>
                     <input className='form-input  btn btn-success' type="submit" value={loading ? "Please Wait..." : "Signup"} disabled={loading} />
                 </form>
                 <span>Already a member? <Link to="/login" className='text-light '>Login here</Link></span>

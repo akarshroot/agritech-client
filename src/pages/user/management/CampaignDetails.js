@@ -20,7 +20,7 @@ function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal
     <div className='row shadow p-3 rounded'>
       <div className='col-12'>
         <div className='row justify-content-end'>
-          <div className='col-2 pb-4'>
+          <div className='col-5 col-sm-3 col-md-2 pb-4'>
             <Button onClick={openModal} variant='success'>Contribute Here</Button>
           </div>
         </div>
@@ -33,7 +33,7 @@ function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal
           ? <legend>Creator</legend>
           : <legend className='bg-success bg-opacity-50 rounded '>Your Campaign</legend>
         }
-        <Table>
+        <Table responsive>
           <tbody className='text-start'>
             <tr>
               <th>Name</th>

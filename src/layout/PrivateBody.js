@@ -9,6 +9,7 @@ function PrivateNav(props) {
     const { currentUser, logout, loading } = useUser()
     const [tab, setTab] = useState(window.location.pathname.split("/")[1])
     const [hamShow,setHamShow] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         setTab(window.location.pathname.split("/")[1])
@@ -21,7 +22,9 @@ function PrivateNav(props) {
         <>
             <div className={`private-nav d-none d-md-block theme-${props.theme}`}>
                 <div className='display-5 logoConsole'>
-                    AgriTech Console
+                    <div onClick={() => navigate('/',{replace:true})} className='logoLink'>
+                        AgriTech Console
+                    </div>
                 </div>
                 <div className='d-flex justify-content-between pt-1'>
                     <div className='links-container'>
