@@ -6,11 +6,6 @@
     cursor: pointer;
 }
 
-.category-content {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-}
 
 .list-group .active {
     background-color: var(--c2) !important;

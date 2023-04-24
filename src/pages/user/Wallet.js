@@ -319,6 +319,7 @@ function Wallet() {
 
   useEffect(() => {
     if (userData) {
+      renderQR()
       getBalanceFormServer(userData.walletAddress)
       getTransactions().then(e => {
         console.log(e)
@@ -355,22 +356,25 @@ function Wallet() {
         theme="light"
       />
       <div className='row align-items-center'>
-        <div className='col-xl-6 p-4'>
-
-          <Table>
+        <div className='col-xl-2 col-md-5 mb-3'>
+          <div>
+            <canvas ref={canvasRef}></canvas>
+          </div>
+          scan to get Address
+        </div>
+        <div className='col-xl-5 col-md-7 p-4'>
+          <Table responsive>
             <tbody>
               {
                 <tr>
                   <td>
                     <h3>Address:</h3>
                   </td>
-                  <td>
-                    <canvas hidden={!showQR} ref={canvasRef}></canvas>
+                  <td className='AddressClassTD'>
                     <h5 hidden={!showAddress} className='AddressClass' title='Copy' onClick={() => { navigator.clipboard.writeText(userData?.walletAddress) }} >{userData?.walletAddress}
                     </h5>
                     <sub className='text-center lead'>
-                      <p onClick={hideShowAddress} className='Camplink m-4'>{!showAddress ? "Show" : "Hide"} Address</p>
-                      <p onClick={() => { renderQR(); toggleQR(!showQR) }} className='Camplink m-4'>{!showQR ? "Show" : "Hide"} QR</p>
+                      <span onClick={hideShowAddress} className='Camplink m-4'>{!showAddress ? "Show" : "Hide"} Address</span>
                     </sub>
                   </td>
                 </tr>
@@ -381,7 +385,7 @@ function Wallet() {
                   <h3>Balance:</h3>
                 </td>
                 <td>
-                  <h4> <CurrencyIconComponent size='56' /> {!balanceLoader ? balance: "Loading..."} KCO
+                  <h4> <CurrencyIconComponent size='35' adjustY={'-3%'} /> {!balanceLoader ? balance: "Loading..."} KCO
                   </h4>
                 </td>
               </tr>
@@ -393,7 +397,7 @@ function Wallet() {
             <AddKCOModal {...buyModalOptions} />
           </div>
         </div>
-        <div className='col-xl-6 p-4'>
+        <div className='col-xl-5 p-4'>
           <TransferModule />
         </div>
       </div>

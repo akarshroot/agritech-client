@@ -1,10 +1,9 @@
 .product-container {
-    width: 250px;
-    /* height: 300px; */
     padding: 10px;
     border-radius: 12px;
     border: 2px solid var(--c1);
     margin: 10px;
+    transition: all 0.3s;
     /* box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px; */
 }
 
@@ -14,6 +13,11 @@
 
 .product-container h5 {
     cursor: pointer;
+}
+.product-container:hover {
+    cursor: pointer;
+    scale: 1.05;
+    box-shadow: black 0px 0px 60px -22px;
 }
 
 .product-image {

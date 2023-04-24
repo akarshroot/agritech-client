@@ -159,16 +159,13 @@ export function PipelineWidget(props) {
             <hr className="style-two" />
             <div className="list list-group">
                 {
-                    userData && userData.currentPlan?.requirements?.map((item) => {
-                        if (item.category == 'crop') {
+                    userData && userData.currentPlan?.requirements?.map((item,i) => {
+                        if (item.category === 'crop') {
                             return (
-                                <>
-                                    <div className="list-group-item">
-                                        {item.item}<br />
-                                        <span className="subtext">Quantity: {item.quantity}</span>
-                                    </div>
-
-                                </>
+                                <div key={'PiplineWigetRenderItem'+i} className="list-group-item">
+                                    {item.item}<br />
+                                    <span className="subtext">Quantity: {item.quantity}</span>
+                                </div>
                             )
                         }
                     })

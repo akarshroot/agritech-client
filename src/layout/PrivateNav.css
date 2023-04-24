@@ -1,25 +1,17 @@
 .private-nav {
     background-color: var(--c4);
     height: fit-content;
-    position: sticky;
+    position: relative;
     top: 0px;
     z-index: 999;
-}
-
-.private-nav h4 {
-    color: var(--white-text);
-    padding: 5px;
-    background-color: var(--c1);
-    margin: 0px;
 }
 
 .links-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     flex-wrap: wrap;
     list-style: none;
-    margin: 0px;
 }
 
 .nav-element {
@@ -50,6 +42,34 @@
     background-color: var(--c3);
     color: var(--black-text);
 }
+.logoConsole{
+    color: var(--white-text);
+    background-color: var(--c1);
+    margin: 0px;
+    padding: 1rem;
+}
+.hamButtonNav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 2.8rem;
+    text-align: start;
+    padding: 1rem;
+}
+.dropDownNav{
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+.showDropDownNav{
+    height: 220px !important;
+}
+/* .LogoutButtonNav{
+    position: absolute;
+    top: calc(1.275rem + 0.3vw + 13px);
+    padding: 4px;
+    right: 0%;
+} */
 
 @media screen and (max-width: 768px) {
     .private-nav {

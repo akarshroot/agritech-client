@@ -254,7 +254,7 @@ function Campaigns() {
   }, [])
 
   return (
-    <div className='container p-2'>
+    <div className='container'>
       <div className='row shadow my-4 justify-content-around'>
         <div className='col-md-3 p-3'>
           <Button variant="success" onClick={handleShow}>
@@ -267,7 +267,7 @@ function Campaigns() {
           </Button>
         </div>
       </div>
-      <div>
+      <div className='px-2'>
         <h1 className='display-6 text-start'>Your Campaigns</h1>
         <hr />
         <div className='row'>

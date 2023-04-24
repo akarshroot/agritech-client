@@ -2,4 +2,5 @@
     object-fit: contain;
     height: 100%;
     aspect-ratio: 1;
+    translate: 0% -10%;
 }

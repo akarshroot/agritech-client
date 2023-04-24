@@ -7,6 +7,12 @@
     color: purple;
     text-decoration: none;
 }
+.AddressClassTD{
+    overflow-y: hidden;
+}
+.AddressClass{
+    font-size: 1rem;
+}
 .AddressClass:hover{
     cursor: pointer;
 }

@@ -8,6 +8,7 @@ import StoreContext from '../../../context/StoreContext'
 import { Cart } from './Cart'
 import CustomImageLoader from 'react-custom-image-loader.'
 import grains from '../../../assets/icons/grain.png'
+import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent'
 
 function ProductDetails(props) {
 
@@ -58,7 +59,7 @@ function ProductDetails(props) {
                         <div className="w-100">
                             <hr />
                         </div>
-                        <h3>{INR.format(productData.price).replace("₹", "KCO ")}</h3>
+                        <h3><CurrencyIconComponent size='35' adjustY={'-5%'}/>{INR.format(productData.price).replace("₹", "KCO ")}</h3>
                         <span>Quantity: {productData.quantity && productData.quantity}</span>
                         <div className="d-flex justify-content-around mt-3">
                             <Button variant="danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>

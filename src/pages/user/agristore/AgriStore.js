@@ -30,7 +30,7 @@ function AgriStore() {
 
 
   return (
-    <div className={`agristore-container p-3 theme-${theme}`}>
+    <div className={`container p-3 theme-${theme}`}>
       <div className="header">
         {/* <h2 className='display-6'>AgriStore</h2> */}
         {/* <hr className='style-two' /> */}
@@ -58,7 +58,7 @@ function AgriStore() {
           <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
         </div>
         <hr className='style-two' />
-        <div className="category-content">
+        <div className="row">
           {
             shopContent?.map((product) => {
               if (product.category.includes(activeStatus))
