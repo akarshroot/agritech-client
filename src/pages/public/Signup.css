@@ -20,12 +20,13 @@
 
 .signup-container {
     background-color: var(--c2);
-    width: fit-content;
+    /* width: fit-content; */
+    width: 30%;
     min-width: 300px;
     margin-left: 50%;
     transform: translateX(-50%);
     border-radius: 12px;
-    padding: 5px 20px 10px;
+    padding: 50px;
     margin-top: 100px;
 }
 
