@@ -30,7 +30,7 @@ function Management(props) {
 
   return (
     <div className={`management-container theme-${theme}`}>
-      <div className="widgets-section management-widgets">
+      <div className="widgets-section management-widgets d-flex">
         {
           widgets.map((widget) => {
             return (
