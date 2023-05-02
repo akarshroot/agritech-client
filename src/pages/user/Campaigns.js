@@ -82,7 +82,7 @@ function ModalForm({ show, handleShow }) {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Create Campaign</Modal.Title>
+          <Modal.Title className=''>Create Campaign</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
