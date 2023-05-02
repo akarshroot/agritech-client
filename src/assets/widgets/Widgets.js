@@ -51,7 +51,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
 
 
     return (
-        <div className='widget-container shadow rounded'>
+        <div className='widget-container'>
 
             {(title && target && contributors && _id) ?
                 <>
