@@ -5,6 +5,7 @@ import { CampaignWidget } from '../../assets/widgets/Widgets';
 import Button from 'react-bootstrap/esm/Button';
 import { ContributeModal } from './Campaigns';
 import { useNavigate } from 'react-router-dom';
+import './Dashboard.css'
 
 function ExploreCampaigns() {
     const [loading, setLoading] = useState(false);
@@ -48,15 +49,17 @@ function ExploreCampaigns() {
                         return (
                             <React.Fragment key={'campaignsKey' + i}>
                                 <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
-                                    <CampaignWidget {...data}>
-                                        <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
-                                    </CampaignWidget>
-                                    <ContributeModal
-                                        show={showContribute}
-                                        handleShow={handleShowContribute}
-                                        cid={data._id}
-                                        minContri={data.minContri}
-                                    />
+                                    <div className='widget'>
+                                        <CampaignWidget {...data}>
+                                            <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
+                                        </CampaignWidget>
+                                        <ContributeModal
+                                            show={showContribute}
+                                            handleShow={handleShowContribute}
+                                            cid={data._id}
+                                            minContri={data.minContri}
+                                        />
+                                    </div>
                                 </div>
                             </React.Fragment>
                         )

@@ -38,20 +38,20 @@ function Dashboard() {
 
     return (
         <>
-            <div className={`dashboard-container theme-${theme}`}>
+            <div className={`dashboard-container row p-0 theme-${theme}`}>
                 <div className={`col-2 d-none d-md-block profile-section theme-${theme}`}>
                     <div className="profile-image-container">
                         <img src={userData?.imgUrl} alt={userData?.name} />
                         <div className="details-section-element"><h3 className="display-name">{userData?.name}</h3></div>
                         <hr className="style-two" />
-                    </div>
-                    <div className="member-details-section">
+                    {/* </div>
+                    <div className="member-details-section"> */}
                         <div className="details-section-element">Region: <span className="region">{userData?.region}</span></div>
                         <div className="details-section-element">Land Area: <span className="land-area">{userData?.landArea}</span></div>
                         <div className="details-section-element">Crop: <span className="prefered-crop">{userData?.crop}</span></div>
                     </div>
                 </div>
-                <div className="col-10 row">
+                <div className="col-10 row m-0">
                     {
                         widgets.map((widget, key) => {
                             return (
