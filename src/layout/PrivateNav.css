@@ -1,5 +1,5 @@
 .private-nav {
-    background-color: var(--c4);
+    background-color: rgb(241, 232, 146);
     height: fit-content;
     position: relative;
     top: 0px;
@@ -9,7 +9,7 @@
 .links-container {
     display: flex;
     flex-direction: row;
-    /* justify-content: space-around; */
+    justify-content: space-around;
     flex-wrap: wrap;
     list-style: none;
 }
@@ -22,7 +22,11 @@
 
 .nav-element-selected {
     color: var(--white-text);
-    background-color: var(--c1);
+    /* background-color: var(--c1); */
+    background-color: #064635;
+    border-radius: 0 0 15px 15px;
+    /* transition: 0.25s ease-out; */
+
 }
 
 .nav-element-btn {
@@ -44,12 +48,15 @@
 }
 .logoConsole{
     color: var(--white-text);
-    background-color: var(--c1);
+    background-color: #064635;
     margin: 0px;
-    padding: 1rem;
+    padding: 0.7rem;
     display: flex;
     justify-content: center;
+    font-size : 1.7rem;
+    font-weight: 600;
 }
+
 .logoLink{
     cursor: pointer;
 }
