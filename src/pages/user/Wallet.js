@@ -12,6 +12,8 @@ import Spinner from 'react-bootstrap/Spinner'
 import './Wallet.css'
 import StoreContext from '../../context/StoreContext'
 import QRCode from 'qrcode'
+import KCO from '../../assets/icons/currencyIcon.png'
+import QRCodeStyling from "qr-code-styling";
 import { ToastContainer, toast } from 'react-toastify'
 
 function TransferModule() {
@@ -20,7 +22,7 @@ function TransferModule() {
   const amountTo = useInput('number', 'how much to send')
   const password = useInput('password', 'Enter password')
   const [loading, setLoading] = useState(false);
-  const { userData,getUserData } = useUser()
+  const { userData, getUserData } = useUser()
 
   function handleShow() { setShow(!show) }
 
@@ -50,7 +52,7 @@ function TransferModule() {
         progress: undefined,
         theme: "light",
       });
-      setTimeout(getUserData,2500)
+      setTimeout(getUserData, 2500)
     }
     setLoading(false)
   }
@@ -77,7 +79,7 @@ function TransferModule() {
   )
 }
 
-export function Transaction({showHashes, sno, receiverId, userId, createdAt, amount, txHash, camp, changeActiveCampaign }) {
+export function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, txHash, camp, changeActiveCampaign }) {
 
   const recivedPaid = receiverId === userId
 
@@ -311,10 +313,26 @@ function Wallet() {
   }
 
   function renderQR() {
-    QRCode.toCanvas(canvasRef.current, userData.walletAddress, function (error) {
-      if (error) console.error(error)
-      console.log('success!');
+    // QRCode.toCanvas(canvasRef.current, userData.walletAddress, function (error) {
+    //   if (error) console.error(error)
+    //   console.log('success!');
+    // })
+    const qrCode = new QRCodeStyling({
+      width: 200,
+      height: 200,
+      image: KCO,
+      dotsOptions: {
+        color: "#064635",
+        type: "rounded"
+      },
+      imageOptions: {
+        crossOrigin: "anonymous",
+        margin: 5
+      },
+      data: userData.walletAddress
     })
+    if(canvasRef.current.innerHTML === "")
+      qrCode.append(canvasRef.current)
   }
 
   useEffect(() => {
@@ -358,7 +376,7 @@ function Wallet() {
       <div className='row align-items-center'>
         <div className='col-xl-2 col-md-5 mb-3'>
           <div>
-            <canvas ref={canvasRef}></canvas>
+            <div className='qrcode-container' ref={canvasRef} />
           </div>
           scan to get Address
         </div>
@@ -385,7 +403,7 @@ function Wallet() {
                   <h3>Balance:</h3>
                 </td>
                 <td>
-                  <h4> <CurrencyIconComponent size='35' adjustY={'-3%'} /> {!balanceLoader ? balance: "Loading..."} KCO
+                  <h4> <CurrencyIconComponent size='35' adjustY={'-3%'} /> {!balanceLoader ? balance : "Loading..."} KCO
                   </h4>
                 </td>
               </tr>

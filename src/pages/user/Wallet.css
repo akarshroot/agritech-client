@@ -1,18 +1,30 @@
-.Camplink{
+.Camplink {
     color: cornflowerblue;
     text-decoration: underline;
 }
-.Camplink:hover{
+
+.Camplink:hover {
     cursor: pointer;
     color: purple;
     text-decoration: none;
 }
-.AddressClassTD{
+
+.AddressClassTD {
     overflow-y: hidden;
 }
-.AddressClass{
+
+.AddressClass {
     font-size: 1rem;
 }
-.AddressClass:hover{
+
+.AddressClass:hover {
     cursor: pointer;
+}
+
+.qrcode-container {
+    width: 210px;
+    /* border-radius: 50px; */
+    background: #ffffff;
+    box-shadow: 20px 20px 40px #d9d9d9,
+        -20px -20px 40px #ffffff;
 }
