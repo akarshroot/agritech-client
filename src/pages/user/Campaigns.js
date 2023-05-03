@@ -117,7 +117,7 @@ function ModalForm({ show, handleShow }) {
         </Modal.Body>
         <Modal.Footer className="ContributeModalFooter">
           <Button variant="danger" onClick={handleShow}>
-            Cancle
+            Cancel
           </Button>
           <Button form="CreateCampaignForm" className='my-3' type='submit' variant="success" disabled={createCampaignLoading}>{createCampaignLoading ? <>
             Creating...
@@ -257,7 +257,7 @@ function Campaigns() {
 
   return (
     <div className='container'>
-      <div className='row shadow my-4 justify-content-around'>
+      <div className='row neumorph my-4 justify-content-around'>
         <div className='col-md-3 p-3'>
           <Button variant="success" onClick={handleShow}>
             + Create Campaign
@@ -280,9 +280,9 @@ function Campaigns() {
               userCampaigns?.map((data, i) => {
                 return (
                   <React.Fragment key={'campaignsKey' + i}>
-                    <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
+                    <div className='col-sm-6 col-md-4 col-lg-3 p-4 widget'>
                       <CampaignWidget {...data}>
-                        <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
+                        <button onClick={handleShowContribute} className='neumorph-btn-green'>Contribute</button>
                       </CampaignWidget>
                       <ContributeModal
                         show={showContribute}

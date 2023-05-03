@@ -3,6 +3,7 @@ import { useUser } from '../../../context/UserContext'
 import FloatingMenu from '../../../layout/FloatingMenu'
 import { renderWidget } from '../../../assets/widgets/Widgets'
 import './Management.css'
+import Spinner from 'react-bootstrap/esm/Spinner'
 
 function Management(props) {
   const [loading, setLoading] = useState(true)
@@ -36,7 +37,7 @@ function Management(props) {
             return (
               <div key={widget.id} className={`widget ${loading ? "skeleton-widget" : "no-skeleton-widget"}`}>
                 {
-                  loading ? <></> :
+                  loading ? <Spinner varient="success" /> :
                     <>
                       {renderWidget(widget.id, widget.data)}
                     </>

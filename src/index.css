@@ -1,3 +1,17 @@
+:root{
+  --c0: #40513B;
+  --c1: #5d9900;
+  --c2: #609966;
+  --c3: #9DC08B;
+  --c4: #EDF1D6;
+  --white-text: #ececec;
+  --black-text: #0a0a0a;
+  --error-text: #c62828;
+  --error-background: #fbe9e7;
+  --warning-text: goldenrod;
+  --warning-background: #ffeca257;
+  --gradient: linear-gradient(to right, #d99e38, #ffcb74);
+}
 body {
   margin: 0;
   background-color: #ebebeb !important;
@@ -108,4 +122,11 @@ code {
   background: #ebebeb;
   box-shadow: inset 11px 11px 22px #d4d4d4,
             inset -11px -11px 22px #ffffff;
+}
+.neumorph-btn-green{
+  background-color: var(--c3);
+  border-radius: 6px;
+  border: solid 1px var(--c1);
+  box-shadow:  8px 8px 16px #cacaca,
+              -8px -8px 16px #ffffff;
 }

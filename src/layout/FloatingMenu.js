@@ -10,7 +10,7 @@ function FloatingMenu(props) {
     const navigate = useNavigate()
 
     return (
-        <div className={`floating-menu-container theme-${props.theme}`}>
+        <div className={`floating-menu-container neumorph theme-${props.theme}`}>
             <ul>
                 <li onClick={()=> navigate("/management/planning")}><img src={PlanningIco} alt="Planning" />Planning</li>
                 <li onClick={()=> navigate("/management/pipeline")}><img src={ProduceIco} alt="Produce Pipeline" />Produce Pipeline</li>
