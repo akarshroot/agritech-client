@@ -53,14 +53,16 @@ function Dashboard() {
                 </div> */}
 
                 <div className='welcome-user'>
-                    <h2 style={{ textAlign: 'center' }}>Welcome, {userData?.name}! </h2>
+                    <h2>Welcome, {userData?.name}! </h2>
                 </div>
+
+                <div className = 'girl-bg'></div>
 
                 <div className="all-widgets-container row">
                     {
                         widgets.map((widget, key) => {
                             return (
-                                <div className={`widget col-sm-6 col-md-4 col-xl-3 ${loading ? "skeleton-widget" : ""}`} key={key}>
+                                <div className={`widget col-md-4 col-xl-3 ${loading ? "skeleton-widget" : ""}`} key={key}>
                                     {
                                         loading ? <></> :
                                             <>
@@ -71,7 +73,7 @@ function Dashboard() {
                             )
                         })
                     }
-                    <div className="col-sm-6 col-md-4 col-xl-3 widget">
+                    <div className="col-md-4 col-xl-3 widget">
                         <CampaignWidget title={campaignWidget?.title} target={campaignWidget?.target} _id={campaignWidget?._id} contributors={campaignWidget?.contributors} deadline={campaignWidget?.deadline} dateCreated={campaignWidget?.dateCreated} />
                     </div>
                 </div>

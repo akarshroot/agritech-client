@@ -57,6 +57,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                 <>
                     <h3>{title}</h3>
                     <h4>Campaign Progress</h4>
+                    <hr/>
                     {/* <div className="error-message" hidden={!error}>{error}</div> */}
                     <div className="campaign-progress">
                         <div className="progress" style={{ height: "30px" }}>
