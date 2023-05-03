@@ -8,18 +8,20 @@ import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
 import { useUser } from '../../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import Spinner from 'react-bootstrap/esm/Spinner'
+import '../../index.css'
+import './Campaigns.css'
 import { ToastContainer, toast } from 'react-toastify'
 
 
 function ModalForm({ show, handleShow }) {
 
   const { userData } = useUser()
-  const title = useInput('text', 'Title Goes Here')
-  const deadline = useInput('number', 'Deadline in seconds')
-  const target = useInput('number', 'Target Amount')
-  const minContribution = useInput('number', 'Minimum Amount')
+  const title = useInput('text', '')
+  const deadline = useInput('number', '')
+  const target = useInput('number', '')
+  const minContribution = useInput('number', '')
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
-  const password = useInput('password', 'Password')
+  const password = useInput('password', '')
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -81,46 +83,46 @@ function ModalForm({ show, handleShow }) {
         size='lg'
         centered
       >
-        <Modal.Header closeButton>
-          <Modal.Title className=''>Create Campaign</Modal.Title>
+        <Modal.Header className='ContributeModalTitle' closeButton>
+          <Modal.Title>Create Campaign</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
+        <Modal.Body className='ContributeModalBody'>
+          <Form id='CreateCampaignForm' onSubmit={handleSubmit}>
 
 
             <div className='d-flex flex-column align-items-center'>
               <fieldset>
-                <label htmlFor='createCampTitle'>Title</label><br />
+                <label htmlFor='createCampTitle'>Title</label>
                 <input id='createCampTitle' {...title} />
               </fieldset>
               <fieldset>
-                <label htmlFor='createCampDeadline'>Deadline</label><br />
+                <label htmlFor='createCampDeadline'>Deadline</label>
                 <input id='createCampDeadline' {...deadline} />
               </fieldset>
               <fieldset>
-                <label htmlFor='createCampTarget'>Target</label><br />
+                <label htmlFor='createCampTarget'>Target</label>
                 <input id='createCampTarget' {...target} />
               </fieldset>
               <fieldset>
-                <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
+                <label htmlFor='createCampMinAmount'>Min. Amount</label>
                 <input id='createCampMinAmount' {...minContribution} />
               </fieldset>
               <fieldset>
-                <label htmlFor='createCampPass'>Password</label><br />
+                <label htmlFor='createCampPass'>Password</label>
                 <input id='createCampPass' {...password} />
               </fieldset>
-              <Button className='my-3' type='submit' variant="success" disabled={createCampaignLoading}>{createCampaignLoading ? <>
-                Creating...
-                <div class="spinner-border" role="status"></div>
-              </> : "Create"}</Button>
             </div>
 
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleShow}>
-            Close
+        <Modal.Footer className="ContributeModalFooter">
+          <Button variant="danger" onClick={handleShow}>
+            Cancle
           </Button>
+          <Button form="CreateCampaignForm" className='my-3' type='submit' variant="success" disabled={createCampaignLoading}>{createCampaignLoading ? <>
+            Creating...
+            <div class="spinner-border" role="status"></div>
+          </> : "Create"}</Button>
         </Modal.Footer>
       </Modal>
     </>
@@ -197,7 +199,7 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
         size='md'
       >
         <Modal.Header>
-          <Modal.Title>Contribute</Modal.Title>
+          <Modal.Title className='ContributeModal'>Contribute</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h4>Minimum contribution is '{minContri}' KCO</h4>

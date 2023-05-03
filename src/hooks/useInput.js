@@ -10,7 +10,7 @@ export default function useInput(type,placeholder) {
         ? setData(e.target.value)
         : setData(e)
     }
-    const className = 'form-control' 
+    const className = 'input-neumorph' 
     return (
         {
             className,

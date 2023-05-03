@@ -1,0 +1,27 @@
+.ContributeModalBody{
+    background-color: #e0e0e0;
+    padding: 3rem;
+}
+.ContributeModalBody label{
+    text-align: end;
+    width: 20%;
+    padding-right: 4%;
+    display: inline-block;
+}
+.ContributeModalBody fieldset{
+    padding: 0.3rem;
+    text-align: center;
+    width: 100%;
+}
+.ContributeModalBody input{
+    display: inline-block;
+    width: 60%;
+}
+.ContributeModalTitle{
+    color: white;
+    background-color: #5d9900;
+}
+.ContributeModalFooter{
+    color: white;
+    background-color: #5d9900
+}
