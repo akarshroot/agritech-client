@@ -37,7 +37,7 @@ function ExploreCampaigns() {
     return (
         <div className='container'>
             <div className="header d-flex justify-content-around align-items-center">
-                <Button className='h-25' onClick={() => { navigate("/campaigns",{replace:true}) }} variant='warning'>&larr;&nbsp; Go Back</Button>
+                <Button className='h-25' onClick={() => { navigate("/campaigns", { replace: true }) }} variant='warning'>&larr;&nbsp; Go Back</Button>
                 <h2 className='display-6'>Explore campaigns across the platform</h2>
                 <hr className='style-two' />
             </div>
@@ -48,15 +48,17 @@ function ExploreCampaigns() {
                         return (
                             <React.Fragment key={'campaignsKey' + i}>
                                 <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
-                                    <CampaignWidget {...data}>
-                                        <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
-                                    </CampaignWidget>
-                                    <ContributeModal
-                                        show={showContribute}
-                                        handleShow={handleShowContribute}
-                                        cid={data._id}
-                                        minContri={data.minContri}
-                                    />
+                                    <div className='widget'>
+                                        <CampaignWidget {...data}>
+                                            <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
+                                        </CampaignWidget>
+                                        <ContributeModal
+                                            show={showContribute}
+                                            handleShow={handleShowContribute}
+                                            cid={data._id}
+                                            minContri={data.minContri}
+                                        />
+                                    </div>
                                 </div>
                             </React.Fragment>
                         )
