@@ -8,6 +8,7 @@ import CustomImageLoader from 'react-custom-image-loader.'
 import grains from '../../../assets/icons/grain.png'
 import { useSearchParams } from 'react-router-dom'
 import { useUser } from '../../../context/UserContext'
+import SideBar from './SideBar'
 
 function AgriStore() {
 
@@ -35,8 +36,8 @@ function AgriStore() {
         {/* <h2 className='display-6'>AgriStore</h2> */}
         {/* <hr className='style-two' /> */}
       </div>
-      <div className="agristore-content mt-2">
-        <div className="options-bar d-flex align-items-center justify-content-between">
+      <div className="agristore-content mt-2 d-flex">
+        {/* <div className="options-bar d-flex align-items-center justify-content-between">
           <div className='d-flex align-items-center'>
             <h5>Shop By:&nbsp;&nbsp;</h5>
             <ul className='d-flex list-group list-group-horizontal'>
@@ -56,25 +57,30 @@ function AgriStore() {
             </ul>
           </div>
           <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
+        </div> */}
+
+        <SideBar />
+        <div>
+              <hr className='style-two' />
+            <div className="row">
+              {
+                shopContent?.map((product) => {
+                  if (product.category.includes(activeStatus))
+                    return (
+                      <Product key={product._id} product={product} />
+                    )
+                })
+              }
+            </div>
+            <Button variant='warning' onClick={() => { fetchShopContent("", activeStatus) }} disabled={shopLoading}>{shopLoading ? "Loading..." : "Load More"}</Button>
+            {
+              shopLoading ?
+                <div className='d-flex w-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'} /></div>
+                :
+                <></>
+            }
         </div>
-        <hr className='style-two' />
-        <div className="row">
-          {
-            shopContent?.map((product) => {
-              if (product.category.includes(activeStatus))
-                return (
-                  <Product key={product._id} product={product} />
-                )
-            })
-          }
-        </div>
-        <Button variant='warning' onClick={() => { fetchShopContent("", activeStatus) }} disabled={shopLoading}>{shopLoading ? "Loading..." : "Load More"}</Button>
-        {
-          shopLoading ?
-            <div className='d-flex w-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'} /></div>
-            :
-            <></>
-        }
+        
       </div>
     </div>
   )

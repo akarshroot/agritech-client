@@ -39,12 +39,12 @@ export function Cart() {
                             <Modal.Body>
                                 <ul className={`list-group theme-${theme}`}>
                                     {
-                                        cart.length == 0 ? <>No items added.</>
+                                        cart.length === 0 ? <>No items added.</>
                                             :
                                             cart.map((item) => {
                                                 const productDetails = item.product
                                                 return (
-                                                    <li className='list-group-item w-100 d-flex justify-content-between' key={productDetails._id}><Button variant='danger' onClick={() => { setCartTotal(cartTotal - productDetails.price); deleteCartItem(item._id) }}>X</Button><div>{productDetails.title}</div><div>{INR.format(productDetails.price)}</div></li>
+                                                    <li className='list-group-item w-100 d-flex justify-content-between bg-success bg-opacity-10' key={productDetails._id}><Button variant='danger' onClick={() => { setCartTotal(cartTotal - productDetails.price); deleteCartItem(item._id) }}>X</Button><div>{productDetails.title}</div><div>{INR.format(productDetails.price)}</div></li>
                                                 )
                                             })
                                     }
