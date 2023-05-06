@@ -14,7 +14,8 @@ body::-webkit-scrollbar-track{
   background: transparent;
 }
 body::-webkit-scrollbar-thumb {
-  background-color: rgba(32, 209, 59, 0.888);
+  /* background-color: rgba(32, 209, 59, 0.888); */
+  background-color: #4c8757;
   border: 1px solid #fff;
   border-radius: 1rem;
 }

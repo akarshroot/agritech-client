@@ -23,7 +23,8 @@
 .nav-element-selected {
     color: var(--white-text);
     /* background-color: var(--c1); */
-    background-color: #064635;
+    /* background-color: #064635; */
+    background-color: #4c8757;
     border-radius: 0 0 15px 15px;
     /* transition: 0.25s ease-out; */
 
@@ -49,7 +50,8 @@
 
 .logoConsole{
     color: var(--white-text);
-    background-color: #064635;
+    /* background-color: #064635; */
+    background-color: #4c8757;
     margin: 0px;
     padding: 0.7rem;
     display: flex;
