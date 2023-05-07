@@ -36,6 +36,7 @@ function AgriStore() {
           <SideBar />
           <div className='col-md-9' >
             <div className="row">
+          <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
               {
                 shopContent?.map((product) => {
                   if (product.category.includes(activeStatus))
