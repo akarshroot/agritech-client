@@ -21,19 +21,54 @@ export default function SideBar() {
     setActiveStatus(searchParams.get("category") ? searchParams.get("category") : "all")
   }, [])
 
+  const ResponsiveNav=()=>{
+    return (
+      <div className="options-bar d-flex align-items-center justify-content-between">
+        <div className='d-flex align-items-center'>
+          <h5>Shop By:&nbsp;&nbsp;</h5>
+          <ul className='d-flex list-group list-group-horizontal'>
+          {
+                categories?.map((category, i) => {
+                  return (
+                    <li key={i} onClick={(e) => {
+                      e.target.classList.add("active")
+                      setSearchParams({ category: category.toLowerCase() })
+                      setActiveStatus(category.toLowerCase())
+                      setContent([])
+                      setSkip(0)
+                    }} className={`list-group-item side-list ${activeStatus === category.toLowerCase() ? "active" : ""}`}>{category}</li>
+                  )
+                })
+              }
+          </ul>
+        </div>
+      </div>
+    )
+  }
   return (
     
     <>
-    {/* <div className="options-bar d-flex align-items-center justify-content-between">
-          <div className='d-flex align-items-center'>
-            <h5>Shop By:&nbsp;&nbsp;</h5>
-            <ul className='d-flex list-group list-group-horizontal'>
-              
-            </ul>
-          </div>
-          <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
-        </div> */}
-        <nav id="sidebarMenu" className="collapse d-lg-block sidebar collapse bg-white col-md-2 position-relative">
+    <div className="options-bar d-flex align-items-center justify-content-between">
+        <div className='d-flex align-items-center'>
+          <h5>Shop By:&nbsp;&nbsp;</h5>
+          <ul className='d-flex list-group list-group-horizontal'>
+          {
+                categories?.map((category, i) => {
+                  return (
+                    <li key={i} onClick={(e) => {
+                      e.target.classList.add("active")
+                      setSearchParams({ category: category.toLowerCase() })
+                      setActiveStatus(category.toLowerCase())
+                      setContent([])
+                      setSkip(0)
+                    }} className={`list-group-item side-list ${activeStatus === category.toLowerCase() ? "active" : ""}`}>{category}</li>
+                  )
+                })
+              }
+          </ul>
+        </div>
+      </div>
+        {/* <nav id="sidebarMenu" className="d-lg-block sidebar bg-white col-md-2 position-relative">
           <div className="side-position">
             <div className="list-group list-group-flush mx-3 mt-4">
             {
@@ -52,7 +87,7 @@ export default function SideBar() {
               
             </div>
           </div>
-        </nav>
+        </nav> */}
     </>
   )
 }

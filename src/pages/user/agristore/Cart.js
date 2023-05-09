@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import StoreContext from '../../../context/StoreContext'
+import './Cart.css'
 
 export function Cart() {
     const { cart, setCart, showCart, openCart, INR, cartTotal, setCartTotal, cartLoading, deleteCartItem } = useContext(StoreContext)
@@ -24,7 +25,7 @@ export function Cart() {
                 !cartLoading ?
                     <>
                         <div className={`cart theme-${theme}`}>
-                            <Button variant="warning" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;<b>({cart.length})</b></Button>
+                            <Button variant="warning cart-btn" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;View Cart <b>({cart.length})</b></Button>
                         </div>
                         <Modal
                             show={showCart}

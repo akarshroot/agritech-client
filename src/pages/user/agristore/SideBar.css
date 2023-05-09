@@ -17,11 +17,12 @@
 
     .side-list:hover{
         cursor: pointer;
-        background-color: bisque;
+        background-color: #f1e892;
     }
 
     .list-group .active{
-        background-color: var(--c1) !important;
+        /* background-color: var(--c1) !important; */
+        background-color: #4c8757 !important;
     }
 
     @media (max-width: 991.98px) {

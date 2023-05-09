@@ -62,10 +62,11 @@ function ProductDetails(props) {
                         <h3><CurrencyIconComponent size='35' adjustY={'-5%'}/>{INR.format(productData.price).replace("₹", "KCO ")}</h3>
                         <span>Quantity: {productData.quantity && productData.quantity}</span>
                         <div className="d-flex justify-content-around mt-3">
-                            <Button variant="danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>
+                            <Button variant="outline-danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>
                             &nbsp;
                             &nbsp;
-                            <Button variant="success">Buy Now</Button>
+                            
+                            <Button variant="success btn-buy floating">Buy Now</Button>
                         </div>
                         <div className="product-description mt-3">
                             {productData.description}

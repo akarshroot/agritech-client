@@ -4,12 +4,28 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useUser } from '../../context/UserContext'
 import './Login.css'
+import eyeClose from '../../assets/icons/eyes-closed.png'
+import eyeOpen from '../../assets/icons/eyes-open.png'
+import { ToastContainer, toast } from 'react-toastify'
 
 function Login() {
     const email = useRef()
     const password = useRef()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
+    const [pwdSrc, setPwdSrc ]=useState(eyeOpen)
+    const [pwdType, setPwdType]=useState('password')
+
+    const changeIcon=()=>{
+        if(pwdSrc === eyeOpen){
+            setPwdSrc(eyeClose)
+            setPwdType('text')
+        }
+        else{
+            setPwdSrc(eyeOpen)
+            setPwdType('password')
+        }
+    }
 
     const {theme, login} = useUser()    
 
@@ -23,7 +39,27 @@ function Login() {
         }
         try {
             await login(credentials)
+            toast.success("Login Successful!", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
         } catch (e) {
+            toast.error("Invalid Email or Password", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
             setError(e.message)
         }
         setLoading(false)
@@ -31,6 +67,18 @@ function Login() {
 
     return (
         <>
+        <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         <div>
             <div className="bg-login"></div>
             <div className="bg-overlay"></div>
@@ -40,8 +88,8 @@ function Login() {
                 <div className='row justify-content-center'>
                     <form className='col-md-4' onSubmit={(e) => processLogin(e)} id="login">
                         <input ref={email} className='form-control' placeholder='Email' type="email" id="email" required /><br/>
-                        <input ref={password} className='form-control' placeholder='Password' type="password" id="password" required /><br/>
-                        <input className='form-input btn btn-success' type="submit" value={loading ? "Please Wait..." : "Login"} disabled={loading} />
+                        <div className='position-relative'><input ref={password} className='form-control' placeholder='Password' type={pwdType} id="password" required /><img src={pwdSrc} className='eye-icn' alt='' onClick={changeIcon}/></div>
+                        <input className='form-input btn btn-success my-3' type="submit" value={loading ? "Please Wait..." : "Login"} disabled={loading} />
                     </form>
                 </div>
                 <span>Not a member? <Link to="/signup" className='text-light '>Create an account</Link> today!</span>
