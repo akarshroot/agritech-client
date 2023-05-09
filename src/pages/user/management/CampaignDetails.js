@@ -12,11 +12,12 @@ import { ContributeModal } from '../Campaigns'
 import { createVoteReq, getTransactionsForCamp, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
 import './CampaignDetails.css'
 import { toast } from 'react-toastify'
+import AlreadyContributed from '../../../assets/icons/tick-box.svg'
 
 
 function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal }) {
 
-  return (
+  return (<>
     <div className='row shadow p-3 rounded'>
       <div className='col-12'>
         <div className='row justify-content-end'>
@@ -51,15 +52,22 @@ function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal
         </Table>
       </div>
     </div>
+  </>
   )
 }
 
-function CampaignInfo({ title, raisedAmount, target }) {
+function CampaignInfo({ title, raisedAmount, target, contributors }) {
+  const { currentUser } = useUser()
   return (
     <div className='row mt-4 shadow p-3 rounded justify-content-around'>
       <div className='col-12'>
         <div className='display-2 text-start'>
           {title}
+          {
+            contributors.find(contributor => contributor.userId == currentUser) ?
+              <img src={AlreadyContributed} width="80px" height="80px" alt="" />
+              : <></>
+          }
         </div>
       </div>
       <hr />
@@ -110,7 +118,6 @@ function CampaignPrograssBar({ raisedAmount, target }) {
     </div>
   )
 }
-
 
 function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber }) {
 
@@ -445,6 +452,7 @@ function Transaction({ sno, receiverId, createdAt, amount, txHash }) {
     </>
   )
 }
+
 function TransactionsHistory({ tx }) {
   return (
     <div>
@@ -517,7 +525,7 @@ function CampaignVotesinfo({ isOwner }) {
 export default function CampaignDetails() {
 
   const { activeCampaign, changeActiveCampaign } = useContext(CampaignContext)
-  const { userData, loadingUser, getUserData } = useUser()
+  const { userData, loadingUser, getUserData, currentUser } = useUser()
   const [show, setShow] = useState(false);
   function handleShow() {
     setShow(!show)
