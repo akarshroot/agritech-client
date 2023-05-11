@@ -48,7 +48,7 @@ export default function SideBar() {
   return (
     
     <>
-    <div className="options-bar d-flex align-items-center justify-content-between">
+    {/* <div className="options-bar d-flex align-items-center justify-content-between">
         <div className='d-flex align-items-center'>
           <h5>Shop By:&nbsp;&nbsp;</h5>
           <ul className='d-flex list-group list-group-horizontal'>
@@ -67,8 +67,8 @@ export default function SideBar() {
               }
           </ul>
         </div>
-      </div>
-        {/* <nav id="sidebarMenu" className="d-lg-block sidebar bg-white col-md-2 position-relative">
+      </div> */}
+        <nav id="sidebarMenu" className="d-lg-block sidebar bg-white col-md-2 position-relative">
           <div className="side-position">
             <div className="list-group list-group-flush mx-3 mt-4">
             {
@@ -87,7 +87,7 @@ export default function SideBar() {
               
             </div>
           </div>
-        </nav> */}
+        </nav>
     </>
   )
 }

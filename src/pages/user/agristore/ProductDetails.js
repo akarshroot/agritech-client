@@ -44,15 +44,17 @@ function ProductDetails(props) {
     }, [])
 
     return (
-        <div className='d-flex flex-column align-items-start w-100 p-3'>
-            <div className="product-details-header d-flex justify-content-between w-100">
+        <div className='row flex-column align-items-start w-100 p-3'>
+            <div className="product-details-header d-flex justify-content-between">
                 <Button onClick={() => navigate("/agristore",{replace:true})} variant='warning'>&larr;&nbsp;Back to Store</Button>
                 <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
             </div>
             {productData ? <>
-                <div className="d-flex p-3 product-details-container w-100">
-                    <div className="product-details-img w-50 p-3" style={{ backgroundImage: `url(${productData.imgUrl})` }}></div>
-                    <div className="product-details d-flex flex-column align-items-start p-3 m-3">
+                <div className="row p-3 product-details-container d-flex justify-content-center justify-content-around">
+                    <div className="product-details-img p-3 col-12 col-sm-12 col-md-4" >
+                        <img src={productData.imgUrl} alt="" height="70%" />
+                    </div>
+                    <div className="product-details col-12 col-sm-12 col-md-5 d-flex flex-column align-items-start p-3 m-3">
                         <div className="category-path mb-3">PRODUCTS / {productData.category.map((category,i) => (category !== "all" || productData.category.length === 1) && (<Link key={'specificProductLink'+productData._id+i} className='link' to={`/agristore?category=${category}`}>{category.toUpperCase()}</Link>))}</div>
                         <h3 className="product-title">{productData.title}</h3>
                         <span>Sold By: {productData.soldBy}</span><span>Rating: {productData.rating}/5</span>

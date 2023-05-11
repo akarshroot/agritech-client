@@ -1,12 +1,12 @@
 .product-details-container {
-    min-height: 100vh;
+    margin-left: 100px;
 }
 
 .product-details-img {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    max-height: 500px;
+    max-height: 1000px;
     border-right: 1px solid gray;
 }
 

@@ -21,7 +21,7 @@ function PrivateNav(props) {
     return (
         <>
             <div className={`private-nav d-none d-md-block theme-${props.theme}`}>
-                <div className='logoConsole'>
+                <div className='logoConsole d-flex justify-content-center'>
                     <div onClick={() => navigate('/',{replace:true})} className='logoLink'>
                         AgriTech Console
                     </div>
