@@ -364,7 +364,7 @@ export function CurrentPlan(props) {
                         <div className="progress" style={{ height: "30px" }}>
                             <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
                                 aria-valuenow={`${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${(new Date() - new Date(userData?.currentPlan.executionStart)) * 100 / (new Date(userData?.currentPlan.executionEnd) - new Date(userData?.currentPlan.executionStart))}%` }}>
-                                <span>{percentage}%</span>
+                                <span>{parseInt(percentage)}%</span>
                             </div>
                         </div>
                         <div className="current-campaign-widget-details mt-2">
