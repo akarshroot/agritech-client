@@ -60,7 +60,7 @@ function PrivateNav(props) {
                     <Button variant='btn bg-warning bg-opacity-75' onClick={() => logout()}>LOGOUT</Button>
                 </div>
                 <div className={`dropDownNav ${hamShow ? 'showDropDownNav' : ''}`}>
-                    <ul className='links-container p-0'>
+                    <ul className='links-container p-0 justify-content-center d-flex flex-column align-items-center'>
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/dashboard"><li className={`nav-element ${tab === "dashboard" ? "nav-element-selected" : ""}`}>Dashboard</li></Link>
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/wallet"><li className={`nav-element ${tab === "wallet" ? "nav-element-selected" : ""}`}>Wallet</li></Link>
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/management"><li className={`nav-element ${tab === "management" ? "nav-element-selected" : ""}`}>Management</li></Link>

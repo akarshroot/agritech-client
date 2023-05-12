@@ -1,6 +1,4 @@
 .crop {
-    border-radius: 12px;
-    border: 2px solid var(--c1);
     width: 300px;
     height: 300px;
 }

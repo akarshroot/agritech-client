@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import './Product.css'
 import Button from 'react-bootstrap/esm/Button';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,8 @@ import { useUser } from '../../../context/UserContext';
 import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent';
 import { ToastContainer, toast } from 'react-toastify';
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
+import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
 
 function Product(props) {
     const { theme } = useUser()
@@ -18,10 +20,11 @@ function Product(props) {
         currency: 'INR',
     });
 
-    async function buyItem(productId) {
+    async function buyItem(e) {
+        e.preventDefault()
+        const productId = modalDetails._id
         setDisable(true)
         const res = await createOrder(productId)
-        setDisable(false)
         if (res.error === false) {
             toast.success(res.message, {
                 position: "top-right",
@@ -34,6 +37,15 @@ function Product(props) {
                 theme: "light",
             });
         }
+        setDisable(false)
+        setShowBuyModal(!openBuyModal)
+    }
+
+    const [openBuyModal, setShowBuyModal] = useState(false)
+    const [modalDetails, setModalDetails] = useState({})
+    const passwordRef = useRef()
+    function handleBuyModal() {
+        setShowBuyModal(!openBuyModal)
     }
 
     return (
@@ -57,8 +69,8 @@ function Product(props) {
                         <div className='my-4'>
                             <Button variant="success p-2 w-100" onClick={buyItem}>Buy Now</Button>
                         </div>
-                            <Button variant="outline-success w-100"  onClick={() => { navigate("/agristore/product/" + props.product._id) }}>View Details</Button>
                     </div>
+
                 </div>
             </div>
         </div>

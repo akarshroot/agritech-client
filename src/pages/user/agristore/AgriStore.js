@@ -9,6 +9,7 @@ import grains from '../../../assets/icons/grain.png'
 import { useSearchParams } from 'react-router-dom'
 import { useUser } from '../../../context/UserContext'
 import SideBar from './SideBar'
+import { ToastContainer } from 'react-toastify'
 
 function AgriStore() {
 
@@ -43,14 +44,23 @@ function AgriStore() {
             </div>
             <Button variant='warning my-3' onClick={() => { fetchShopContent("", activeStatus) }} disabled={shopLoading}>{shopLoading ? "Loading..." : "Load More"}</Button>
             {
-              shopLoading ?
-                <div className='d-flex w-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'} /></div>
-                :
-                <></>
+              shopContent?.map((product) => {
+                if (product.category.includes(activeStatus))
+                  return (
+                    <Product key={product._id} product={product} />
+                  )
+              })
             }
+          </div>
+          <Button variant='warning my-3' onClick={() => { fetchShopContent("", activeStatus) }} disabled={shopLoading}>{shopLoading ? "Loading..." : "Load More"}</Button>
+          {
+            shopLoading ?
+              <div className='d-flex w-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'} /></div>
+              :
+              <></>
+          }
         </div>
       </div>
-    </div>
   )
 }
 

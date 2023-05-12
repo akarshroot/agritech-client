@@ -128,7 +128,7 @@ export function StoreContextProvider({ children }) {
         try {
             const response = await axios.post("/store/order/create", { userId: currentUser, product: productId })
             if(response.hasOwnProperty("data"))
-                return response.data.data
+                return response.data
             else throw response
         } catch (error) {
             console.log(error.response.data.message);
