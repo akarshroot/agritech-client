@@ -35,7 +35,7 @@ export function Cart() {
                             size='md'
                         >
                             <Modal.Header closeButton>
-                                <Modal.Title>Your saved items</Modal.Title>
+                                <Modal.Title><img src={shoppingCart} alt="cart" className='cart-img' /> Your saved items</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <ul className={`list-group theme-${theme}`}>

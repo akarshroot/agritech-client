@@ -34,7 +34,7 @@ function AgriStore() {
     <div className={`container-fluid theme-${theme}`}>
       <div className='row'>
           <SideBar />
-          <div className='col-md-9' >
+          <div className='col-md-10' >
             <div className="row">
           <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
               {

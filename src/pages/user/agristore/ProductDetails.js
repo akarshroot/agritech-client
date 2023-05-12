@@ -52,7 +52,7 @@ function ProductDetails(props) {
             {productData ? <>
                 <div className="row p-3 product-details-container d-flex justify-content-center justify-content-around">
                     <div className="product-details-img p-3 col-12 col-sm-12 col-md-4" >
-                        <img src={productData.imgUrl} alt="" height="70%" />
+                        <img src={productData.imgUrl} alt="" height="50%" />
                     </div>
                     <div className="product-details col-12 col-sm-12 col-md-5 d-flex flex-column align-items-start p-3 m-3">
                         <div className="category-path mb-3">PRODUCTS / {productData.category.map((category,i) => (category !== "all" || productData.category.length === 1) && (<Link key={'specificProductLink'+productData._id+i} className='link' to={`/agristore?category=${category}`}>{category.toUpperCase()}</Link>))}</div>

@@ -31,30 +31,58 @@ function Signup() {
     const { theme, signup } = useUser()
 
     async function processSignup(e) {
-        const data = {
-            name: name.current.value,
-            email: email.current.value,
-            phno: phno.current.value,
-            password: password.current.value
-        }
         e.preventDefault()
-        setLoading(true)
-        try {
-            await signup(data)
-            toast.success("Signup Successful!", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-        } catch (e) {
-            setError(e.message)
+        if(repassword.current.value !== password.current.value){
+            showWarning("Password doesn't match !")
+            return;
         }
-        setLoading(false)
+        else{
+            const data = {
+                name: name.current.value,
+                email: email.current.value,
+                phno: phno.current.value,
+                password: password.current.value
+            }
+            setLoading(true)
+            try {
+                await signup(data)
+                toast.success("Signup Successful!", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            } catch (e) {
+                toast.error("Invalid Signup! Try Again", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                setError(e.message)
+            }
+            setLoading(false)
+        }
+    }
+    const showWarning=(e)=>{
+        toast.error(e, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
     }
 
     return (
@@ -75,12 +103,12 @@ function Signup() {
             <div className="bg-overlay"></div>
             <div className={`bg-success bg-opacity-50 text-light signup-container theme-${theme}`}>
                 <h1 className='mb-3'>SIGN UP</h1>
-                <div className="error-message" hidden={!error}>{error}</div>
+                {/* <div className="error-message" hidden={!error}>{error}</div> */}
                 <div className='row justify-content-center'>
                     <form className='col-md-4' onSubmit={(e) => processSignup(e)} id="signup">
                         <input ref={name}  className='form-control' placeholder='Full Name' type="text" id="name" required /><br/>
                         <input ref={email} className='form-control' placeholder='Email' type="email" id="email" required /><br/>
-                        <input ref={phno} className='form-control' placeholder='Phone Number' type="number" title="Error Message" pattern="[1-9]{1}[0-9]{9}" id="phno" required /><br/>
+                        <input ref={phno} className='form-control' placeholder='Phone Number' type="number" max="9999999999" min="1000000000" id="phno" required onInvalid={()=>{showWarning('Invalid PhoneNumber')}} /><br/>
                         <div className='position-relative'><input ref={password} className='form-control' placeholder='Password' type={pwdType} id="password" required /><img src={pwdSrc} className='eye-icn' alt='' onClick={changeIcon} /></div><br/>
                         <input ref={repassword} className='form-control' type="password" placeholder='Re-type Password' id="re-password" required /><br/>
                         <input className='form-input  btn btn-success' type="submit" value={loading ? "Please Wait..." : "Signup"} disabled={loading} />

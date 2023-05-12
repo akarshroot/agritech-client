@@ -33,8 +33,8 @@ function Product(props) {
                     <Button variant="outline-success w-100"  onClick={() => { navigate("/agristore/product/" + props.product._id) }}>View Details</Button>
             </div>
         </div> */}
-    <div className='col-md-3 col-lg-4'>
-        <div className={`product-container col-10 col-md-10 h-100 shadow row flex-column justify-content-center theme-${theme} p-3`}>
+    <div className='col-sm-6 col-md-4 col-xl-3 p-3 m-3'>
+        <div className={`product-container h-100 shadow row flex-column justify-content-center theme-${theme} p-3`}>
             <div className="star-product" hidden={!props.product.recent}>Recently Watched</div>
             <div onClick={() => { navigate("/agristore/product/" + props.product._id) }} style={{ backgroundImage: `url(${props.product.imgUrl})` }} alt={props.product.title} className='product-image' />
             <h5 onClick={() => { navigate("/agristore/product/" + props.product._id) }}>{props.product.title}</h5>
