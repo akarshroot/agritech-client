@@ -33,16 +33,11 @@ function AgriStore() {
 
   return (
     <div className={`container-fluid theme-${theme}`}>
-      <div className='row justify-content-center'>
-          <SideBar />
-          <div className='col-md-10' >
-            <div className="row justify-content-around">
-          <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
-              {
-                shopContent?.map((product,i) => product.category.includes(activeStatus) && <Product key={product._id+i} product={product} />)
-              }
-            </div>
-            <Button variant='warning my-3' onClick={() => { fetchShopContent("", activeStatus) }} disabled={shopLoading}>{shopLoading ? "Loading..." : "Load More"}</Button>
+      <div className='row'>
+        <SideBar />
+        <div className='col-md-10' >
+            <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
+          <div className="row">
             {
               shopContent?.map((product) => {
                 if (product.category.includes(activeStatus))
@@ -61,6 +56,7 @@ function AgriStore() {
           }
         </div>
       </div>
+    </div>
   )
 }
 

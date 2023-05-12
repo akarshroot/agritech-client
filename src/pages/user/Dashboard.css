@@ -37,9 +37,7 @@
 }
 
 .all-widgets-container {
-  display: flex;
   width: 100%;
-  padding-left: 40px;
 }
 
 .widget {

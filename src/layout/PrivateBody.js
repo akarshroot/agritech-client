@@ -99,7 +99,7 @@ function PrivateBody(props) {
                     :
                     <>
                         <PrivateNav theme={theme} />
-                        {userData && userData.verified == false ? <div className="verification-bar alert alert-danger p-1">Verify your email to use all features. Click here.</div> : <></>}
+                        {userData && userData.verified === false && <div className="verification-bar alert alert-danger m-0">Verify your email to use all features. Click here.</div>}
                         <div className="body">
                             <Body theme={theme} />
                         </div>

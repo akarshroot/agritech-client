@@ -51,7 +51,50 @@ function Product(props) {
 
     return (
         <>
-            <div className='col-md-6 col-xl-3 p-3'>
+            <div className='col-md-6 col-xl-3 p-5'>
+                <Modal
+                    show={openBuyModal}
+                    onHide={handleBuyModal}
+                    backdrop="static"
+                    keyboard={false}
+                    size='md'
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Buy {modalDetails.title} for {modalDetails.price} KCO</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={buyItem} className='form-control'>
+                            <div className='d-flex flex-column justify-content-center align-items-center'>
+                                <fieldset className='m-1'>
+                                    <label htmlFor='passwordToPurchase'>Password</label><br />
+                                    <input id='passwordToPurchase' type='password' ref={passwordRef} required={true} />
+                                </fieldset>
+                                <div className="alert alert-warning">
+                                    This action would deduct {modalDetails.price} KCO from your wallet.
+                                </div>
+                            </div>
+                            <div className='text-end'>
+                                <Button className='mx-2' variant="danger" onClick={handleBuyModal}>
+                                    Cancel
+                                </Button>
+                                <Button className='my-3' type='submit' variant="success" disabled={disableBuy} >{disableBuy ? "Ordering..." : "Confirm Purchase"}</Button>
+                            </div>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+
+                <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
                 <div className={`product-container h-100 shadow row flex-column justify-content-center theme-${theme} p-3`}>
                     <div className="star-product" hidden={!props.product.recent}>Recently Watched</div>
                     <div onClick={() => { navigate("/agristore/product/" + props.product._id) }} style={{ backgroundImage: `url(${props.product.imgUrl})` }} alt={props.product.title} className='product-image' />
@@ -68,10 +111,10 @@ function Product(props) {
                                     <Button variant="warning w-100" onClick={() => { addToCart(props.product) }}><img src={shoppingCart} alt='' /> Add To Cart</Button>
                                 </div>
                                 <div className='my-4'>
-                                    <Button variant="success p-2 w-100" onClick={buyItem}>Buy Now</Button>
+                                    <Button variant="success p-2 w-100" onClick={() => {setModalDetails(props.product); setShowBuyModal(!openBuyModal)}}>{disableBuy ? "Ordering..." : "Buy Now"}</Button>
                                 </div>
+                                <Button variant="outline-success w-100" onClick={() => { navigate("/agristore/product/" + props.product._id) }}>View Details</Button>
                             </div>
-
                         </div>
                     </div>
                 </div>
