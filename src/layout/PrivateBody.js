@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import FontAwesome from 'react-fontawesome'
@@ -9,6 +9,8 @@ import wallet from '../assets/icons/wallet.png'
 import management from '../assets/icons/management.png'
 import campaigns from '../assets/icons/campaigns.png'
 import agristore from '../assets/icons/agristore.png'
+import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
 
 function PrivateNav(props) {
     const { currentUser, logout, loading, userData, getUserData } = useUser()
@@ -77,12 +79,16 @@ function PrivateBody(props) {
     const Body = props.body
     const navigate = useNavigate()
 
-    const { currentUser, theme, checkTokenCookie, loading } = useUser()
+    const { currentUser, theme, checkTokenCookie, loading, userData, getUserData } = useUser()
 
 
     useEffect(() => {
         if (!checkTokenCookie && !currentUser) { navigate("/") }
     })
+
+    useEffect(() => {
+        if (!userData) getUserData()
+    }, [])
 
     return (
         <>
@@ -93,12 +99,64 @@ function PrivateBody(props) {
                     :
                     <>
                         <PrivateNav theme={theme} />
+                        {userData && userData.verified == false ? <div className="verification-bar alert alert-danger p-1">Verify your email to use all features. Click here.</div> : <></>}
                         <div className="body">
                             <Body theme={theme} />
                         </div>
                     </>
             }
         </>
+    )
+}
+
+function VerifyEmailModal(props) {
+
+    const [openBuyModal, setShowBuyModal] = useState(false)
+    const [disableBuy, setDisableBuy] = useState(false)
+    const [modalDetails, setModalDetails] = useState({})
+    const passwordRef = useRef()
+
+
+    function handleBuyModal() {
+        setShowBuyModal(!openBuyModal)
+    }
+
+    async function verifyOTP(e) {
+        e.preventDefault()
+
+    }
+
+    const otpRef = useRef()
+
+    return (
+        <Modal
+            show={openBuyModal}
+            onHide={handleBuyModal}
+            backdrop="static"
+            keyboard={false}
+            size='md'
+        >
+            <Modal.Header closeButton>
+                <Modal.Title>Verify Email</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form onSubmit={verifyOTP} className='form-control'>
+                    <div className='d-flex flex-column justify-content-center align-items-center'>
+                        <p>Enter the 4 digit pin sent to your registered email.</p>
+                        <fieldset className='m-1'>
+                            <label htmlFor='otp'>OTP</label><br />
+                            <input id='otp' type='number' ref={otpRef} required={true} />
+                        </fieldset>
+                    </div>
+                    <div className='text-end'>
+                        <Button className='mx-2' variant="danger" onClick={handleBuyModal}>
+                            Cancel
+                        </Button>
+                        <Button className='my-3' type='submit' variant="success" disabled={disableBuy} >{disableBuy ? "Ordering..." : "Confirm Purchase"}</Button>
+                    </div>
+                </Form>
+            </Modal.Body>
+        </Modal>
     )
 }
 
