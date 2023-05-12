@@ -16,8 +16,9 @@
 
 .nav-element {
     width: 200px;
-    padding: 10px;
+    padding: 2px;
     color: var(--black-text);
+    font-size: large;
 }
 
 .nav-element-selected {
@@ -90,6 +91,10 @@
     padding: 4px;
     right: 0%;
 } */
+
+.nav-element > img{
+    margin-right: 5px;
+}
 
 @media screen and (max-width: 768px) {
     .private-nav {
