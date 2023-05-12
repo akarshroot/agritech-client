@@ -56,8 +56,6 @@ function Dashboard() {
                     <h2>Welcome, {userData?.name}! </h2>
                 </div>
 
-                <div className = 'girl-bg'></div>
-
                 <div className="all-widgets-container row">
                     {
                         widgets.map((widget, key) => {
