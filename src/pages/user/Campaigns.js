@@ -264,12 +264,12 @@ function Campaigns() {
   return (
     <div className='container'>
       <div className='row shadow my-4 justify-content-around'>
-        <div className='col-md-3 p-3'>
+        <div className='col-sm-3 p-3'>
           <Button variant="success" onClick={handleShow}>
             + Create Campaign
           </Button>
         </div>
-        <div className='col-md-3 p-3'>
+        <div className='col-sm-3 p-3'>
           <Button variant="success" onClick={() => { navigate("/campaigns/all", { replace: true }) }}>
             View All Campaigns
           </Button>

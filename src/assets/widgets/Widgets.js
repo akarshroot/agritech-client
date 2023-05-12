@@ -10,6 +10,7 @@ import Table from 'react-bootstrap/esm/Table';
 import { Link, useNavigate } from 'react-router-dom';
 import { getTransactions } from '../../interceptors/web3ServerApi';
 import AlreadyContributed from '../../assets/icons/tick-box.svg'
+import FontAwesome from 'react-fontawesome';
 
 //Widget renderer
 export function renderWidget(id, props) {
@@ -45,11 +46,12 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
     }
 
     useEffect(() => {
+        console.log("getting CampLength")
         if (_id)
             getCollectonCampbyId(_id).then((res) => {
                 setCollection(res.raisedAmount)
             }).catch((err) => alert(err.message))
-    }, [])
+    }, [_id])
 
 
     return (
@@ -57,18 +59,16 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
 
             {(title && target && contributors && _id) ?
                 <>
-                    <h3>
+                    {
+                    contributors.find(contributor => contributor.userId === currentUser) &&
+                    <div className='ContributionTick'>
+                        <FontAwesome className='text-light' size='2x' name="check"/>
+                    </div>}
+                    <h3 className='container'>
                         {title}
-                        {
-
-                            contributors.find(contributor => contributor.userId === currentUser) ?
-                                <img src={AlreadyContributed} className='contributedImage' alt="Contributed Here" />
-                                : <></>
-                        }
                     </h3>
                     <h4>Campaign Progress</h4>
                     <hr />
-                    {/* <div className="error-message" hidden={!error}>{error}</div> */}
                     <div className="campaign-progress">
                         <div className="progress" style={{ height: "30px" }}>
                             <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"

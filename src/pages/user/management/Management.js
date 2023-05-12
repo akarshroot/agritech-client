@@ -29,19 +29,21 @@ function Management(props) {
   }, [])
 
   return (
-    <div className={`management-container theme-${theme}`}>
-      <div className="widgets-section management-widgets d-flex">
+    <div className={`container theme-${theme}`}>
+      <div className="row">
         {
           widgets.map((widget) => {
             return (
-              <div key={widget.id} className={`widget ${loading ? "skeleton-widget" : "no-skeleton-widget"}`}>
-                {
-                  loading ? <></> :
+              <div key={widget.id} className='col-md-6 col-lg-4 col-xl-3 p-3'>
+                <div className={`widget ${loading ? "skeleton-widget" : ""}`}>
+                  {
+                    loading ? <></> :
                     <>
                       {renderWidget(widget.id, widget.data)}
                     </>
-                }
-              </div>
+                  }
+                </div>
+              </ div>
             )
           })
         }

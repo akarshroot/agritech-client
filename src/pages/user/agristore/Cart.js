@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import StoreContext from '../../../context/StoreContext'
+import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent'
 import './Cart.css'
 import { useNavigate } from 'react-router-dom'
 
@@ -58,7 +59,8 @@ export function Cart() {
                                                                 <img src={productDetails.imgUrl} alt="" width="20%" />
                                                                 <div className='m-3'>
                                                                     <h5>{productDetails.title}</h5>
-                                                                    {INR.format(productDetails.price)}
+                                                                    {/* {INR.format(productDetails.price)} */}
+                                                                    <CurrencyIconComponent size={'25px'} adjustY={'-2px'} /> {productDetails.price} KCO
                                                                 </div>
                                                             </div>
                                                             <Button variant='danger' onClick={() => { setCartTotal(cartTotal - productDetails.price); deleteCartItem(item._id) }}>Remove</Button>

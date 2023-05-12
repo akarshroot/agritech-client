@@ -38,14 +38,14 @@ function PrivateNav(props) {
                     {userData?.admin && < Button variant='success' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
                 </div>
                 {/* <div className='d-flex justify-content-between pt-1'> */}
-                <div className='links-container d-flex justify-content-between'>
-                    <div className='d-flex'>
+                <div className='links-container d-flex justify-content-between flex-wrap'>
+                    {/* <div className='d-flex'> */}
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/dashboard"><li className={`nav-element ${tab === "dashboard" ? "nav-element-selected" : ""}`}><img src={dashboard} height={45} width={45} />Dashboard</li></Link>
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/wallet"><li className={`nav-element ${tab === "wallet" ? "nav-element-selected" : ""}`}><img src={wallet} height={45} width={45} />Wallet</li></Link>
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/management"><li className={`nav-element ${tab === "management" ? "nav-element-selected" : ""}`}><img src={management} height={45} width={45} />Management</li></Link>
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/campaigns"><li className={`nav-element ${tab === "campaigns" ? "nav-element-selected" : ""}`}><img src={campaigns} height={45} width={45} />Campaigns</li></Link>
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/agristore"><li className={`nav-element ${tab === "agristore" ? "nav-element-selected" : ""}`}><img src={agristore} height={45} width={45} />AgriStore</li></Link>
-                    </div>
+                    {/* </div> */}
                     <div className='p-1'>
                         <Button variant='btn bg-warning bg-opacity-75 mx-3' onClick={() => logout()}>LOGOUT</Button>
                     </div>

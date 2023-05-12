@@ -6,7 +6,7 @@ import './Dashboard.css'
 function Dashboard() {
 
     const { currentUser, userData, theme, loading, getUserData, getUserCampaigns, userCampaigns } = useUser()
-    const [campaignWidget, setCampaignWidget] = useState({})
+    const [campaignWidget, setCampaignWidget] = useState()
     const [widgets, setWidgets] = useState([
         {
             category: "inventory",
