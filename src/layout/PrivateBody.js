@@ -11,7 +11,7 @@ import campaigns from '../assets/icons/campaigns.png'
 import agristore from '../assets/icons/agristore.png'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import { toast } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 
 function PrivateNav(props) {
     const { currentUser, logout, loading, userData, getUserData } = useUser()
@@ -156,6 +156,19 @@ function PrivateBody(props) {
                                         </Form>
                                     </Modal.Body>
                                 </Modal>
+
+                                <ToastContainer
+                                    position="top-right"
+                                    autoClose={5000}
+                                    hideProgressBar={false}
+                                    newestOnTop={false}
+                                    closeOnClick
+                                    rtl={false}
+                                    pauseOnFocusLoss={false}
+                                    draggable
+                                    pauseOnHover
+                                    theme="light"
+                                />
                                 <div className="verification-bar alert alert-danger p-1">Verify your email to use all features. <a className='link' onClick={handleVerifyModal}>Click here</a>.</div>
                             </>
                             : <></>}
