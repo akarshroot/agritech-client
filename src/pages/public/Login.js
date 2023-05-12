@@ -82,11 +82,11 @@ function Login() {
         <div>
             <div className="bg-login"></div>
             <div className="bg-overlay"></div>
-            <div className={`p-5 bg-success bg-opacity-50 text-light login-container theme-${theme}`}>
+            <div className={`p-5 text-light login-container theme-${theme}`}>
                 <h1>LOGIN</h1>
                 {/* <div className="error-message" hidden={!error}>{error}</div> */}
                 <div className='row justify-content-center'>
-                    <form className='col-md-4' onSubmit={(e) => processLogin(e)} id="login">
+                    <form className='col-md-3' onSubmit={(e) => processLogin(e)} id="login">
                         <input ref={email} className='form-control' placeholder='Email' type="email" id="email" required /><br/>
                         <div className='position-relative'><input ref={password} className='form-control' placeholder='Password' type={pwdType} id="password" required /><img src={pwdSrc} className='eye-icn' alt='' onClick={changeIcon}/></div>
                         <input className='form-input btn btn-success my-3' type="submit" value={loading ? "Please Wait..." : "Login"} disabled={loading} />
