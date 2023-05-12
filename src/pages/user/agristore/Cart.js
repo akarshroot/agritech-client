@@ -6,10 +6,13 @@ import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import StoreContext from '../../../context/StoreContext'
 import './Cart.css'
+import { useNavigate } from 'react-router-dom'
 
 export function Cart() {
     const { cart, setCart, showCart, openCart, INR, cartTotal, setCartTotal, cartLoading, deleteCartItem } = useContext(StoreContext)
     const { theme, currentUser } = useUser()
+    const [URL,changeURL] = useState(false)
+    const navigate = useNavigate()
 
     function handleShow() {
         openCart(!showCart)
@@ -18,6 +21,11 @@ export function Cart() {
     useEffect(() => {
 
     }, [cart])
+    const openProduct=(productDetails)=>{
+        changeURL(!URL)
+        navigate("/agristore/product/" + productDetails._id,{replace:true}) 
+        handleShow() 
+    }
 
     return (
         <>
@@ -45,7 +53,16 @@ export function Cart() {
                                             cart.map((item) => {
                                                 const productDetails = item.product
                                                 return (
-                                                    <li className='list-group-item w-100 d-flex justify-content-between bg-success bg-opacity-10' key={productDetails._id}><Button variant='danger' onClick={() => { setCartTotal(cartTotal - productDetails.price); deleteCartItem(item._id) }}>X</Button><div>{productDetails.title}</div><div>{INR.format(productDetails.price)}</div></li>
+                                                        <li className='list-group-item w-100 d-flex justify-content-between align-items-center bg-success bg-opacity-10' key={productDetails._id}>
+                                                            <div className='d-flex cart-list' onClick={() => { openProduct(productDetails)}}>
+                                                                <img src={productDetails.imgUrl} alt="" width="20%" />
+                                                                <div className='m-3'>
+                                                                    <h5>{productDetails.title}</h5>
+                                                                    {INR.format(productDetails.price)}
+                                                                </div>
+                                                            </div>
+                                                            <Button variant='danger' onClick={() => { setCartTotal(cartTotal - productDetails.price); deleteCartItem(item._id) }}>Remove</Button>
+                                                        </li>
                                                 )
                                             })
                                     }

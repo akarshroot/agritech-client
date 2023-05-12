@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useUser } from '../../../context/UserContext'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import './ProductDetails.css'
 import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
@@ -21,7 +21,7 @@ function ProductDetails(props) {
 
     const params = useParams()
     const navigate = useNavigate()
-
+    const location = useLocation()
 
     async function fetchProductDetails(prodId) {
         try {
@@ -41,7 +41,7 @@ function ProductDetails(props) {
         const productId = params.id
         setProductId(productId)
         fetchProductDetails(productId)
-    }, [])
+    }, [location])
 
     return (
         <div className='row flex-column align-items-start w-100 p-3'>
@@ -52,7 +52,7 @@ function ProductDetails(props) {
             {productData ? <>
                 <div className="row p-3 product-details-container d-flex justify-content-center justify-content-around">
                     <div className="product-details-img p-3 col-12 col-sm-12 col-md-4" >
-                        <img src={productData.imgUrl} alt="" height="50%" />
+                        <img src={productData.imgUrl} alt="" width="70%" />
                     </div>
                     <div className="product-details col-12 col-sm-12 col-md-5 d-flex flex-column align-items-start p-3 m-3">
                         <div className="category-path mb-3">PRODUCTS / {productData.category.map((category,i) => (category !== "all" || productData.category.length === 1) && (<Link key={'specificProductLink'+productData._id+i} className='link' to={`/agristore?category=${category}`}>{category.toUpperCase()}</Link>))}</div>

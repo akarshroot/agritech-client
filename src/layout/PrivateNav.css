@@ -9,7 +9,9 @@
 .links-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-end;
+
+    /* justify-content: space-around; */
     flex-wrap: nowrap;
     list-style: none;
 }
@@ -85,9 +87,3 @@
     padding: 4px;
     right: 0%;
 } */
-
-@media screen and (max-width: 768px) {
-    .private-nav {
-        position: static;
-    }
-}

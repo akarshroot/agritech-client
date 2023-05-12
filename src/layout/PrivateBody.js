@@ -26,19 +26,14 @@ function PrivateNav(props) {
                         AgriTech Console
                     </div>
                 </div>
-                {/* <div className='d-flex justify-content-between pt-1'> */}
                     <div className='links-container'>
                         <Link onClick={()=> setHamShow(false)} className={`link theme-${props.theme}`} to="/dashboard"><li className={`nav-element ${tab === "dashboard" ? "nav-element-selected" : ""}`}>Dashboard</li></Link>
                         <Link onClick={()=> setHamShow(false)} className={`link theme-${props.theme}`} to="/wallet"><li className={`nav-element ${tab === "wallet" ? "nav-element-selected" : ""}`}>Wallet</li></Link>
                         <Link onClick={()=> setHamShow(false)} className={`link theme-${props.theme}`} to="/management"><li className={`nav-element ${tab === "management" ? "nav-element-selected" : ""}`}>Management</li></Link>
                         <Link onClick={()=> setHamShow(false)} className={`link theme-${props.theme}`} to="/campaigns"><li className={`nav-element ${tab === "campaigns" ? "nav-element-selected" : ""}`}>Campaigns</li></Link>
                         <Link onClick={()=> setHamShow(false)} className={`link theme-${props.theme}`} to="/agristore"><li className={`nav-element ${tab === "agristore" ? "nav-element-selected" : ""}`}>AgriStore</li></Link>
-                        <Button variant='btn bg-warning bg-opacity-75' onClick={() => logout()}>LOGOUT</Button>
+                        <Button variant='btn bg-warning bg-opacity-75 mx-5 link theme-' onClick={() => logout()}>LOGOUT</Button>
                     </div>
-                    {/* <div className='px-3'>
-                        
-                    </div> */}
-                {/* </div> */}
             </div>
 
             <div className={`private-nav d-block d-md-none theme-${props.theme}`}>

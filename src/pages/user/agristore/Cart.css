@@ -8,3 +8,7 @@
 .cart-img{
     height: 40px;
 }
+
+.cart-list:hover{
+    cursor: pointer;
+}

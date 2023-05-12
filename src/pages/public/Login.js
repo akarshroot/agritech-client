@@ -12,7 +12,6 @@ function Login() {
     const email = useRef()
     const password = useRef()
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
     const [pwdSrc, setPwdSrc ]=useState(eyeOpen)
     const [pwdType, setPwdType]=useState('password')
 
@@ -32,7 +31,6 @@ function Login() {
     async function processLogin(e) {
         e.preventDefault()
         setLoading(true)
-        setError("")
         const credentials = {
             email: email.current.value,
             password: password.current.value
@@ -60,8 +58,10 @@ function Login() {
                 progress: undefined,
                 theme: "light",
             });
-            setError(e.message)
+            console.log("after try")
+            setLoading(false)
         }
+        console.log("after try")
         setLoading(false)
     }
 
@@ -84,7 +84,7 @@ function Login() {
             <div className="bg-overlay"></div>
             <div className={`p-5 bg-success bg-opacity-50 text-light login-container theme-${theme}`}>
                 <h1>LOGIN</h1>
-                <div className="error-message" hidden={!error}>{error}</div>
+                {/* <div className="error-message" hidden={!error}>{error}</div> */}
                 <div className='row justify-content-center'>
                     <form className='col-md-4' onSubmit={(e) => processLogin(e)} id="login">
                         <input ref={email} className='form-control' placeholder='Email' type="email" id="email" required /><br/>
