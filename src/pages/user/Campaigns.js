@@ -10,12 +10,12 @@ import { useNavigate } from 'react-router-dom'
 import Spinner from 'react-bootstrap/esm/Spinner'
 import { ToastContainer, toast } from 'react-toastify'
 
-
 function ModalForm({ show, handleShow }) {
 
   const { userData } = useUser()
   const title = useInput('text', 'Title Goes Here')
   const deadline = useInput('number', 'Deadline in seconds')
+  const description = useInput('number', 'Talk about the benefits you will give to the contributors. You may define different returns as per contribution ranges')
   const target = useInput('number', 'Target Amount')
   const minContribution = useInput('number', 'Minimum Amount')
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
@@ -86,26 +86,34 @@ function ModalForm({ show, handleShow }) {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-
-
-            <div className='d-flex flex-column align-items-center'>
-              <fieldset>
+            <div className='d-flex flex-wrap align-items-center'>
+              <fieldset className="m-3">
                 <label htmlFor='createCampTitle'>Title</label><br />
                 <input id='createCampTitle' {...title} />
               </fieldset>
-              <fieldset>
+              <fieldset className="m-3">
                 <label htmlFor='createCampDeadline'>Deadline</label><br />
                 <input id='createCampDeadline' {...deadline} />
               </fieldset>
-              <fieldset>
+              <fieldset className="m-3">
+                <label htmlFor='description'>Description</label><br />
+                <textarea id='description' {...description} />
+              </fieldset>
+              <div className="form-group p-3">
+                <label htmlFor="refund">Refund Unused Funds</label>
+                <select className="form-control" id="refund" defaultValue={"allowed"} disabled={true}>
+                  <option value={"allowed"}>Allowed</option>
+                </select>
+              </div>
+              <fieldset className="m-3">
                 <label htmlFor='createCampTarget'>Target</label><br />
                 <input id='createCampTarget' {...target} />
               </fieldset>
-              <fieldset>
+              <fieldset className="m-3">
                 <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
                 <input id='createCampMinAmount' {...minContribution} />
               </fieldset>
-              <fieldset>
+              <fieldset className="m-3">
                 <label htmlFor='createCampPass'>Password</label><br />
                 <input id='createCampPass' {...password} />
               </fieldset>
@@ -234,7 +242,7 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
 function Campaigns() {
   const [showContribute, setShowContribute] = useState(false);
   const [show, setShow] = useState(false);
-  const { userData, getUserData, getUserCampaigns, userCampaigns } = useUser();
+  const { userData, getUserData, getUserCampaigns, userCampaigns, currentUser } = useUser();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
   function handleShow() {
@@ -278,7 +286,7 @@ function Campaigns() {
               userCampaigns?.map((data, i) => {
                 return (
                   <React.Fragment key={'campaignsKey' + i}>
-                    <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
+                    <div className='widget col-sm-6 col-md-4 col-lg-3 p-4'>
                       <CampaignWidget {...data}>
                         <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
                       </CampaignWidget>
