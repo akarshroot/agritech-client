@@ -57,7 +57,7 @@ function TransferModule() {
     setLoading(false)
   }
   return (
-    <Form onSubmit={transfer} className='shadow p-3 text-start'>
+    <Form onSubmit={transfer} className='p-3 text-start'>
       <fieldset className='py-2'>
         <label htmlFor='transferInputAddress'>Address:</label>
         <input id='transferInputAddress' className='form-control' {...addressTo} />
@@ -331,20 +331,20 @@ function Wallet() {
       },
       data: userData.walletAddress
     })
-    if(canvasRef.current.innerHTML === "")
+    if (canvasRef.current.innerHTML === "")
       qrCode.append(canvasRef.current)
   }
 
   useEffect(() => {
     if (userData) {
       renderQR()
-      getBalanceFormServer(userData.walletAddress)
-      getTransactions().then(e => {
-        console.log(e)
-        setWalletTx(e.wallet.reverse())
-        setCampsTx(e.camps.reverse())
+      // getBalanceFormServer(userData.walletAddress)
+      // getTransactions().then(e => {
+      //   console.log(e)
+      //   setWalletTx(e.wallet.reverse())
+      //   setCampsTx(e.camps.reverse())
 
-      })
+      // })
     } else getUserData()
   }, [getUserData, userData, canvasRef])
 
@@ -375,10 +375,12 @@ function Wallet() {
       />
       <div className='row align-items-center'>
         <div className='col-xl-2 col-md-5 mb-3'>
-          <div>
-            <div className='qrcode-container' ref={canvasRef} />
+          <div className='qr-code-scan'>
+            <div>
+              <div className='qrcode-container' ref={canvasRef} />
+            </div>
+            scan to get Address
           </div>
-          scan to get Address
         </div>
         <div className='col-xl-5 col-md-7 p-4'>
           <Table responsive>
@@ -415,12 +417,12 @@ function Wallet() {
             <AddKCOModal {...buyModalOptions} />
           </div>
         </div>
-        <div className='col-xl-5 p-4'>
+        <div className='col-xl-5 p-4 neumorphism-container'>
           <TransferModule />
         </div>
       </div>
 
-      <div className='row flex-column rounded shadow'>
+      <div className='row flex-column neumorphism-container'>
         {userData && (
           <>
             <TransactionHistory label={'Wallet Transactions'} userId={userData._id} tx={walletTx} />
