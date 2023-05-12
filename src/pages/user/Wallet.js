@@ -338,13 +338,13 @@ function Wallet() {
   useEffect(() => {
     if (userData) {
       renderQR()
-      // getBalanceFormServer(userData.walletAddress)
-      // getTransactions().then(e => {
-      //   console.log(e)
-      //   setWalletTx(e.wallet.reverse())
-      //   setCampsTx(e.camps.reverse())
+      getBalanceFormServer(userData.walletAddress)
+      getTransactions().then(e => {
+        console.log(e)
+        setWalletTx(e.wallet.reverse())
+        setCampsTx(e.camps.reverse())
 
-      // })
+      })
     } else getUserData()
   }, [getUserData, userData, canvasRef])
 
