@@ -11,7 +11,7 @@ import campaigns from '../assets/icons/campaigns.png'
 import agristore from '../assets/icons/agristore.png'
 
 function PrivateNav(props) {
-    const { currentUser, logout, loading } = useUser()
+    const { currentUser, logout, loading, userData, getUserData } = useUser()
     const [tab, setTab] = useState(window.location.pathname.split("/")[1])
     const [hamShow, setHamShow] = useState(false)
     const navigate = useNavigate()
@@ -22,6 +22,11 @@ function PrivateNav(props) {
             setTab("dashboard")
         }
     }, [window.location.pathname, currentUser, loading])
+
+    useEffect(() => {
+        if (!userData) getUserData()
+    }, [])
+
 
     return (
         <>
@@ -43,8 +48,8 @@ function PrivateNav(props) {
                 {/* <div className='px-3'>
                         
                     </div> */}
-                {/* </div> */}
-            </div>
+            {/* </div> */}
+        </div >
 
             <div className={`private-nav d-block d-md-none theme-${props.theme}`}>
                 <div className='display-5 logoConsole'>AgriTech Console</div>
