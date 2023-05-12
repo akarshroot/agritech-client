@@ -80,12 +80,12 @@
     padding: 1rem;
 }
 .dropDownNav{
-    height: 0;
+    max-height: 0;
     overflow: hidden;
     transition: all 0.3s;
 }
 .showDropDownNav{
-    height: 220px !important;
+    max-height: 100vh !important;
 }
 /* .LogoutButtonNav{
     position: absolute;
