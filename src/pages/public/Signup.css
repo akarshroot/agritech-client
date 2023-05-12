@@ -30,6 +30,42 @@
     /* margin-top: 100px; */
 }
 
+.eye-icn{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    opacity: 0.7;
+    transform: scale(0.8);
+}
+
+.eye-icn:hover{
+    cursor: pointer;
+}
+
+/* .signup-container label{
+    font-size: 15px;
+    position: relative;
+    bottom: 10%;
+    padding-left: 10px;
+    color: #000;
+    transition: 0.3s;
+}
+
+input:valid ~ label,input:focus ~ label{
+    transition: 0.3s;
+    transform: translateX(-70%) !important;
+    color: #fff;
+}
+
+input:focus{
+    border: 2px solid transparent;
+    color: #fff;
+    box-shadow: 3px 3px 10px rgba(0,0,0,1),
+    -1px -1px 6px rgba(255, 255, 255, 0.4),
+    inset 3px 3px 10px rgba(0,0,0,1),
+    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+} */
+
 #signup {
     display: flex;
     flex-direction: column;

@@ -61,8 +61,8 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                         {title}
                         {
 
-                            contributors.find(contributor => contributor.userId == currentUser) ?
-                                <img src={AlreadyContributed} width="50px" height="50px" alt="" />
+                            contributors.find(contributor => contributor.userId === currentUser) ?
+                                <img src={AlreadyContributed} className='contributedImage' alt="Contributed Here" />
                                 : <></>
                         }
                     </h3>

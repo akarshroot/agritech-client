@@ -11,3 +11,7 @@
     background-color: var(--c2) !important;
     border: 1px solid var(--c1) !important;
 }
+
+.agristore-content{
+    padding-left: 10%;
+}

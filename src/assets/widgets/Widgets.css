@@ -2,7 +2,9 @@
     padding: 20px 10px;
     display: flex;
     flex-direction: column;
-    height: 300px;
+    min-height: 300px;
+    /* height: 100%; */
+    /* max-height: 400px; */
     justify-content: flex-start;
 }
 
@@ -29,4 +31,8 @@
 
 .list-group-item .subtext {
     font-size: smaller;
+}
+.contributedImage{
+    width: 2rem;
+    aspect-ratio: 1;
 }

@@ -47,7 +47,7 @@ function ExploreCampaigns() {
                     campaigns?.map((data, i) => {
                         return (
                             <React.Fragment key={'campaignsKey' + i}>
-                                <div className='col-sm-6 col-md-4 col-lg-3 p-4'>
+                                <div className='col-sm-6 col-md-4 col-lg-3 p-4 h-100'>
                                     <div className='widget'>
                                         <CampaignWidget {...data}>
                                             <Button onClick={handleShowContribute} variant='success'>Contribute</Button>

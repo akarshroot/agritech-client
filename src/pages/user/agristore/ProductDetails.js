@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useUser } from '../../../context/UserContext'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import './ProductDetails.css'
 import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
@@ -21,7 +21,7 @@ function ProductDetails(props) {
 
     const params = useParams()
     const navigate = useNavigate()
-
+    const location = useLocation()
 
     async function fetchProductDetails(prodId) {
         try {
@@ -41,18 +41,20 @@ function ProductDetails(props) {
         const productId = params.id
         setProductId(productId)
         fetchProductDetails(productId)
-    }, [])
+    }, [location])
 
     return (
-        <div className='d-flex flex-column align-items-start w-100 p-3'>
-            <div className="product-details-header d-flex justify-content-between w-100">
+        <div className='row flex-column align-items-start w-100 p-3'>
+            <div className="product-details-header d-flex justify-content-between">
                 <Button onClick={() => navigate("/agristore",{replace:true})} variant='warning'>&larr;&nbsp;Back to Store</Button>
                 <Cart show={showCart} handleShow={handleShow} shopContent={shopContent} />
             </div>
             {productData ? <>
-                <div className="d-flex p-3 product-details-container w-100">
-                    <div className="product-details-img w-50 p-3" style={{ backgroundImage: `url(${productData.imgUrl})` }}></div>
-                    <div className="product-details d-flex flex-column align-items-start p-3 m-3">
+                <div className="row p-3 product-details-container d-flex justify-content-center justify-content-around">
+                    <div className="product-details-img p-3 col-12 col-sm-12 col-md-4" >
+                        <img src={productData.imgUrl} alt="" width="70%" />
+                    </div>
+                    <div className="product-details col-12 col-sm-12 col-md-5 d-flex flex-column align-items-start p-3 m-3">
                         <div className="category-path mb-3">PRODUCTS / {productData.category.map((category,i) => (category !== "all" || productData.category.length === 1) && (<Link key={'specificProductLink'+productData._id+i} className='link' to={`/agristore?category=${category}`}>{category.toUpperCase()}</Link>))}</div>
                         <h3 className="product-title">{productData.title}</h3>
                         <span>Sold By: {productData.soldBy}</span><span>Rating: {productData.rating}/5</span>
@@ -62,10 +64,11 @@ function ProductDetails(props) {
                         <h3><CurrencyIconComponent size='35' adjustY={'-5%'}/>{INR.format(productData.price).replace("₹", "KCO ")}</h3>
                         <span>Quantity: {productData.quantity && productData.quantity}</span>
                         <div className="d-flex justify-content-around mt-3">
-                            <Button variant="danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>
+                            <Button variant="outline-danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>
                             &nbsp;
                             &nbsp;
-                            <Button variant="success">Buy Now</Button>
+                            
+                            <Button variant="success btn-buy floating">Buy Now</Button>
                         </div>
                         <div className="product-description mt-3">
                             {productData.description}
