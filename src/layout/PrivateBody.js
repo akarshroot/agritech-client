@@ -11,6 +11,7 @@ import campaigns from '../assets/icons/campaigns.png'
 import agristore from '../assets/icons/agristore.png'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import { ToastContainer, toast } from 'react-toastify'
 
 function PrivateNav(props) {
     const { currentUser, logout, loading, userData, getUserData } = useUser()
@@ -79,8 +80,35 @@ function PrivateBody(props) {
     const Body = props.body
     const navigate = useNavigate()
 
-    const { currentUser, theme, checkTokenCookie, loading, userData, getUserData } = useUser()
+    const { currentUser, theme, checkTokenCookie, loading, userData, getUserData, verifyUserEmail } = useUser()
 
+    const [openVerifyModal, setShowVerifyModal] = useState(false)
+    const [disableVerify, setDisableVerify] = useState(false)
+    const otpRef = useRef()
+
+
+    function handleVerifyModal() {
+        setShowVerifyModal(!openVerifyModal)
+    }
+
+    async function verifyOTP(e) {
+        e.preventDefault()
+        setDisableVerify(true)
+        const res = await verifyUserEmail(otpRef.current.value)
+        setDisableVerify(false)
+        if (res.error === false) {
+            toast.success(res.message, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    }
 
     useEffect(() => {
         if (!checkTokenCookie && !currentUser) { navigate("/") }
@@ -92,71 +120,65 @@ function PrivateBody(props) {
 
     return (
         <>
-
             {
                 loading ?
                     <>Loading...</>
                     :
                     <>
                         <PrivateNav theme={theme} />
-                        {userData && userData.verified === false && <div className="verification-bar alert alert-danger m-0">Verify your email to use all features. Click here.</div>}
+                        {userData && userData.verified == false ?
+                            <>
+                                <Modal
+                                    show={openVerifyModal}
+                                    onHide={handleVerifyModal}
+                                    backdrop="static"
+                                    keyboard={false}
+                                    size='md'
+                                >
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Verify Email</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <Form onSubmit={verifyOTP} className='form-control'>
+                                            <div className='d-flex flex-column justify-content-center align-items-center'>
+                                                <p>Enter the 4 digit pin sent to your registered email.</p>
+                                                <fieldset className='m-1'>
+                                                    <label htmlFor='otp'>OTP</label><br />
+                                                    <input id='otp' type='number' ref={otpRef} required={true} />
+                                                </fieldset>
+                                            </div>
+                                            <div className='text-end'>
+                                                <Button className='mx-2' variant="danger" onClick={handleVerifyModal}>
+                                                    Cancel
+                                                </Button>
+                                                <Button className='my-3' type='submit' variant="success" disabled={disableVerify} >{disableVerify ? "Verifying..." : "Verify"}</Button>
+                                            </div>
+                                        </Form>
+                                    </Modal.Body>
+                                </Modal>
+
+                                <ToastContainer
+                                    position="top-right"
+                                    autoClose={5000}
+                                    hideProgressBar={false}
+                                    newestOnTop={false}
+                                    closeOnClick
+                                    rtl={false}
+                                    pauseOnFocusLoss={false}
+                                    draggable
+                                    pauseOnHover
+                                    theme="light"
+                                />
+                                <div className="verification-bar alert alert-danger p-1">Verify your email to use all features. <a className='link' onClick={handleVerifyModal}>Click here</a>.</div>
+                            </>
+                            : <></>}
+
                         <div className="body">
                             <Body theme={theme} />
                         </div>
                     </>
             }
         </>
-    )
-}
-
-function VerifyEmailModal(props) {
-
-    const [openBuyModal, setShowBuyModal] = useState(false)
-    const [disableBuy, setDisableBuy] = useState(false)
-    const [modalDetails, setModalDetails] = useState({})
-    const passwordRef = useRef()
-
-
-    function handleBuyModal() {
-        setShowBuyModal(!openBuyModal)
-    }
-
-    async function verifyOTP(e) {
-        e.preventDefault()
-
-    }
-
-    const otpRef = useRef()
-
-    return (
-        <Modal
-            show={openBuyModal}
-            onHide={handleBuyModal}
-            backdrop="static"
-            keyboard={false}
-            size='md'
-        >
-            <Modal.Header closeButton>
-                <Modal.Title>Verify Email</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={verifyOTP} className='form-control'>
-                    <div className='d-flex flex-column justify-content-center align-items-center'>
-                        <p>Enter the 4 digit pin sent to your registered email.</p>
-                        <fieldset className='m-1'>
-                            <label htmlFor='otp'>OTP</label><br />
-                            <input id='otp' type='number' ref={otpRef} required={true} />
-                        </fieldset>
-                    </div>
-                    <div className='text-end'>
-                        <Button className='mx-2' variant="danger" onClick={handleBuyModal}>
-                            Cancel
-                        </Button>
-                        <Button className='my-3' type='submit' variant="success" disabled={disableBuy} >{disableBuy ? "Ordering..." : "Confirm Purchase"}</Button>
-                    </div>
-                </Form>
-            </Modal.Body>
-        </Modal>
     )
 }
 

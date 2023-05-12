@@ -128,6 +128,18 @@ export function UserProvider({ children }) {
         }
     }
 
+    async function verifyUserEmail(otp) {
+        try {
+            const response = await axios.post("/auth/otp/verify", { userId: currentUser, code: otp })
+            if(response.hasOwnProperty("data")) {
+                return response.data
+            }
+            else throw response
+        } catch (error) {
+            return error.response.data
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////AUTH FUNCTIONS END HERE//////////////////////////////
     ////////////////////////////////////////////////////////////
@@ -267,7 +279,8 @@ export function UserProvider({ children }) {
         getOrderId,
         verifyPayment,
         getAdminData,
-        adminData
+        adminData,
+        verifyUserEmail
     }
     return (
         <UserContext.Provider value={value}>
