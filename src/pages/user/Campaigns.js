@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -9,6 +9,261 @@ import { useUser } from '../../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import Spinner from 'react-bootstrap/esm/Spinner'
 import { ToastContainer, toast } from 'react-toastify'
+import PropTypes from 'prop-types'
+import './Campaigns.css'
+
+const Step = ({
+  indicator,
+  label,
+  navigateToStepHandler,
+  index,
+  isActive,
+  isComplete,
+  isWarning,
+  isError,
+  isRightToLeftLanguage,
+}) => {
+  const classes = [''];
+
+  if (isActive) {
+    classes.push('is-active');
+  }
+  if (isComplete) {
+    classes.push('is-complete');
+  }
+  if (isWarning) {
+    classes.push('is-warning');
+  }
+  if (isError) {
+    classes.push('is-error');
+  }
+  if (isRightToLeftLanguage) {
+    classes.push('rightToLeft');
+  }
+
+  return (
+    <div className={`stepper-step ${classes.join(' ')}`}>
+      <div className="stepper-indicator">
+        <span
+          className="stepper-indicator-info"
+          onClick={isComplete || isError ? () => navigateToStepHandler(index) : null}
+        >
+          {isComplete ? (
+            <svg className="stepper-tick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490 490">
+              <path d="M452.253 28.326L197.831 394.674 29.044 256.875 0 292.469l207.253 169.205L490 54.528z" />
+            </svg>
+          ) : (
+            indicator
+          )}
+        </span>
+      </div>
+      <div className="stepper-label">{label}</div>
+    </div>
+  );
+};
+
+Step.propTypes = {
+  indicator: PropTypes.oneOfType([PropTypes.node, PropTypes.number]),
+  label: PropTypes.string.isRequired,
+  navigateToStepHandler: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+  isActive: PropTypes.bool,
+  isComplete: PropTypes.bool,
+  isError: PropTypes.bool,
+  isWarning: PropTypes.bool,
+  isRightToLeftLanguage: PropTypes.bool,
+};
+
+const StepperHead = ({
+  stepperContent,
+  navigateToStepHandler,
+  isVertical,
+  isInline,
+  isRightToLeftLanguage,
+  currentTabIndex,
+}) => (
+  <div
+    className={`stepper-head ${isVertical ? 'vertical-stepper-head' : ''} ${isInline ? 'inline-stepper-head' : ''
+      }`}
+  >
+    {stepperContent.map((el, i) => (
+      <Step
+        key={i}
+        index={i}
+        navigateToStepHandler={navigateToStepHandler}
+        isActive={i === currentTabIndex}
+        isComplete={el.isComplete}
+        isWarning={el.isWarning}
+        isError={el.isError}
+        isRightToLeftLanguage={isRightToLeftLanguage}
+        indicator={i + 1}
+        label={el.label}
+      />
+    ))}
+  </div>
+);
+
+StepperHead.propTypes = {
+  stepperContent: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      content: PropTypes.node.isRequired,
+      clicked: PropTypes.func,
+      isWarning: PropTypes.bool,
+      isError: PropTypes.bool,
+      isComplete: PropTypes.bool,
+      isLoading: PropTypes.bool,
+    })
+  ),
+  navigateToStepHandler: PropTypes.func.isRequired,
+  currentTabIndex: PropTypes.number.isRequired,
+  isInline: PropTypes.bool,
+  isVertical: PropTypes.bool,
+  isRightToLeftLanguage: PropTypes.bool,
+};
+
+const StepperFooter = ({
+  isPrevBtn,
+  previousStepHandler,
+  isLastStep,
+  nextStepHandler,
+  submitHandler,
+  stepperContent,
+  currentTabIndex,
+}) => {
+  const submitCurrentStep = async () => {
+    await stepperContent[currentTabIndex].clicked();
+    nextStepHandler();
+  };
+
+  return (
+    <div
+      className="stepper-footer"
+      style={{ justifyContent: isPrevBtn ? 'space-between' : 'flex-end' }}
+    >
+      {isPrevBtn && (
+        <Button variant="secondary" onClick={previousStepHandler}>
+          Back to {stepperContent[currentTabIndex - 1].label}
+        </Button>
+      )}
+      <Button
+        variant="success my-3"
+        onClick={
+          isLastStep
+            ? submitHandler
+            : stepperContent[currentTabIndex].clicked
+              ? submitCurrentStep
+              : nextStepHandler
+        }
+        disabled={
+          (isLastStep
+            ? stepperContent.some((el) => !el.isComplete)
+            : !stepperContent[currentTabIndex].isComplete) ||
+          stepperContent[currentTabIndex].isLoading
+        }
+      >
+        {isLastStep ? 'Submit' : `Continue to ${stepperContent[currentTabIndex + 1].label}`}
+      </Button>
+    </div>
+  );
+};
+
+StepperFooter.propTypes = {
+  isPrevBtn: PropTypes.bool,
+  previousStepHandler: PropTypes.func.isRequired,
+  isLastStep: PropTypes.bool,
+  nextStepHandler: PropTypes.func.isRequired,
+  submitHandler: PropTypes.func.isRequired,
+  currentTabIndex: PropTypes.number.isRequired,
+  stepperContent: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      content: PropTypes.node.isRequired,
+      clicked: PropTypes.func,
+      isWarning: PropTypes.bool,
+      isError: PropTypes.bool,
+      isComplete: PropTypes.bool,
+      isLoading: PropTypes.bool,
+    })
+  ),
+};
+
+let Stepper = ({ isRightToLeftLanguage, isVertical, isInline, stepperContent, submitStepper }) => {
+  const [currentTabIndex, setCurrentTabIndex] = useState(0),
+    isLastStep = currentTabIndex === stepperContent.length - 1,
+    isPrevBtn = currentTabIndex !== 0;
+
+  const navigateToStepHandler = (index) => {
+    if (index !== currentTabIndex) {
+      setCurrentTabIndex(index);
+    }
+  };
+
+  const nextStepHandler = () => {
+    setCurrentTabIndex((prev) => {
+      if (prev !== stepperContent.length - 1) {
+        return prev + 1;
+      }
+    });
+  };
+
+  const previousStepHandler = () => {
+    setCurrentTabIndex((prev) => prev - 1);
+  };
+
+  const submitHandler = () => {
+    submitStepper();
+  };
+
+  return (
+    <div className="stepper-wrapper">
+      <div style={{ display: isVertical ? 'flex' : 'block' }}>
+        <StepperHead
+          stepperContent={stepperContent}
+          navigateToStepHandler={navigateToStepHandler}
+          isVertical={isVertical}
+          isInline={isInline}
+          currentTabIndex={currentTabIndex}
+          isRightToLeftLanguage={isRightToLeftLanguage}
+        />
+        <div className="stepper-body">
+          {stepperContent.map((el, i) => (
+            <Fragment key={i}>{i === currentTabIndex && el.content}</Fragment>
+          ))}
+        </div>
+      </div>
+      <hr />
+      <StepperFooter
+        isPrevBtn={isPrevBtn}
+        previousStepHandler={previousStepHandler}
+        isLastStep={isLastStep}
+        nextStepHandler={nextStepHandler}
+        submitHandler={submitHandler}
+        stepperContent={stepperContent}
+        currentTabIndex={currentTabIndex}
+      />
+    </div>
+  );
+};
+
+Stepper.propTypes = {
+  stepperContent: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      content: PropTypes.node.isRequired,
+      clicked: PropTypes.func,
+      isWarning: PropTypes.bool,
+      isError: PropTypes.bool,
+      isComplete: PropTypes.bool,
+      isLoading: PropTypes.bool,
+    })
+  ),
+  submitStepper: PropTypes.func.isRequired,
+  isInline: PropTypes.bool,
+  isVertical: PropTypes.bool,
+  isRightToLeftLanguage: PropTypes.bool,
+};
+
 
 function ModalForm({ show, handleShow }) {
 
@@ -57,6 +312,147 @@ function ModalForm({ show, handleShow }) {
 
   }
 
+  const [enableSecond, setEnableSecond] = useState({
+    checked: true,
+    touched: true,
+  }),
+    [enableThird, setEnableThrid] = useState({
+      checked: false,
+      touched: false,
+    }),
+    [enableSubmit, setEnableSubmit] = useState({
+      checked: false,
+      touched: false,
+    }),
+    [isSecondStepLoading, setIsSecondStepLoading] = useState(false);
+
+  const firstTermsHandler = () => {
+    setEnableSecond((prev) => ({ checked: !prev.checked, touched: true }));
+  };
+
+  const secondTermsHandler = () => {
+    setEnableThrid((prev) => ({ checked: !prev.checked, touched: true }));
+  };
+
+  const thirdTermsHandler = () => {
+    setEnableSubmit((prev) => ({ checked: !prev.checked, touched: true }));
+  };
+
+  //for demo purposes only
+  const timeout = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+  const secondStepAsyncFunc = async () => {
+    //it can be an API call
+    setIsSecondStepLoading(true);
+    await timeout(3000);
+    setIsSecondStepLoading(false);
+    console.log('second step clicked');
+  };
+
+  const stepperContent = [
+    {
+      label: 'Basic Details',
+      content: (
+        <div>
+          <label>
+            <Form onSubmit={handleSubmit}>
+              <div className='d-flex flex-wrap align-items-center'>
+                <fieldset className="m-3">
+                  <label htmlFor='createCampTitle'>Title</label><br />
+                  <input id='createCampTitle' {...title} />
+                </fieldset>
+                <fieldset className="m-3">
+                  <label htmlFor='createCampDeadline'>Deadline</label><br />
+                  <input id='createCampDeadline' {...deadline} />
+                </fieldset>
+                <fieldset className="m-3">
+                  <label htmlFor='description'>Description</label><br />
+                  <textarea id='description' {...description} />
+                </fieldset>
+                <div className="form-group p-3">
+                  <label htmlFor="refund">Refund Unused Funds</label>
+                  <select className="form-control" id="refund" defaultValue={"allowed"} disabled={true}>
+                    <option value={"allowed"}>Allowed</option>
+                  </select>
+                </div>
+                <fieldset className="m-3">
+                  <label htmlFor='createCampTarget'>Target</label><br />
+                  <input id='createCampTarget' {...target} />
+                </fieldset>
+                <fieldset className="m-3">
+                  <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
+                  <input id='createCampMinAmount' {...minContribution} />
+                </fieldset>
+                <fieldset className="m-3">
+                  <label htmlFor='createCampPass'>Password</label><br />
+                  <input id='createCampPass' {...password} />
+                </fieldset>
+              </div>
+
+            </Form>
+          </label>
+        </div>
+      ),
+      isError: !enableSecond.checked && enableSecond.touched,
+      isComplete: enableSecond.checked,
+    },
+    {
+      label: 'Choose Plan',
+      content: (
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={enableThird.checked}
+              onChange={secondTermsHandler}
+            />{' '}
+            Accept second terms and conditions
+          </label>
+        </div>
+      ),
+      clicked: () => secondStepAsyncFunc(),
+      isLoading: isSecondStepLoading,
+      isError: !enableThird.checked && enableThird.touched,
+      isComplete: enableThird.checked,
+    },
+    {
+      label: 'Expeced Returns',
+      content: (
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={enableSubmit.checked}
+              onChange={thirdTermsHandler}
+            />{' '}
+            Accept third terms and conditions
+          </label>
+        </div>
+      ),
+      isError: !enableSubmit.checked && enableSubmit.touched,
+      isComplete: enableSubmit.checked,
+    },
+  ];
+
+  const submitStepper = () => {
+    console.log('submitted');
+  };
+  const destroyStepper = () => {
+    setEnableSecond({
+      checked: false,
+      touched: false
+    })
+    setEnableThrid({
+      checked: false,
+      touched: false
+    })
+    setEnableSubmit({
+      checked: false,
+      touched: false
+    })
+  }
 
   return (
     <>
@@ -75,61 +471,34 @@ function ModalForm({ show, handleShow }) {
       />
       <Modal
         show={show}
-        onHide={handleShow}
+        onHide={() => {
+          handleShow()
+          destroyStepper()
+        }}
         backdrop="static"
         keyboard={false}
-        size='lg'
+        size='xl'
         centered
       >
         <Modal.Header closeButton>
           <Modal.Title>Create Campaign</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <div className='d-flex flex-wrap align-items-center'>
-              <fieldset className="m-3">
-                <label htmlFor='createCampTitle'>Title</label><br />
-                <input id='createCampTitle' {...title} />
-              </fieldset>
-              <fieldset className="m-3">
-                <label htmlFor='createCampDeadline'>Deadline</label><br />
-                <input id='createCampDeadline' {...deadline} />
-              </fieldset>
-              <fieldset className="m-3">
-                <label htmlFor='description'>Description</label><br />
-                <textarea id='description' {...description} />
-              </fieldset>
-              <div className="form-group p-3">
-                <label htmlFor="refund">Refund Unused Funds</label>
-                <select className="form-control" id="refund" defaultValue={"allowed"} disabled={true}>
-                  <option value={"allowed"}>Allowed</option>
-                </select>
-              </div>
-              <fieldset className="m-3">
-                <label htmlFor='createCampTarget'>Target</label><br />
-                <input id='createCampTarget' {...target} />
-              </fieldset>
-              <fieldset className="m-3">
-                <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
-                <input id='createCampMinAmount' {...minContribution} />
-              </fieldset>
-              <fieldset className="m-3">
-                <label htmlFor='createCampPass'>Password</label><br />
-                <input id='createCampPass' {...password} />
-              </fieldset>
-              <Button className='my-3' type='submit' variant="success" disabled={createCampaignLoading}>{createCampaignLoading ? <>
-                Creating...
-                <div class="spinner-border" role="status"></div>
-              </> : "Create"}</Button>
+          <div className="container">
+            <div className="">
+              <Stepper stepperContent={stepperContent} submitStepper={submitStepper} />
             </div>
-
-          </Form>
+          </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleShow}>
-            Close
+        {/* <Modal.Footer>
+          <Button variant="danger" onClick={handleShow}>
+            Discard
           </Button>
-        </Modal.Footer>
+          <Button className='my-3' type='submit' variant="success" disabled={createCampaignLoading}>{createCampaignLoading ? <>
+            Creating...
+            <div class="spinner-border" role="status"></div>
+          </> : "Create"}</Button>
+        </Modal.Footer> */}
       </Modal>
     </>
   )
