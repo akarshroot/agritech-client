@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import PropTypes from 'prop-types'
 import './Campaigns.css'
 
+// STEPPER FUNCTIONS START
 const Step = ({
   indicator,
   label,
@@ -264,6 +265,7 @@ Stepper.propTypes = {
   isRightToLeftLanguage: PropTypes.bool,
 };
 
+// STEPPER FUNCTIONS END
 
 function ModalForm({ show, handleShow }) {
 
