@@ -320,6 +320,10 @@ function ModalForm({ show, handleShow }) {
       checked: false,
       touched: false,
     }),
+    [enableFourth, setEnableFourth] = useState({
+      checked: false,
+      touched: false,
+    }),
     [enableSubmit, setEnableSubmit] = useState({
       checked: false,
       touched: false,
@@ -335,7 +339,7 @@ function ModalForm({ show, handleShow }) {
   };
 
   const thirdTermsHandler = () => {
-    setEnableSubmit((prev) => ({ checked: !prev.checked, touched: true }));
+    setEnableFourth((prev) => ({ checked: !prev.checked, touched: true }));
   };
 
   //for demo purposes only
@@ -424,10 +428,22 @@ function ModalForm({ show, handleShow }) {
           <label>
             <input
               type="checkbox"
-              checked={enableSubmit.checked}
+              checked={enableFourth.checked}
               onChange={thirdTermsHandler}
             />{' '}
             Accept third terms and conditions
+          </label>
+        </div>
+      ),
+      isError: !enableFourth.checked && enableFourth.touched,
+      isComplete: enableFourth.checked,
+    },
+    {
+      label: 'Launch',
+      content: (
+        <div>
+          <label>
+            Click submit to launch!
           </label>
         </div>
       ),
@@ -449,6 +465,10 @@ function ModalForm({ show, handleShow }) {
       touched: false
     })
     setEnableSubmit({
+      checked: false,
+      touched: false
+    })
+    setEnableFourth({
       checked: false,
       touched: false
     })

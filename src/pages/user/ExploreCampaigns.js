@@ -41,7 +41,11 @@ function ExploreCampaigns() {
                 <h2 className='display-6'>Explore campaigns across the platform</h2>
                 <hr className='style-two' />
             </div>
+            <hr />
             <div className='row'>
+                {
+                    campaigns?.length === 0 && <div className='text-center m-3'>No campaigns created yet.</div>
+                }
                 {loading ? <>Loading...</>
                     :
                     campaigns?.map((data, i) => {
