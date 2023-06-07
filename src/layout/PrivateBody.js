@@ -12,12 +12,14 @@ import agristore from '../assets/icons/agristore.png'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import { ToastContainer, toast } from 'react-toastify'
+import { Helmet } from 'react-helmet'
 
 function PrivateNav(props) {
     const { currentUser, logout, loading, userData, getUserData } = useUser()
     const [tab, setTab] = useState(window.location.pathname.split("/")[1])
     const [hamShow, setHamShow] = useState(false)
     const navigate = useNavigate()
+    const [translateActive, setTranslateActive] = useState(false)
 
     useEffect(() => {
         setTab(window.location.pathname.split("/")[1])
@@ -31,12 +33,25 @@ function PrivateNav(props) {
     }, [])
 
 
+    function googleTranslateElementInit() {
+        new window.google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element')
+    }
+
+
     return (
         <>
+            <Helmet>
+                <script type="text/javascript"
+                    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            </Helmet>
             <div className={`private-nav d-none d-md-block theme-${props.theme}`}>
                 <div className='logoConsole'>
                     <div onClick={() => navigate('/', { replace: true })} className='logoLink'>
                         AgriTech Console
+                    </div>
+                    <div className="language-setter">
+                        <Button variant='warning' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
+                        <div id="google_translate_element"></div>
                     </div>
                     {userData?.admin && < Button variant='success' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
                 </div>
@@ -70,6 +85,11 @@ function PrivateNav(props) {
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/campaigns"><li className={`nav-element ${tab === "campaigns" ? "nav-element-selected" : ""}`}>Campaigns</li></Link>
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/agristore"><li className={`nav-element ${tab === "agristore" ? "nav-element-selected" : ""}`}>AgriStore</li></Link>
                     </ul>
+
+                    <div className="language-setter">
+                        <Button variant='warning' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
+                        <div id="google_translate_element"></div>
+                    </div>
                 </div>
             </div>
         </>

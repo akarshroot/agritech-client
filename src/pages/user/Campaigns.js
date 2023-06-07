@@ -396,6 +396,14 @@ function ModalForm({ show, handleShow }) {
                   <input id='createCampPass' {...password} />
                 </fieldset>
               </div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={enableSecond.checked}
+                  onChange={firstTermsHandler}
+                />{' '}
+                Accept first terms and conditions
+              </label>
 
             </Form>
           </label>

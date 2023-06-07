@@ -1,9 +1,18 @@
+@font-face {
+  font-family: 'Hind-Regular';
+  src: url('./assets/fonts/Hind-Regular.ttf')
+}
+
+@font-face {
+  font-family: 'Hind-Light';
+  src: url('./assets/fonts/Hind-Light.ttf')
+}
 body {
   margin: 0;
   max-width: 100dvw;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    sans-serif, 'Hindi-Regular';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;

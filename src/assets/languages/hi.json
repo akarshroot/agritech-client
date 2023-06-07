@@ -1,0 +1,118 @@
+{
+    "agritech_console": "एग्रीटेक कंसोल",
+    "navigation": {
+        "dashboard": "डैशबोर्ड",
+        "wallet": "वॉलेट",
+        "management": "प्रबंधन",
+        "campaigns": "कैंपेन",
+        "agristore": "एग्रीस्टोर",
+        "logout": "लॉगआउट",
+        "go_back": "वापस जाएं"
+    },
+    "dashboard": {
+        "heading": "स्वागत है, "
+    },
+    "wallet": {
+        "address": "पता",
+        "balance": "शेष राशि",
+        "password": "पासवर्ड",
+        "buy_btn": "KCO खरीदें",
+        "qr_help": "पता प्राप्त करने के लिए स्कैन करें",
+        "transaction": {
+            "amount": "राशि (KCO में)",
+            "transfer_btn": "KCO स्थानांतरण"
+        },
+        "transaction_history": {
+            "heading": "वॉलेट लेन-देन",
+            "table_info": "हैश दिखाएं",
+            "table": {
+                "sno": "क्रमांक",
+                "to_from": "से/को",
+                "amount": "राशि",
+                "time": "समय",
+                "hash": "लेनदेन हैश"
+            },
+            "no_transactions": "अबतक कोई लेन-देन नहीं हुए हैं।"
+        },
+        "contribution_history": {
+            "heading": "आपके योगदान",
+            "table_info": "हैश दिखाएं",
+            "table": {
+                "sno": "क्रमांक",
+                "to_from": "से/को",
+                "amount": "राशि",
+                "time": "समय",
+                "hash": "लेनदेन हैश"
+            },
+            "no_transactions": "अबतक कोई लेन-देन नहीं हुए हैं।"
+        }
+    },
+    "management": {
+        "planning": {
+            "heading": "योजना बनाएं",
+            "description": "आगामी फसल सीजन के लिए आगे की योजना बनाएं। आप बिक्री रिपोर्ट का संदर्भ ले सकते हैं और विश्लेषण कर सकते हैं कि कौन सी फसलें सबसे अच्छी मुनाफा उत्पन्न करती हैं।",
+            "create_plan_btn": "नया प्लान बनाएं",
+            "no_plans": "अबतक कोई प्लान नहीं बनाया गया है।",
+            "modal": {
+                "heading": "नया प्लान बनाएं",
+                "inputs": {
+                    "title": "शीर्षक",
+                    "duration": "माहों में अवधि",
+                    "items": {
+                        "heading": "आइटम",
+                        "no_items": "कोई आइटम जोड़ा नहीं गया।",
+                        "delete_item_btn": "अंतिम आइटम हटाएं",
+                        "add_item_btn": "नई आइटम जोड़ें",
+                        "item_name": "आइटम का नाम",
+                        "yield": "अनुमानित उपज",
+                        "yield_info": "उपज बीज से फसल की परिवर्तन अनुपात है। उदाहरण: यदि आप 1 किलो बीज से 20 किलो फसल प्राप्त करते हैं तो उपज 20 होगी।",
+                        "quantity": "मात्रा",
+                        "category": {
+                            "category": "श्रेणी",
+                            "crop_seeds": "फसल के बीज",
+                            "supplements": "पूरक"
+                        },
+                        "cost": "प्रति इकाई कीमत",
+                        "sale": "प्रति इकाई बिक्री मूल्य"
+                    }
+                },
+                "create_btn": "बनाएं",
+                "discard_btn": "छोड़ें"
+            },
+            "estimated_cost": "अनुमानित लागत",
+            "estimated_revenue": "अनुमानित आय",
+            "estimated_profit": "अनुमानित मुनाफा",
+            "estimated_loss": "अनुमानित हानि",
+            "execute_plan": "प्लान को क्रियान्वित करें",
+            "delete_plan": "प्लान को हटाएं"
+        }
+    },
+    "campaigns": {},
+    "agristore": {},
+    "widgets": {
+        "weather_widget": {
+            "heading": "मौसम विजेट"
+        },
+        "current_inventory": {
+            "heading": "वर्तमान इन्वेंटरी",
+            "quantity": "मात्रा",
+            "item": "आइटम",
+            "price": "मूल्य",
+            "total": "कुल",
+            "more": "और अधिक",
+            "no_inventory": "अभी तक कोई इन्वेंटरी नहीं जोड़ी गई है।"
+        },
+        "crops_sown": {
+            "heading": "बोए गए फसलें"
+        },
+        "transaction_history": {
+            "heading": "लेन-देन इतिहास"
+        },
+        "contribution_history": {
+            "heading": "योगदान इतिहास"
+        },
+        "current_plan": {
+            "heading": "वर्तमान प्लान"
+        }
+    }
+}

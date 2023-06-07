@@ -1,0 +1,118 @@
+{
+    "agritech_console": "AgriTech Console",
+    "navigation": {
+        "dashboard": "Dashboard",
+        "wallet": "Wallet",
+        "management": "Management",
+        "campaigns": "Campaigns",
+        "agristore": "AgriStore",
+        "logout": "Logout",
+        "go_back": "Go Back"
+    },
+    "dashboard": {
+        "heading": "Welcome, "
+    },
+    "wallet": {
+        "address": "Address",
+        "balance": "Balance",
+        "password": "Password",
+        "buy_btn": "Buy KCO",
+        "qr_help": "Scan to get address",
+        "transaction": {
+            "amount": "Amount (in KCO)",
+            "transfer_btn": "Transfer KCO"
+        },
+        "transaction_history": {
+            "heading": "Wallet Transactions",
+            "table_info": "Show Hashes",
+            "table": {
+                "sno": "S.No.",
+                "to_from": "To/From",
+                "amount": "Amount",
+                "time": "Time",
+                "hash": "Transaction Hash"
+            },
+            "no_transactions": "No transactions yet."
+        },
+        "contribution_history": {
+            "heading": "Your Contributions",
+            "table_info": "Show Hashes",
+            "table": {
+                "sno": "S.No.",
+                "to_from": "To/From",
+                "amount": "Amount",
+                "time": "Time",
+                "hash": "Transaction Hash"
+            },
+            "no_transactions": "No transactions yet."
+        }
+    },
+    "management": {
+        "planning": {
+            "heading": "Planning",
+            "description": "Plan in advance for the next harvest season. You may refer to Sales reports to analyze which crops generate best profits.",
+            "create_plan_btn": "Create New Plan",
+            "no_plans": "No plans created yet.",
+            "modal": {
+                "heading": "Create New Plan",
+                "inputs": {
+                    "title": "Title",
+                    "duration": "Duration in months",
+                    "items": {
+                        "heading": "Items",
+                        "no_items": "No items added.",
+                        "delete_item_btn": "Delete last item",
+                        "add_item_btn": "Add new item",
+                        "item_name": "Item Name",
+                        "yield": "Estimated Yield",
+                        "yield_info": "Yield is the seed to crop conversion ratio. Example: If you get 20 Kgs of a crop from 1 Kg of its seeds, yield is 20.",
+                        "quantity": "Quantity",
+                        "category": {
+                            "category": "Category",
+                            "crop_seeds": "Crop Seeds",
+                            "supplements": "Supplements"
+                        },
+                        "cost": "Cost per unit",
+                        "sale": "Sale price per unit"
+                    }
+                },
+                "create_btn": "Create",
+                "discard_btn": "Discard"
+            },
+            "estimated_cost": "Estimated Cost",
+            "estimated_revenue": "Estimated Revenue",
+            "estimated_profit": "Estimated Profit",
+            "estimated_loss": "Estimated Loss",
+            "execute_plan": "Execute Plan",
+            "delete_plan": "Delete Plan"
+        }
+    },
+    "campaigns": {},
+    "agristore": {},
+    "widgets": {
+        "weather_widget": {
+            "heading": "Weather Widget"
+        },
+        "current_inventory": {
+            "heading": "Current Inventory",
+            "quantity": "Quantity",
+            "item": "Item",
+            "price": "Price",
+            "total": "Total",
+            "more": "more",
+            "no_inventory": "Nothing added to inventory yet."
+        },
+        "crops_sown": {
+            "heading": "Crops Sown"
+        },
+        "transaction_history": {
+            "heading": "Transaction History"
+        },
+        "contribution_history": {
+            "heading": "Contribution History"
+        },
+        "current_plan": {
+            "heading": "Current Plan"
+        }
+    }
+}
