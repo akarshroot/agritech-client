@@ -110,7 +110,11 @@ function Planning() {
 
     async function fetchUserPlans() {
         const plans = await getUserPlans()
-        setUserPlans(plans.data.reverse())
+        //recent plans first
+        plans.data.reverse()
+        //plans under execution first
+        plans.data.sort(function (x, y) { return x.executing == true ? -1 : y.executing == true ? 1 : 0; })
+        setUserPlans(plans.data)
     }
 
     async function deletePlan(planId) {
@@ -144,7 +148,7 @@ function Planning() {
 
     async function executePlan(planId) {
         const data = await executeUserPlan(planId)
-        if (data.error)
+        if (data.error) {
             toast.error(data.message, {
                 position: "top-right",
                 autoClose: 2000,
@@ -155,6 +159,7 @@ function Planning() {
                 progress: undefined,
                 theme: "light",
             });
+        }
         else {
             toast.success(data.message, {
                 position: "top-right",

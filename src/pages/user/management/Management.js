@@ -29,7 +29,7 @@ function Management(props) {
   }, [])
 
   return (
-    <div className={`container theme-${theme}`}>
+    <div className={`p-3 theme-${theme} management-widgets w-100`}>
       <div className="row">
         {
           widgets.map((widget) => {

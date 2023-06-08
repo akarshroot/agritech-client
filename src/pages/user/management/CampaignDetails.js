@@ -121,6 +121,7 @@ function CampaignPrograssBar({ raisedAmount, target }) {
 
 function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber }) {
 
+  const [loading, setLoading] = useState(false)
   const [prompt, openPrompt] = useState(false)
   const [password, setPassword] = useState("")
 
@@ -139,6 +140,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
       cid
     }
     console.log(dataToSend)
+    setLoading(true)
     const res = await usevoteReq(dataToSend)
     handlePrompt()
     if (res.error) {
@@ -165,13 +167,14 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
         theme: "light",
       });
     }
+    setLoading(false)
   }
-
 
   async function voteRequest(e) {
     if (!password) {
       return
     }
+    setLoading(true)
     console.log(e.target.value)
     const dataToSend = {
       voteNumber,
@@ -181,17 +184,31 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
     }
     const res = await voteForReq(dataToSend)
     handlePrompt()
-
-    toast.success(res.message, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    if (res.error) {
+      toast.error(res.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    else {
+      toast.success(res.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    setLoading(false)
   }
 
   return (
@@ -209,7 +226,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
             Cancel
           </Button>
           <Button type='submit' form="create-plan" variant="success" onClick={isOwner ? useRequest : voteRequest}>
-            Proceed
+            {loading ? "Please wait..." : "Proceed"}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -245,7 +262,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
         <div className='text-center py-3'>
           {!isOwner
             ? <div><Button variant='outline-success' onClick={handlePrompt} value='allow'>Allow</Button>   <Button onClick={handlePrompt} value='dontAllow' variant='outline-danger'>Dont Allow</Button></div>
-            : <Button onClick={handlePrompt} variant='danger'>Use Request</Button>
+            : <Button onClick={handlePrompt} variant='danger' disabled={loading}>{loading ? "Please wait..." : "Use Request"}</Button>
           }
         </div>
       </div>
@@ -287,7 +304,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
     _id: 'personalUse',
     price: ''
   }
-
+  const [loading, setLoading] = useState(false)
   const reason = useInput('text', 'Tell them what you want')
   const amount = useInput('number', 'How much?')
   const password = useInput('password', 'enter password to confirm')
@@ -318,9 +335,11 @@ function CreateRequestModal({ show, handleShow, vid }) {
       amount: amount.value ? amount.value : 'GetFromProduct',
       campaignId: activeCampaign._id
     }
+    setLoading(true)
     const res = await createVoteReq(dataToSend)
-    if (res.response.data.error) {
-      toast.error(res.response.data.message, {
+    console.log(res);
+    if (res.error) {
+      toast.error(res.status + " " + res.message, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -332,7 +351,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
       });
     }
     else {
-      toast.success(res.response.data.message, {
+      toast.success(res.message, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -343,6 +362,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
         theme: "light",
       });
     }
+    setLoading(false)
   }
 
   return (
@@ -425,7 +445,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
               <label htmlFor={'voteCampPassFor' + vid}>Confirm with password</label><br />
               <input id={'voteCampPassFor' + vid} {...password} />
             </fieldset>
-            <Button className='my-3' type='submit' variant="warning">Create Request</Button>
+            <Button className='my-3' type='submit' variant="warning" disabled={loading}>{loading ? "Creating..." : "Create Request"}</Button>
           </div>
 
         </Form>

@@ -36,7 +36,7 @@ function Pipeline() {
         </div>
         <hr className="style-two" />
       </div>
-      <div className="d-flex">
+      <div className="d-flex flex-wrap justify-content-center justify-content-md-start">
         {
           userData?.currentPlan?.requirements.map((item) => {
             if (item.category === 'crop') {

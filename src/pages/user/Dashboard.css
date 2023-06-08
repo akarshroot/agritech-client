@@ -5,7 +5,7 @@
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
-  background-color: #f5f8f9;
+  background-color: #f4f6f7;
   z-index: 0;
 }
 
@@ -38,16 +38,6 @@
 
 .all-widgets-container {
   width: 100%;
-}
-
-.widget {
-  position: relative;
-  overflow: hidden;
-  /* margin: 20px; */
-  border-radius: 39px;
-  background: #ffffff;
-  box-shadow:  5px 5px 31px #cccccc,
-                -5px -5px 31px #ffffff;
 }
 
 .no-skeleton-widget:hover {

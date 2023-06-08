@@ -3,6 +3,8 @@
     flex-direction: column;
     flex-wrap: wrap;
     padding: 10px;
+    background-color: #f4f6f7;
+    min-height: 100vh;
 }
 
 .planning-header {
@@ -26,8 +28,10 @@
     margin: 20px;
     border-radius: 12px;
     background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    box-shadow: 5px 5px 31px rgba(204, 204, 204, 0.5),
+        -5px -5px 31px rgba(255, 255, 255, 0.5);
     text-align: left;
+    border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .plan-details {
