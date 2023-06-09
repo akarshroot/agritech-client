@@ -8,6 +8,8 @@ import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
 import { useUser } from '../../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import Spinner from 'react-bootstrap/esm/Spinner'
+import '../../index.css'
+import './Campaigns.css'
 import { ToastContainer, toast } from 'react-toastify'
 import PropTypes from 'prop-types'
 import './Campaigns.css'
@@ -276,7 +278,7 @@ function ModalForm({ show, handleShow }) {
   const target = useInput('number', 'Target Amount')
   const minContribution = useInput('number', 'Minimum Amount')
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
-  const password = useInput('password', 'Password')
+  const password = useInput('password', '')
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -510,7 +512,7 @@ function ModalForm({ show, handleShow }) {
         size='xl'
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header className='ContributeModalTitle' closeButton>
           <Modal.Title>Create Campaign</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -604,7 +606,7 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
         size='md'
       >
         <Modal.Header>
-          <Modal.Title>Contribute</Modal.Title>
+          <Modal.Title className='ContributeModal'>Contribute</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h4>Minimum contribution is '{minContri}' KCO</h4>
@@ -687,7 +689,7 @@ function Campaigns() {
                   <React.Fragment key={'campaignsKey' + i}>
                     <div className='widget col-sm-6 col-md-4 col-lg-3 p-4'>
                       <CampaignWidget {...data}>
-                        <Button onClick={handleShowContribute} variant='success'>Contribute</Button>
+                        <button onClick={handleShowContribute} className='neumorph-btn-green'>Contribute</button>
                       </CampaignWidget>
                       <ContributeModal
                         show={showContribute}
