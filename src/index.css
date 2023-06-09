@@ -11,6 +11,14 @@
   --warning-text: goldenrod;
   --warning-background: #ffeca257;
   --gradient: linear-gradient(to right, #d99e38, #ffcb74);
+
+  --new-color1: #a7cf2f;
+  --new-color2: #6cb119;
+  --new-color3: #106812;
+  
+  --new-color-Blue1: #b0d8ff;
+  --new-color-Blue2: #4c76b2;
+  --new-color-Blue3: #003580;
 }
 body {
   margin: 0;
