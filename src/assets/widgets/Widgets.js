@@ -39,11 +39,7 @@ export function renderWidget(id, props) {
 export function CampaignWidget({ title, target, contributors, _id, ...props }) {
     const numberOfContributors = contributors?.length
     const [collection, setCollection] = useState(0)
-    const { changeActiveCampaign } = useContext(CampaignContext)
     const { currentUser } = useUser()
-    function handleShowDetails() {
-        changeActiveCampaign(_id)
-    }
 
     useEffect(() => {
         console.log("getting CampLength")
@@ -91,7 +87,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                         </div>
                     </div>
                     <div className="widget-action-center d-flex justify-content-around mt-3">
-                        <Button onClick={handleShowDetails} variant='outline-success neumorph' >Details</Button>
+                        <Link to={'/detailedCampaign/'+_id} variant='outline-success' >Details</Link>
                         {props.children}
                     </div>
                 </>
