@@ -13,6 +13,7 @@ import './Campaigns.css'
 import { ToastContainer, toast } from 'react-toastify'
 import PropTypes from 'prop-types'
 import './Campaigns.css'
+import DatePicker from "react-datepicker"
 
 // STEPPER FUNCTIONS START
 const Step = ({
@@ -273,19 +274,27 @@ function ModalForm({ show, handleShow }) {
 
   const { userData } = useUser()
   const title = useInput('text', 'Title Goes Here')
-  const deadline = useInput('number', 'Deadline in seconds')
+  
+  const [deadline,setDeadline] = useState(new Date())
   const description = useInput('number', 'Talk about the benefits you will give to the contributors. You may define different returns as per contribution ranges')
   const target = useInput('number', 'Target Amount')
   const minContribution = useInput('number', 'Minimum Amount')
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
-  const password = useInput('password', '')
+  const password = useInput('password', 'Password')
+
+  function changeDeadline(date){
+   
+    setDeadline(date)
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
     setCreateCampaignLoading(true)
+    const deadlineToSend = Math.floor(deadline.getTime()/1000)
+    console.log(deadlineToSend)
     const dataToSend = {
       title: title.value,
-      deadline: deadline.value,
+      deadline: deadlineToSend,
       target: target.value,
       minContribution: minContribution.value,
       password: password.value,
@@ -293,7 +302,8 @@ function ModalForm({ show, handleShow }) {
       userId: userData._id
     }
     console.log("Sending Data", dataToSend)
-    const res = await createCampaign(dataToSend);
+    // const res = await createCampaign(dataToSend);
+    const res =''
     if (res.status === 'Deployed Successfully') {
       toast.success(res.status, {
         position: "top-right",
@@ -366,46 +376,61 @@ function ModalForm({ show, handleShow }) {
         <div>
           <label>
             <Form onSubmit={handleSubmit}>
-              <div className='d-flex flex-wrap align-items-center'>
-                <fieldset className="m-3">
-                  <label htmlFor='createCampTitle'>Title</label><br />
-                  <input id='createCampTitle' {...title} />
+              <div className='createCampaginForm d-flex flex-wrap justify-content-center'>
+                <fieldset className="col-md-6 p-3">
+                  <label htmlFor='createCampTitle'>Title</label>
+                  <input className='agri-input p-2' id='createCampTitle' {...title} />
                 </fieldset>
-                <fieldset className="m-3">
-                  <label htmlFor='createCampDeadline'>Deadline</label><br />
-                  <input id='createCampDeadline' {...deadline} />
+                <fieldset className="col-md-6 p-3">
+                  <label htmlFor='createCampDeadline'>Deadline</label>
+                  {/* <input className='agri-input p-2' id='createCampDeadline' {...deadline} /> */}
+                  <DatePicker
+                    className='agri-input p-2'
+                    // showIcon
+                    minDate={new Date()}
+                    // maxDate={addMonths(new Date(), 5)}
+                    showDisabledMonthNavigation
+                    selected={deadline}
+                    onChange={changeDeadline} 
+                  />
                 </fieldset>
-                <fieldset className="m-3">
-                  <label htmlFor='description'>Description</label><br />
-                  <textarea id='description' {...description} />
+                <fieldset className="col-md-6 p-3">
+                  <label htmlFor='createCampTarget'>Target</label>
+                  <input className='agri-input p-2' id='createCampTarget' {...target} />
                 </fieldset>
-                <div className="form-group p-3">
+                <fieldset className="col-md-6 p-3">
+                  <label htmlFor='createCampMinAmount'>Mininmum Amount</label>
+                  <input className='agri-input p-2' id='createCampMinAmount' {...minContribution} />
+                </fieldset>
+                <fieldset className="col-md-6 p-3">
+                  <label htmlFor='createCampPass'>Password</label>
+                  <input className='agri-input p-2' id='createCampPass' {...password} />
+                </fieldset>
+                <fieldset className="col-md-6 p-3">
                   <label htmlFor="refund">Refund Unused Funds</label>
-                  <select className="form-control" id="refund" defaultValue={"allowed"} disabled={true}>
+                  <select className="agri-input p-2" id="refund" defaultValue={"allowed"} disabled={true}>
                     <option value={"allowed"}>Allowed</option>
                   </select>
-                </div>
-                <fieldset className="m-3">
-                  <label htmlFor='createCampTarget'>Target</label><br />
-                  <input id='createCampTarget' {...target} />
-                </fieldset>
-                <fieldset className="m-3">
-                  <label htmlFor='createCampMinAmount'>Mininmum Amount</label><br />
-                  <input id='createCampMinAmount' {...minContribution} />
-                </fieldset>
-                <fieldset className="m-3">
-                  <label htmlFor='createCampPass'>Password</label><br />
-                  <input id='createCampPass' {...password} />
                 </fieldset>
               </div>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={enableSecond.checked}
-                  onChange={firstTermsHandler}
-                />{' '}
-                Accept first terms and conditions
-              </label>
+              <fieldset className="col-12 d-flex flex-column px-3">
+                <label htmlFor='description'>Description</label>
+                <textarea 
+                  id='description'
+                  rows={8}
+                  {...description} />
+              </fieldset>
+              <fieldset>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={enableSecond.checked}
+                    onChange={firstTermsHandler}
+                    />{' '}
+                  Accept first terms and conditions
+                </label>
+              </fieldset>
+              
 
             </Form>
           </label>
@@ -509,7 +534,7 @@ function ModalForm({ show, handleShow }) {
         }}
         backdrop="static"
         keyboard={false}
-        size='xl'
+        size='lg'
         centered
       >
         <Modal.Header className='ContributeModalTitle' closeButton>

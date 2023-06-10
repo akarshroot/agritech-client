@@ -10,10 +10,10 @@ export default function useInput(type,placeholder) {
         ? setData(e.target.value)
         : setData(e)
     }
-    const className = 'input-neumorph' 
+    // const className = 'input-neumorph'
     return (
         {
-            className,
+            // className,
             type,
             onChange:handleChange,
             value:data,
