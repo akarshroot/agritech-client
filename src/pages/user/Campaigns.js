@@ -668,7 +668,7 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
 function Campaigns() {
   const [showContribute, setShowContribute] = useState(false);
   const [show, setShow] = useState(false);
-  const { userData, getUserData, getUserCampaigns, userCampaigns, currentUser } = useUser();
+  const { userData, getUserData, getUserCampaigns, userCampaigns } = useUser();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
   function handleShow() {
