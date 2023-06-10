@@ -5,6 +5,7 @@ import { CampaignWidget } from '../../assets/widgets/Widgets';
 import Button from 'react-bootstrap/esm/Button';
 import { ContributeModal } from './Campaigns';
 import { useNavigate } from 'react-router-dom';
+import './Dashboard.css'
 
 function ExploreCampaigns() {
     const [loading, setLoading] = useState(false);

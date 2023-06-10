@@ -9,6 +9,7 @@
 }
 body {
   margin: 0;
+  background-color: #ebebeb !important;
   max-width: 100dvw;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -20,7 +21,8 @@ body {
 }
 
 .theme-dark {
-  --c1: #40513B;
+  --c0: #40513B;
+  --c1: #5d9900;
   --c2: #609966;
   --c3: #9DC08B;
   --c4: #EDF1D6;
@@ -35,7 +37,8 @@ body {
 }
 
 .theme-light {
-  --c1: #40513B;
+  --c0: #40513B;
+  --c1: #5d9900;
   --c2: #609966;
   --c3: #9DC08B;
   --c4: #EDF1D6;
@@ -85,4 +88,29 @@ hr.style-two {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.agri-input{
+  width: 100%;
+  border-radius: 3px;
+  /* padding: 1rem; */
+  border: solid 1px gray;
+  outline: none;
+}
+.agri-input:focus-visible,
+.agri-input:focus{
+  border: solid 2px green !important;
+}
+
+
+
+
+
+.createCampaginForm fieldset{
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+textarea{
+  resize: none !important;
 }

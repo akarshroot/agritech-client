@@ -16,6 +16,7 @@
     "react-bootstrap": "^2.7.2",
     "react-content-loader": "^6.2.1",
     "react-custom-image-loader.": "^1.0.3",
+    "react-datepicker": "^4.12.0",
     "react-dom": "^18.2.0",
     "react-fontawesome": "^1.7.1",
     "react-helmet": "^6.1.0",
@@ -50,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-aria": "^3.24.0"
   }
 }
