@@ -24,6 +24,7 @@ import { StoreContextProvider } from './context/StoreContext';
 import { ManagementContextProvider } from './context/ManagementContext';
 import AdminConsole from './pages/user/AdminConsole';
 import Forbidden from './pages/public/Forbidden';
+import Loader from './assets/loader/Loader'
 
 function App() {
   return (
@@ -54,6 +55,9 @@ function App() {
                   <Route exact path='/detailedCampaign' element={<PrivateBody body={CampaignDetails} />} />
                   <Route exact path='/admin/panel' element={<PrivateBody body={AdminConsole} restricted={true} />} />
                   <Route exact path='/forbidden' element={<PublicBody body={Forbidden}/>} />
+
+
+                  <Route exact path='/loader' element={<Loader height='500px' width='500px' />} />
                 </Routes>
               </ManagementContextProvider>
             </StoreContextProvider>
