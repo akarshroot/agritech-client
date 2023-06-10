@@ -405,7 +405,7 @@ function Wallet() {
                   <h3>Balance:</h3>
                 </td>
                 <td>
-                  <h4> <CurrencyIconComponent size='35' adjustY={'-3%'} /> {!balanceLoader ? balance : "Loading..."} KCO
+                  <h4 className='notranslate'> <CurrencyIconComponent size='35' adjustY={'-3%'} /> {!balanceLoader ? balance : "Loading..."} KCO
                   </h4>
                 </td>
               </tr>

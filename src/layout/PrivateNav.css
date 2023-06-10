@@ -93,3 +93,10 @@
     padding: 4px;
     right: 0%;
 } */
+
+.language-setter {
+    height: 30px;
+    font-size: medium;
+    /* position: absolute; */
+    right: 20px;
+}

@@ -12,12 +12,14 @@ import agristore from '../assets/icons/agristore.png'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import { ToastContainer, toast } from 'react-toastify'
+import { Helmet } from 'react-helmet'
 
 function PrivateNav(props) {
     const { currentUser, logout, loading, userData, getUserData } = useUser()
     const [tab, setTab] = useState(window.location.pathname.split("/")[1])
     const [hamShow, setHamShow] = useState(false)
     const navigate = useNavigate()
+    const [translateActive, setTranslateActive] = useState(false)
 
     useEffect(() => {
         setTab(window.location.pathname.split("/")[1])
@@ -31,14 +33,29 @@ function PrivateNav(props) {
     }, [])
 
 
+    function googleTranslateElementInit() {
+        new window.google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element')
+    }
+
+
     return (
         <>
+            <Helmet>
+                <script type="text/javascript"
+                    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            </Helmet>
             <div className={`private-nav d-none d-md-block theme-${props.theme}`}>
-                <div className='logoConsole'>
-                    <div onClick={() => navigate('/', { replace: true })} className='logoLink'>
+                <div className='logoConsole row m-0'>
+                    <div className="col"></div>
+                    <div onClick={() => navigate('/', { replace: true })} className='logoLink col'>
                         AgriTech Console
                     </div>
-                    {userData?.admin && < Button variant='success' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
+                    <div className="language-setter col d-flex align-items center h-100 justify-content-end">
+                        {userData?.admin && < Button variant='success m-1' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
+                        <Button variant='warning m-1' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
+                        <Button variant='warning m-1' onClick={() => logout()}>Logout</Button>
+                        <div id="google_translate_element"></div>
+                    </div>
                 </div>
                 {/* <div className='d-flex justify-content-between pt-1'> */}
                 <div className='links-container d-flex justify-content-between flex-wrap'>
@@ -49,16 +66,13 @@ function PrivateNav(props) {
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/campaigns"><li className={`nav-element ${tab === "campaigns" ? "nav-element-selected" : ""}`}><img src={campaigns} height={45} width={45} />Campaigns</li></Link>
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/agristore"><li className={`nav-element ${tab === "agristore" ? "nav-element-selected" : ""}`}><img src={agristore} height={45} width={45} />AgriStore</li></Link>
                     {/* </div> */}
-                    <div className='p-1'>
-                        <Button variant='btn bg-warning bg-opacity-75 mx-3' onClick={() => logout()}>LOGOUT</Button>
-                    </div>
                 </div>
             </div >
 
             <div className={`private-nav d-block d-md-none theme-${props.theme}`}>
                 <div className='display-5 logoConsole'>AgriTech Console</div>
                 <div className='hamButtonNav'>
-                    <FontAwesome name='bars' onClick={() => setHamShow(!hamShow)} className="fa-solid fa-bars" />
+                    <FontAwesome name='bars' onClick={() => setHamShow(!hamShow)} className="fa-light fa-bars" />
                     {userData?.admin && < Button variant='success' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
                     <Button variant='btn bg-warning bg-opacity-75' onClick={() => logout()}>LOGOUT</Button>
                 </div>
@@ -69,6 +83,12 @@ function PrivateNav(props) {
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/management"><li className={`nav-element ${tab === "management" ? "nav-element-selected" : ""}`}>Management</li></Link>
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/campaigns"><li className={`nav-element ${tab === "campaigns" ? "nav-element-selected" : ""}`}>Campaigns</li></Link>
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/agristore"><li className={`nav-element ${tab === "agristore" ? "nav-element-selected" : ""}`}>AgriStore</li></Link>
+                        <li className={`nav-element ${tab === "agristore" ? "nav-element-selected" : ""}`}>
+                            <div className="language-setter">
+                                <Button variant='warning' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
+                                <div id="google_translate_element"></div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

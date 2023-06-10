@@ -3,6 +3,7 @@ import { useUser } from '../../../context/UserContext'
 import FloatingMenu from '../../../layout/FloatingMenu'
 import { renderWidget } from '../../../assets/widgets/Widgets'
 import './Management.css'
+import Spinner from 'react-bootstrap/esm/Spinner'
 
 function Management(props) {
   const [loading, setLoading] = useState(true)
@@ -29,7 +30,7 @@ function Management(props) {
   }, [])
 
   return (
-    <div className={`container theme-${theme}`}>
+    <div className={`p-3 theme-${theme} management-widgets w-100`}>
       <div className="row">
         {
           widgets.map((widget) => {

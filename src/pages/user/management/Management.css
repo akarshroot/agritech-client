@@ -1,3 +1,8 @@
+.management-widgets {
+    background-color: #f4f6f7;
+    min-height: 100vh;
+}
+
 .skeleton-widget {
     background: linear-gradient(270deg, #ecebeb, #f3f3f3);
     background-size: 400% 100%;

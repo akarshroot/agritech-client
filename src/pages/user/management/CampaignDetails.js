@@ -1,18 +1,20 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import CampaignContext from '../../../context/CampaignContext'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import useInput from '../../../hooks/useInput'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useUser } from '../../../context/UserContext'
 import StoreContext from '../../../context/StoreContext'
 import { ContributeModal } from '../Campaigns'
-import { createVoteReq, getTransactionsForCamp, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
+import { createVoteReq, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
 import './CampaignDetails.css'
+import Loader from '../../../assets/loader/Loader'
 import { toast } from 'react-toastify'
 import AlreadyContributed from '../../../assets/icons/tick-box.svg'
+import {getCampbyId} from '../../../interceptors/serverAPIs'
 
 
 function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal }) {
@@ -121,6 +123,7 @@ function CampaignPrograssBar({ raisedAmount, target }) {
 
 function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber }) {
 
+  const [loading, setLoading] = useState(false)
   const [prompt, openPrompt] = useState(false)
   const [password, setPassword] = useState("")
 
@@ -139,6 +142,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
       cid
     }
     console.log(dataToSend)
+    setLoading(true)
     const res = await usevoteReq(dataToSend)
     handlePrompt()
     if (res.error) {
@@ -165,13 +169,14 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
         theme: "light",
       });
     }
+    setLoading(false)
   }
-
 
   async function voteRequest(e) {
     if (!password) {
       return
     }
+    setLoading(true)
     console.log(e.target.value)
     const dataToSend = {
       voteNumber,
@@ -181,17 +186,31 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
     }
     const res = await voteForReq(dataToSend)
     handlePrompt()
-
-    toast.success(res.message, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    if (res.error) {
+      toast.error(res.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    else {
+      toast.success(res.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    setLoading(false)
   }
 
   return (
@@ -209,7 +228,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
             Cancel
           </Button>
           <Button type='submit' form="create-plan" variant="success" onClick={isOwner ? useRequest : voteRequest}>
-            Proceed
+            {loading ? "Please wait..." : "Proceed"}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -245,7 +264,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
         <div className='text-center py-3'>
           {!isOwner
             ? <div><Button variant='outline-success' onClick={handlePrompt} value='allow'>Allow</Button>   <Button onClick={handlePrompt} value='dontAllow' variant='outline-danger'>Dont Allow</Button></div>
-            : <Button onClick={handlePrompt} variant='danger'>Use Request</Button>
+            : <Button onClick={handlePrompt} variant='danger' disabled={loading}>{loading ? "Please wait..." : "Use Request"}</Button>
           }
         </div>
       </div>
@@ -287,7 +306,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
     _id: 'personalUse',
     price: ''
   }
-
+  const [loading, setLoading] = useState(false)
   const reason = useInput('text', 'Tell them what you want')
   const amount = useInput('number', 'How much?')
   const password = useInput('password', 'enter password to confirm')
@@ -318,9 +337,11 @@ function CreateRequestModal({ show, handleShow, vid }) {
       amount: amount.value ? amount.value : 'GetFromProduct',
       campaignId: activeCampaign._id
     }
+    setLoading(true)
     const res = await createVoteReq(dataToSend)
-    if (res.response.data.error) {
-      toast.error(res.response.data.message, {
+    console.log(res);
+    if (res.error) {
+      toast.error(res.status + " " + res.message, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -332,7 +353,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
       });
     }
     else {
-      toast.success(res.response.data.message, {
+      toast.success(res.message, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -343,6 +364,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
         theme: "light",
       });
     }
+    setLoading(false)
   }
 
   return (
@@ -425,7 +447,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
               <label htmlFor={'voteCampPassFor' + vid}>Confirm with password</label><br />
               <input id={'voteCampPassFor' + vid} {...password} />
             </fieldset>
-            <Button className='my-3' type='submit' variant="warning">Create Request</Button>
+            <Button className='my-3' type='submit' variant="warning" disabled={loading}>{loading ? "Creating..." : "Create Request"}</Button>
           </div>
 
         </Form>
@@ -478,10 +500,8 @@ function TransactionsHistory({ tx }) {
   )
 }
 
-function CampaignVotesinfo({ isOwner }) {
+function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors }) {
   const [show, setShow] = useState(false);
-  const { activeCampaign } = useContext(CampaignContext)
-  const voteRequests = activeCampaign.voteRequests
   function handleShow() {
     setShow(!show);
   }
@@ -507,8 +527,8 @@ function CampaignVotesinfo({ isOwner }) {
                     <WithdrawRequests
                       isOwner={isOwner}
                       key={'votesContainerKey' + i}
-                      cid={activeCampaign._id}
-                      voters={activeCampaign.contributors.length}
+                      cid={_id}
+                      voters={contributors.length}
                       {...data} />
                   )
                 })}
@@ -524,22 +544,36 @@ function CampaignVotesinfo({ isOwner }) {
 
 export default function CampaignDetails() {
 
-  const { activeCampaign, changeActiveCampaign } = useContext(CampaignContext)
-  const { userData, loadingUser, getUserData, currentUser } = useUser()
+  const [activeCampaign, changeActiveCampaign] = useState(null)
+  const { userData, loadingUser, getUserData } = useUser()
   const [show, setShow] = useState(false);
+  const params = useParams()
+
   function handleShow() {
     setShow(!show)
   }
+  async function getCampaignData(id){
+    const resdata = await getCampbyId(id)
+    console.log("Campdata",resdata)
+    changeActiveCampaign(resdata)
+  }
+
   useEffect(() => {
     if (loadingUser || !userData) {
       getUserData()
     }
     if (!activeCampaign) {
-      changeActiveCampaign()
+      getCampaignData(params.id)
     }
   }, [])
+
+
   if (!activeCampaign || !userData || loadingUser) {
-    return <div>Loading...</div>
+    return (
+      <div style={{height:'90vh'}} className='d-flex justify-content-center align-items-center'>
+        <Loader height='150px' width='150px' />
+      </div>
+      )
   }
   const contributeModalData = {
     show,
@@ -555,7 +589,12 @@ export default function CampaignDetails() {
     <div className='container py-2'>
       <CreatorDetails {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
       <CampaignInfo {...activeCampaign} />
-      <CampaignVotesinfo isOwner={isOwner} />
+      <CampaignVotesinfo 
+      isOwner={isOwner} 
+      _id={activeCampaign._id}
+      contributors={activeCampaign.contributors}
+      voteRequests={activeCampaign.voteRequests}
+      />
       <ContributeModal {...contributeModalData} />
       {activeCampaign.campaignTransactions && isOwner
         ? <TransactionsHistory tx={activeCampaign.campaignTransactions} />

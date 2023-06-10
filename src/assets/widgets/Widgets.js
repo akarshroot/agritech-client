@@ -39,11 +39,7 @@ export function renderWidget(id, props) {
 export function CampaignWidget({ title, target, contributors, _id, ...props }) {
     const numberOfContributors = contributors?.length
     const [collection, setCollection] = useState(0)
-    const { changeActiveCampaign } = useContext(CampaignContext)
     const { currentUser } = useUser()
-    function handleShowDetails() {
-        changeActiveCampaign(_id)
-    }
 
     useEffect(() => {
         console.log("getting CampLength")
@@ -70,7 +66,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                     <h4>Campaign Progress</h4>
                     <hr />
                     <div className="campaign-progress">
-                        <div className="progress" style={{ height: "30px" }}>
+                        <div className="progress neumorphInto" style={{ height: "30px" }}>
                             <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
                                 aria-valuenow={`${parseInt((collection / target) * 100)}`} aria-valuemin="0" aria-valuemax="100" style={{ width: `${parseInt((collection / target) * 100)}%` }}>
                                 {`${parseInt((collection / target) * 100)}%`}
@@ -91,7 +87,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                         </div>
                     </div>
                     <div className="widget-action-center d-flex justify-content-around mt-3">
-                        <Button onClick={handleShowDetails} variant='outline-success' >Details</Button>
+                        <Link to={'/detailedCampaign/'+_id} variant='outline-success' >Details</Link>
                         {props.children}
                     </div>
                 </>

@@ -44,17 +44,19 @@ async function createVoteReq(data) {
     const res = await axios.post(voteURL + 'makeRequest', data)
     if (res.hasOwnProperty("data"))
         return res.data
-    else return res
+    else return res.response.data
 }
 async function voteForReq(data) {
     const res = await axios.post(voteURL + 'vote', data)
-    return res.data
+    if (res.hasOwnProperty("data"))
+        return res.data
+    else return res.response.data
 }
 async function usevoteReq(data) {
     const res = await axios.post(voteURL + 'useRequestedMoney', data)
     if (res.hasOwnProperty("data"))
         return res.data
-    else return res.data.data
+    else return res.response.data
 }
 
 
