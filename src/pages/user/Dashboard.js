@@ -47,8 +47,8 @@ function Dashboard() {
                     {
                         widgets.map((widget, key) => {
                             return (
-                                <div className='col-md-4 col-xl-3 '>
-                                    <div className={`widget  ${loading ? "skeleton-widget" : ""}`} key={"DASHBOARD_WIDGETS_"+key}>
+                                <div className='col-md-4 col-xl-3 m-5'>
+                                    <div className={`widget   ${loading ? "skeleton-widget" : ""}`} key={"DASHBOARD_WIDGETS_"+key}>
                                         {
                                             loading ? <></> :
                                             <>
@@ -60,7 +60,7 @@ function Dashboard() {
                             )
                         })
                     }
-                    <div className="col-md-4 col-xl-3 p-4">
+                    <div className="col-md-4 col-xl-3 m-5">
                         <div className='widget'>
                             <CampaignWidget title={campaignWidget?.title} target={campaignWidget?.target} _id={campaignWidget?._id} contributors={campaignWidget?.contributors} deadline={campaignWidget?.deadline} dateCreated={campaignWidget?.dateCreated} />
                         </div>

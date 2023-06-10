@@ -5,7 +5,7 @@
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
-  background-color: #f5f8f9;
+  background-color: #f4f6f7;
   z-index: 0;
 }
 
@@ -44,9 +44,9 @@
   position: relative;
   overflow: hidden;
   /* margin: 20px; */
-  border-radius: 39px;
+  border-radius: 15px;
   background: #ffffff;
-  box-shadow:  5px 5px 31px #cccccc,
+  box-shadow:  5px 5px 31px #e5e4e4,
                 -5px -5px 31px #ffffff;
 }
 
