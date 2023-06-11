@@ -312,8 +312,8 @@ function CreateRequestModal({ show, handleShow, vid }) {
   const password = useInput('password', 'enter password to confirm')
   const [dropdown, setDropdown] = useState(false)
   const [receiverProduct, setReceiverProduct] = useState(productSelect)
-  const { activeCampaign } = useContext(CampaignContext)
   const { cart } = useContext(StoreContext)
+  const urlParams = useParams();
 
   function handleDropdown() {
     setDropdown(!dropdown)
@@ -335,7 +335,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
       password: password.value,
       receiverProduct: receiverProduct._id,
       amount: amount.value ? amount.value : 'GetFromProduct',
-      campaignId: activeCampaign._id
+      campaignId: urlParams.id
     }
     setLoading(true)
     const res = await createVoteReq(dataToSend)
@@ -523,6 +523,7 @@ function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors }) {
               <hr />
               <div className='row'>
                 {voteRequests?.map((data, i) => {
+                  console.log(data)
                   return (
                     <WithdrawRequests
                       isOwner={isOwner}

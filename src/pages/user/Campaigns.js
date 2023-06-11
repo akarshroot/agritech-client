@@ -302,8 +302,7 @@ function ModalForm({ show, handleShow }) {
       userId: userData._id
     }
     console.log("Sending Data", dataToSend)
-    // const res = await createCampaign(dataToSend);
-    const res =''
+    const res = await createCampaign(dataToSend);
     if (res.status === 'Deployed Successfully') {
       toast.success(res.status, {
         position: "top-right",
@@ -478,7 +477,7 @@ function ModalForm({ show, handleShow }) {
     {
       label: 'Launch',
       content: (
-        <div>
+        <div onClick={handleSubmit}>
           <label>
             Click submit to launch!
           </label>
