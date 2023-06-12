@@ -68,7 +68,7 @@ export function Cart() {
                                                 )
                                             })
                                     }
-                                    <li className='list-group-item w-100 d-flex justify-content-between active'><div>Total</div><div>{INR.format(cartTotal)}</div></li>
+                                    <li className='list-group-item w-100 d-flex justify-content-between active'><div>Total</div><div>{cartTotal} KCO</div></li>
                                 </ul>
                             </Modal.Body>
                             <Modal.Footer>

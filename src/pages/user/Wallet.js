@@ -410,7 +410,7 @@ function Wallet() {
             </tbody>
           </Table>
           <div>
-            <Button variant='warning' onClick={setShowBuyModal}>Buy More KCO</Button>
+            <Button variant='primary' onClick={setShowBuyModal}>Buy More KCO</Button>
             <AddKCOModal {...buyModalOptions} />
           </div>
         </div>

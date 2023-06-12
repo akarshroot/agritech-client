@@ -54,7 +54,7 @@ body {
 .link {
   text-decoration: none;
   cursor: pointer;
-  color: inherit;
+  color: #0163b1;
 }
 
 .link:hover {
