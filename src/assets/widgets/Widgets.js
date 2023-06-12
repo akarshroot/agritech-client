@@ -11,6 +11,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getTransactions } from '../../interceptors/web3ServerApi';
 import AlreadyContributed from '../../assets/icons/tick-box.svg'
 import FontAwesome from 'react-fontawesome';
+//Charts
+import { AxisOptions, Chart } from "react-charts";
 
 //Widget renderer
 export function renderWidget(id, props) {
@@ -31,6 +33,8 @@ export function renderWidget(id, props) {
             return <OrderHistory {...props} />
         case "current-plan":
             return <CurrentPlan {...props} />
+        case "msp":
+            return <MSPChart {...props} />
         default:
             return <></>
     }
@@ -56,10 +60,10 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
             {(title && target && contributors && _id) ?
                 <>
                     {
-                    contributors.find(contributor => contributor.userId === currentUser) &&
-                    <div className='ContributionTick'>
-                        <FontAwesome className='text-light' size='2x' name="check"/>
-                    </div>}
+                        contributors.find(contributor => contributor.userId === currentUser) &&
+                        <div className='ContributionTick'>
+                            <FontAwesome className='text-light' size='2x' name="check" />
+                        </div>}
                     <h3 className='container'>
                         {title}
                     </h3>
@@ -87,7 +91,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                         </div>
                     </div>
                     <div className="widget-action-center d-flex justify-content-around mt-3">
-                        <Link to={'/detailedCampaign/'+_id} variant='outline-success' >Details</Link>
+                        <Link to={'/detailedCampaign/' + _id} variant='outline-success' >Details</Link>
                         {props.children}
                     </div>
                 </>
@@ -390,5 +394,216 @@ export function CurrentPlan(props) {
                 </>
             }
         </div>
+    )
+}
+
+
+// function ResizableBox({
+//     children,
+//     width = 600,
+//     height = 300,
+//     resizable = true,
+//     style = {},
+//     className = "",
+// }) {
+//     return (
+//         <div style={{ marginLeft: 20 }}>
+//             <div
+//                 style={{
+//                     display: "inline-block",
+//                     width: "auto",
+//                     background: "white",
+//                     padding: ".5rem",
+//                     borderRadius: "0.5rem",
+//                     boxShadow: "0 30px 40px rgba(0,0,0,.1)",
+//                     ...style,
+//                 }}
+//             >
+//                 {resizable ? (
+//                     <ReactResizableBox width={width} height={height}>
+//                         <div
+//                             style={{
+//                                 width: "100%",
+//                                 height: "100%",
+//                             }}
+//                             className={className}
+//                         >
+//                             {children}
+//                         </div>
+//                     </ReactResizableBox>
+//                 ) : (
+//                     <div
+//                         style={{
+//                             width: `${width}px`,
+//                             height: `${height}px`,
+//                         }}
+//                         className={className}
+//                     >
+//                         {children}
+//                     </div>
+//                 )}
+//             </div>
+//         </div>
+//     );
+// }
+
+
+export function MSPChart() {
+    const [lineData, setLineData] = useState([
+        {
+            label: 'MSP',
+            data: [{
+                year: 2010,
+                msp: 1000
+            },
+            {
+                year: 2011,
+                msp: 1080
+            },
+            {
+                year: 2012,
+                msp: 1250
+            },
+            {
+                year: 2013,
+                msp: 1310
+            },
+            {
+                year: 2014,
+                msp: 1360
+            },
+            {
+                year: 2015,
+                msp: 1410
+            },
+            {
+                year: 2016,
+                msp: 1470
+            },
+            {
+                year: 2017,
+                msp: 1550
+            },
+            {
+                year: 2018,
+                msp: 1750
+            },
+            {
+                year: 2019,
+                msp: 1815
+            },
+            {
+                year: 2020,
+                msp: 1868
+            },
+            {
+                year: 2021,
+                msp: 1940
+            },
+            {
+                year: 2022,
+                msp: 2040
+            }]
+        }
+    ])
+    const [barData, setBarData] = useState([
+        {
+            label: "MSP",
+            data: [{
+                year: "2010-11",
+                msp: 1000
+            },
+            {
+                year: "2011-12",
+                msp: 1080
+            },
+            {
+                year: "2012-13",
+                msp: 1250
+            },
+            {
+                year: "2013-14",
+                msp: 1310
+            },
+            {
+                year: "2014-15",
+                msp: 1360
+            },
+            {
+                year: "2015-16",
+                msp: 1410
+            },
+            {
+                year: "2016-17",
+                msp: 1470
+            },
+            {
+                year: "2017-18",
+                msp: 1550
+            },
+            {
+                year: "2018-19",
+                msp: 1750
+            },
+            {
+                year: "2019-20",
+                msp: 1815
+            },
+            {
+                year: "2020-21",
+                msp: 1868
+            },
+            {
+                year: "2021-22",
+                msp: 1940
+            },
+            {
+                year: "2022-23",
+                msp: 2040
+            }]
+        }
+    ])
+    const primaryAxis = React.useMemo(
+        () => ({
+            getValue: (datum) => datum.year,
+        }),
+        []
+    );
+
+    const secondaryAxes = React.useMemo(
+        () => [
+            {
+                getValue: (datum) => datum.msp,
+            },
+        ],
+        []
+    );
+
+    const [chosenFormat, setChosenFormat] = useState(barData)
+
+    return (
+        <>
+            <div className='d-flex flex-column p-1 h-100'>
+                <div className="d-flex justify-content-center">
+                    Select Chart Type: &nbsp;
+                    <select onChange={(e) => {
+                        if (e.target.value === "line") setChosenFormat(lineData)
+                        else setChosenFormat(barData)
+                    }}>
+                        <option value="line">Line</option>
+                        <option value="bar" selected>Bar</option>
+                    </select>
+                </div>
+                <div className="w-100" style={{ height: "90%" }}>
+                    <Chart
+                        options={{
+                            data: chosenFormat,
+                            primaryAxis,
+                            secondaryAxes,
+                        }}
+                    />
+                </div>
+            </div>
+        </>
     )
 }
