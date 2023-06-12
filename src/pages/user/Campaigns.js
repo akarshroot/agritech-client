@@ -1,4 +1,5 @@
-import React, { useEffect, useState, Fragment } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState, Fragment,useRef } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -6,14 +7,17 @@ import { CampaignWidget } from '../../assets/widgets/Widgets'
 import useInput from '../../hooks/useInput'
 import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
 import { useUser } from '../../context/UserContext'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Spinner from 'react-bootstrap/esm/Spinner'
 import '../../index.css'
 import './Campaigns.css'
 import { ToastContainer, toast } from 'react-toastify'
 import PropTypes from 'prop-types'
+import LogoImage from '../../assets/logo/logoImg.svg'
 import './Campaigns.css'
 import DatePicker from "react-datepicker"
+import Loader from '../../assets/loader/Loader'
+import {getUserPlans} from '../../interceptors/serverAPIs'
 
 // STEPPER FUNCTIONS START
 const Step = ({
@@ -87,7 +91,7 @@ const StepperHead = ({
   currentTabIndex,
 }) => (
   <div
-    className={`stepper-head ${isVertical ? 'vertical-stepper-head' : ''} ${isInline ? 'inline-stepper-head' : ''
+    className={` stepper-head ${isVertical ? 'vertical-stepper-head' : ''} ${isInline ? 'inline-stepper-head' : ''
       }`}
   >
     {stepperContent.map((el, i) => (
@@ -134,12 +138,12 @@ const StepperFooter = ({
   submitHandler,
   stepperContent,
   currentTabIndex,
+  createCampaignFormRef,
+  launchLoading
 }) => {
   const submitCurrentStep = async () => {
-    await stepperContent[currentTabIndex].clicked();
-    nextStepHandler();
+    nextStepHandler()
   };
-
   return (
     <div
       className="stepper-footer"
@@ -153,20 +157,26 @@ const StepperFooter = ({
       <Button
         variant="success my-3"
         onClick={
-          isLastStep
+          currentTabIndex===0
+          ?()=>{createCampaignFormRef.current.checkValidity()
+            ?submitCurrentStep()
+            :toast.warning('Missing or invalid value. Please check the provided details')
+          }
+          :isLastStep
             ? submitHandler
             : stepperContent[currentTabIndex].clicked
-              ? submitCurrentStep
+              ? () => {stepperContent[currentTabIndex].clicked();submitCurrentStep()}
               : nextStepHandler
         }
         disabled={
+          
           (isLastStep
             ? stepperContent.some((el) => !el.isComplete)
             : !stepperContent[currentTabIndex].isComplete) ||
           stepperContent[currentTabIndex].isLoading
         }
       >
-        {isLastStep ? 'Submit' : `Continue to ${stepperContent[currentTabIndex + 1].label}`}
+        {isLastStep ? !launchLoading? 'Submit':'Launching...' : `Continue to ${stepperContent[currentTabIndex + 1].label}`}
       </Button>
     </div>
   );
@@ -192,7 +202,7 @@ StepperFooter.propTypes = {
   ),
 };
 
-let Stepper = ({ isRightToLeftLanguage, isVertical, isInline, stepperContent, submitStepper }) => {
+let Stepper = ({ launchLoading,campaignFormRef,isRightToLeftLanguage, isVertical, isInline, stepperContent, submitStepper }) => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0),
     isLastStep = currentTabIndex === stepperContent.length - 1,
     isPrevBtn = currentTabIndex !== 0;
@@ -232,7 +242,7 @@ let Stepper = ({ isRightToLeftLanguage, isVertical, isInline, stepperContent, su
         />
         <div className="stepper-body">
           {stepperContent.map((el, i) => (
-            <Fragment key={i}>{i === currentTabIndex && el.content}</Fragment>
+            <Fragment key={'StepperContentKey'+i}>{i === currentTabIndex && el.content}</Fragment>
           ))}
         </div>
       </div>
@@ -245,6 +255,8 @@ let Stepper = ({ isRightToLeftLanguage, isVertical, isInline, stepperContent, su
         submitHandler={submitHandler}
         stepperContent={stepperContent}
         currentTabIndex={currentTabIndex}
+        createCampaignFormRef={campaignFormRef}
+        launchLoading={launchLoading}
       />
     </div>
   );
@@ -270,36 +282,147 @@ Stepper.propTypes = {
 
 // STEPPER FUNCTIONS END
 
+function StepperSelectPlanForm({selectedPlan,selectPlan,secondTermsHandler}){
+
+  const [plans,setPlans] = useState(null)
+  const [loading,setLoading] = useState(false)
+  useEffect(()=>{
+    setLoading(true)
+    getUserPlans().then(e =>{
+      console.log(e.data)
+      setPlans(e.data.reverse())
+      setLoading(false)
+    })
+  },[])
+
+
+  function handleSelectPlan(id,ele){
+    console.log(id)
+    console.log(ele)
+    selectPlan(id)
+    secondTermsHandler()
+  }
+
+  return(
+    <div className='PlanAssociateContainer'>
+      <h2>Choose Plan To Associate</h2>
+      <div className='UserPlans d-flex '>
+        {loading
+        ?(<div className='loaderFormSelectPlans text-center'>
+          <Loader height='100px' width='100px' />
+        </div>)
+        :plans?.length
+        ?plans.map((plan,key) => {
+          const styleColor = selectedPlan===plan._id? 'borderS':plan.executing? 'borderE':''
+          return(
+            <div onClick={(e) => handleSelectPlan(plan._id,this)} key={'EachUserPlanKey'+key} className='EachUserPlan col-11'>
+                <div className={`plan planBorder newEachPlanShadow ${styleColor}`} >
+                  <div className="d-flex align-items-center justify-content-between">
+                      <h5>{plan.title}</h5>
+                      {
+                       selectedPlan===plan._id && <div className="alert alert-primary p-1 m-0">&#10004; Selected</div>
+                      }
+                  </div>
+                  <hr className="style-two" />
+                  <div className="plan-details">
+                      <div className="requirements">
+                          <table>
+                              <tbody>
+                                  <tr><th>Item</th><th>Quantity</th></tr>
+                                  {
+                                      plan.requirements.map((req, key) => {
+                                          return (
+                                              <tr key={key}>
+                                                  <td>{req.item}</td>
+                                                  <td>{req.quantity}</td>
+                                              </tr>
+                                          )
+                                      })
+                                  }
+                              </tbody>
+                          </table>
+                      </div>
+                      <div className="specifics">
+                          <table>
+                              <tbody>
+                                  <tr><th>Duration</th><th>Estimated Cost</th></tr>
+                                  <tr><td>{plan.duration}</td><td>₹{new Intl.NumberFormat("en-IN").format(plan.estCost)}</td></tr>
+                                  <tr><th>Estimated Revenue</th><th>Estimated {plan.estRevenue - plan.estCost > 0 ? "Profit" : "Loss"}</th></tr>
+                                  <tr><td>₹{new Intl.NumberFormat("en-IN").format(plan.estRevenue)}</td><td>₹{new Intl.NumberFormat("en-IN").format(Math.abs(plan.estRevenue - plan.estCost))}</td></tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+            </div>
+          )
+        })
+        :<div className='noPlansForForm flex-grow-1 d-flex flex-column align-items-center justify-content-center'>
+          <div className='m-3'>
+            <img src={LogoImage} width='150px' height='150px' alt='Logo' />
+          </div>
+          <div className='m-3'>
+            <h3>
+              Oops..., you don't seem to have a plan
+            </h3>
+            <h6>
+              You Must have a plan in order to launch a Campaign
+            </h6>
+          </div>
+          <div className='m-3'>
+            <Link className='btn btn-success' to={'/management/planning'} >
+              Create one now?
+            </Link>
+          </div>
+        </div>
+      }
+      </div>
+    </div>
+  )
+}
+
+
 function ModalForm({ show, handleShow }) {
 
   const { userData } = useUser()
   const title = useInput('text', 'Title Goes Here')
   
   const [deadline,setDeadline] = useState(new Date())
-  const description = useInput('number', 'Talk about the benefits you will give to the contributors. You may define different returns as per contribution ranges')
+  const description = useInput('number', 'Describe your Campaign here')
   const target = useInput('number', 'Target Amount')
   const minContribution = useInput('number', 'Minimum Amount')
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
+  
+  const campaignFormRef = useRef();
+  const plansContainerRef = useRef();
+  
+  const [associatedPlan,setAssociatedPlan] = useState();
+
   const password = useInput('password', 'Password')
 
   function changeDeadline(date){
    
     setDeadline(date)
   }
+  useEffect(()=>{
+    setEnableThird((prev) => ({ checked: associatedPlan? true:false,touched :false}));
+  },[associatedPlan])
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+  async function handleSubmit() {
+    // e.preventDefault()
     setCreateCampaignLoading(true)
     const deadlineToSend = Math.floor(deadline.getTime()/1000)
     console.log(deadlineToSend)
     const dataToSend = {
       title: title.value,
       deadline: deadlineToSend,
+      description:description.value,
       target: target.value,
       minContribution: minContribution.value,
       password: password.value,
       walletAddress: userData.walletAddress,
-      userId: userData._id
+      userId: userData._id,
+      associatedPlan
     }
     console.log("Sending Data", dataToSend)
     const res = await createCampaign(dataToSend);
@@ -315,7 +438,7 @@ function ModalForm({ show, handleShow }) {
         theme: "light",
       });
       title.onChange('')
-      deadline.onChange('')
+      setDeadline(new Date())
       target.onChange('')
       minContribution.onChange('')
       password.onChange('')
@@ -325,11 +448,11 @@ function ModalForm({ show, handleShow }) {
 
   }
 
-  const [enableSecond, setEnableSecond] = useState({
-    checked: true,
-    touched: true,
-  }),
-    [enableThird, setEnableThrid] = useState({
+    const [enableSecond, setEnableSecond] = useState({
+      checked: true,
+      touched: true,
+    }),
+    [enableThird, setEnableThird] = useState({
       checked: false,
       touched: false,
     }),
@@ -340,70 +463,62 @@ function ModalForm({ show, handleShow }) {
     [enableSubmit, setEnableSubmit] = useState({
       checked: false,
       touched: false,
-    }),
-    [isSecondStepLoading, setIsSecondStepLoading] = useState(false);
+    })
 
   const firstTermsHandler = () => {
-    setEnableSecond((prev) => ({ checked: !prev.checked, touched: true }));
+    setEnableSecond((prev) => ({ checked: true, touched: true }));
   };
 
   const secondTermsHandler = () => {
-    setEnableThrid((prev) => ({ checked: !prev.checked, touched: true }));
+    setEnableThird((prev) => ({ checked: associatedPlan? true:false , touched: true }));
   };
 
   const thirdTermsHandler = () => {
     setEnableFourth((prev) => ({ checked: !prev.checked, touched: true }));
   };
 
-  //for demo purposes only
-  const timeout = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
 
-  const secondStepAsyncFunc = async () => {
-    //it can be an API call
-    setIsSecondStepLoading(true);
-    await timeout(3000);
-    setIsSecondStepLoading(false);
-    console.log('second step clicked');
-  };
+  useEffect(e=>{
 
-  const stepperContent = [
+    plansContainerRef.current?.addEventListener("wheel", (evt) => {
+      evt.preventDefault();
+      plansContainerRef.scrollLeft += evt.deltaY;
+    });
+  },[])
+
+  const stepperContent= [
     {
       label: 'Basic Details',
       content: (
         <div>
           <label>
-            <Form onSubmit={handleSubmit}>
+            <Form ref={campaignFormRef} onSubmit={firstTermsHandler}>{/**/} 
               <div className='createCampaginForm d-flex flex-wrap justify-content-center'>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor='createCampTitle'>Title</label>
-                  <input className='agri-input p-2' id='createCampTitle' {...title} />
+                  <input required className='agri-input p-2' id='createCampTitle' {...title} />
                 </fieldset>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor='createCampDeadline'>Deadline</label>
-                  {/* <input className='agri-input p-2' id='createCampDeadline' {...deadline} /> */}
+                  {/* <input required className='agri-input p-2' id='createCampDeadline' {...deadline} /> */}
                   <DatePicker
                     className='agri-input p-2'
-                    // showIcon
-                    minDate={new Date()}
-                    // maxDate={addMonths(new Date(), 5)}
-                    showDisabledMonthNavigation
+                    minDate={new Date()} // +2592000
                     selected={deadline}
                     onChange={changeDeadline} 
                   />
                 </fieldset>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor='createCampTarget'>Target</label>
-                  <input className='agri-input p-2' id='createCampTarget' {...target} />
+                  <input required className='agri-input p-2' id='createCampTarget' {...target} />
                 </fieldset>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor='createCampMinAmount'>Mininmum Amount</label>
-                  <input className='agri-input p-2' id='createCampMinAmount' {...minContribution} />
+                  <input required className='agri-input p-2' id='createCampMinAmount' {...minContribution} />
                 </fieldset>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor='createCampPass'>Password</label>
-                  <input className='agri-input p-2' id='createCampPass' {...password} />
+                  <input required className='agri-input p-2' id='createCampPass' {...password} />
                 </fieldset>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor="refund">Refund Unused Funds</label>
@@ -415,22 +530,12 @@ function ModalForm({ show, handleShow }) {
               <fieldset className="col-12 d-flex flex-column px-3">
                 <label htmlFor='description'>Description</label>
                 <textarea 
+                  required
                   id='description'
                   rows={8}
                   {...description} />
               </fieldset>
-              <fieldset>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={enableSecond.checked}
-                    onChange={firstTermsHandler}
-                    />{' '}
-                  Accept first terms and conditions
-                </label>
-              </fieldset>
-              
-
+              {/* <Button type='submit'>SUBMIT</Button> */}
             </Form>
           </label>
         </div>
@@ -439,21 +544,12 @@ function ModalForm({ show, handleShow }) {
       isComplete: enableSecond.checked,
     },
     {
-      label: 'Choose Plan',
+      label: 'Choose Plan to Associate',
       content: (
         <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={enableThird.checked}
-              onChange={secondTermsHandler}
-            />{' '}
-            Accept second terms and conditions
-          </label>
+          <StepperSelectPlanForm secondTermsHandler={secondTermsHandler} selectedPlan={associatedPlan} selectPlan={setAssociatedPlan} />
         </div>
       ),
-      clicked: () => secondStepAsyncFunc(),
-      isLoading: isSecondStepLoading,
       isError: !enableThird.checked && enableThird.touched,
       isComplete: enableThird.checked,
     },
@@ -471,16 +567,17 @@ function ModalForm({ show, handleShow }) {
           </label>
         </div>
       ),
+      clicked: ()=>{setEnableSubmit((prev) => ({ checked: true, touched: true }))},
       isError: !enableFourth.checked && enableFourth.touched,
       isComplete: enableFourth.checked,
     },
     {
       label: 'Launch',
       content: (
-        <div onClick={handleSubmit}>
-          <label>
-            Click submit to launch!
-          </label>
+        <div className='text-center'>
+          <h3>
+            All Good, Click Submit to Launch
+          </h3>
         </div>
       ),
       isError: !enableSubmit.checked && enableSubmit.touched,
@@ -489,14 +586,16 @@ function ModalForm({ show, handleShow }) {
   ];
 
   const submitStepper = () => {
-    console.log('submitted');
+    handleSubmit();
+    destroyStepper();
   };
   const destroyStepper = () => {
+    campaignFormRef.current.reset()
     setEnableSecond({
-      checked: false,
+      checked: true,
       touched: false
     })
-    setEnableThrid({
+    setEnableThird({
       checked: false,
       touched: false
     })
@@ -536,25 +635,22 @@ function ModalForm({ show, handleShow }) {
         size='lg'
         centered
       >
-        <Modal.Header className='ContributeModalTitle' closeButton>
+        <Modal.Header className='ContributeModalTitle bg-success text-light' closeButton>
           <Modal.Title>Create Campaign</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="container">
+            
             <div className="">
-              <Stepper stepperContent={stepperContent} submitStepper={submitStepper} />
+              <Stepper 
+                campaignFormRef={campaignFormRef}
+                stepperContent={stepperContent}
+                submitStepper={submitStepper}
+                launchLoading={createCampaignLoading}  
+              />
             </div>
           </div>
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="danger" onClick={handleShow}>
-            Discard
-          </Button>
-          <Button className='my-3' type='submit' variant="success" disabled={createCampaignLoading}>{createCampaignLoading ? <>
-            Creating...
-            <div class="spinner-border" role="status"></div>
-          </> : "Create"}</Button>
-        </Modal.Footer> */}
       </Modal>
     </>
   )

@@ -1,0 +1,8 @@
+.widget-container-campaign-v2{
+    cursor:pointer ;
+    min-height: 50dvh;
+    transition-duration: 0.3s;
+}
+.widget-container-campaign-v2:hover{
+    scale: 1.05;
+}

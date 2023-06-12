@@ -106,7 +106,7 @@ function Login() {
                         data-itp_support="true">
                     </div>
 
-                    <div class="g_id_signin"
+                    <div className="g_id_signin"
                         data-type="standard"
                         data-shape="rectangular"
                         data-theme="outline"

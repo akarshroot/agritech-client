@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useUser } from './UserContext'
 
 const ManagementContext = React.createContext()
@@ -30,7 +30,7 @@ export function ManagementContextProvider({ children }) {
 
     async function getUserPlans() {
         try {
-            const response = await axios.get("/management/plan/all?user=" + currentUser)
+            const response = await axios.get("/management/plan/all")
             if (response.hasOwnProperty("data"))
                 return response.data
             else throw response.response.data

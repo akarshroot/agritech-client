@@ -47,8 +47,8 @@ function Dashboard() {
                     {
                         widgets.map((widget, key) => {
                             return (
-                                <div className='col-md-4 col-xl-3 m-5'>
-                                    <div className={`widget   ${loading ? "skeleton-widget" : ""}`} key={"DASHBOARD_WIDGETS_"+key}>
+                                <div key={"DASHBOARD_WIDGETS_"+key} className='col-md-4 col-xl-3 m-5'>
+                                    <div className={`widget   ${loading ? "skeleton-widget" : ""}`} >
                                         {
                                             loading ? <></> :
                                             <>

@@ -65,7 +65,8 @@
 }
 
 .admin-btn {
-    margin-left: 10px;
+    background-color: var(--cb0);
+    color: white;
 }
 
 .logoLink{

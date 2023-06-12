@@ -20,6 +20,27 @@ body {
   overflow-y: overlay;
 }
 
+:root{
+  --c0: #40513B;
+  --c1: #5d9900;
+  --c2: #609966;
+  --c3: #9DC08B;
+  --c4: #EDF1D6;
+  /* --c5: #8390FA; */
+  --white-text: #ececec;
+  --black-text: #0a0a0a;
+  --error-text: #c62828;
+  --error-background: #fbe9e7;
+  --warning-text: goldenrod;
+  --warning-background: #ffcc0057;
+  --gradient: linear-gradient(to right, #d99e38, #ffcb74);
+
+  --cb0:#4bb2dc;
+  --cb1:#b0d8ff;
+  --cb2:#4c76b2;
+  --cb3:#003580;
+}
+
 .theme-dark {
   --c0: #40513B;
   --c1: #5d9900;
@@ -34,6 +55,8 @@ body {
   --warning-text: goldenrod;
   --warning-background: #ffcc0057;
   --gradient: linear-gradient(to right, #d99e38, #ffcb74);
+
+  --cb0:#4bb2dc;
 }
 
 .theme-light {
@@ -42,6 +65,7 @@ body {
   --c2: #609966;
   --c3: #9DC08B;
   --c4: #EDF1D6;
+  --cb0:#4bb2dc;
   --white-text: #ececec;
   --black-text: #0a0a0a;
   --error-text: #c62828;
@@ -113,4 +137,12 @@ code {
 }
 textarea{
   resize: none !important;
+}
+
+.button-blue{
+  background-color: #4bb2dc;
+  color: white;
+}
+.bg-white{
+  background-color: white !important;
 }
