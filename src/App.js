@@ -25,6 +25,7 @@ import { ManagementContextProvider } from './context/ManagementContext';
 import AdminConsole from './pages/user/AdminConsole';
 import Forbidden from './pages/public/Forbidden';
 import Loader from './assets/loader/Loader'
+import AgriNeeds from './pages/user/agristore/AgriNeeds';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                   <Route exact path='/campaigns' element={<PrivateBody body={Campaigns} />} />
                   <Route exact path='/campaigns/all' element={<PrivateBody body={ExploreCampaigns} />} />
                   <Route exact path='/agristore' element={<PrivateBody body={AgriStore} />} />
+                  <Route exact path='/agrineeds' element={<PrivateBody body={AgriNeeds} />} />
 
                   <Route exact path='/agristore/product/:id' element={<PrivateBody body={ProductDetails} />} />
                   <Route exact path='/detailedCampaign/:id' element={<PrivateBody body={CampaignDetails} />} />

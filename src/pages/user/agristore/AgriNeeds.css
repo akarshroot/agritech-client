@@ -1,0 +1,17 @@
+.options-bar ul {
+    list-style: none;
+}
+
+.options-bar ul li {
+    cursor: pointer;
+}
+
+
+.list-group .active {
+    background-color: var(--c2) !important;
+    border: 1px solid var(--c1) !important;
+}
+
+.agristore-content{
+    padding-left: 10%;
+}
