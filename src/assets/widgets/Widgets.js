@@ -82,7 +82,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                             <span className="subtext">contributors</span>
                         </div>
                         <div className="time-remaining">
-                            <span className="quantity">{parseInt(((new Date(props.dateCreated).getTime() + props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
+                            <span className="quantity">{parseInt(((props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
                             <span className="subtext">remaining</span>
                         </div>
                     </div>

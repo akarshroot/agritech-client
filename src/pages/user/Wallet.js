@@ -15,6 +15,7 @@ import QRCode from 'qrcode'
 import KCO from '../../assets/icons/currencyIcon.png'
 import QRCodeStyling from "qr-code-styling";
 import { ToastContainer, toast } from 'react-toastify'
+import {Link} from 'react-router-dom'
 
 function TransferModule() {
   const [show, setShow] = useState(false)
@@ -79,20 +80,16 @@ function TransferModule() {
   )
 }
 
-export function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, txHash, camp, changeActiveCampaign }) {
+export function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, txHash, camp }) {
 
   const recivedPaid = receiverId === userId
-
-  function checkCampaign() {
-    changeActiveCampaign(receiverId)
-  }
   const formattedDate = new Date(createdAt).toISOString().replace(/T/, ' ').replace(/\..+/, '').split(' ')
   return (
     <>
       <tr>
         <td>{sno}</td>
         {camp
-          ? <td><span onClick={checkCampaign} className='Camplink'>{receiverId}</span></td>
+          ? <td><Link to={'/detailedCampaign/'+receiverId} className='Camplink'>{receiverId}</Link></td>
           : <td>{receiverId}</td>
         }
         <td className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}
