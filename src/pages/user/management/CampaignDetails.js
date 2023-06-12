@@ -58,7 +58,7 @@ function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal
   )
 }
 
-function CampaignInfo({ title, raisedAmount, target, contributors }) {
+function CampaignInfo({ title, description, raisedAmount, target, contributors }) {
   const { currentUser } = useUser()
   return (
     <div className='row mt-4 shadow p-3 rounded justify-content-around'>
@@ -66,10 +66,19 @@ function CampaignInfo({ title, raisedAmount, target, contributors }) {
         <div className='display-2 text-start'>
           {title}
           {
-            contributors.find(contributor => contributor.userId == currentUser) ?
+            contributors.find(contributor => contributor.userId === currentUser) ?
               <img src={AlreadyContributed} width="80px" height="80px" alt="" />
               : <></>
           }
+        </div>
+      <hr />
+        <div className='campaignDescription px-5 text-start'>
+          <h3 className='px-3'>
+            Description
+          </h3>
+          <div className='px-5 '>
+            {description.content}
+          </div>
         </div>
       </div>
       <hr />
@@ -121,7 +130,7 @@ function CampaignPrograssBar({ raisedAmount, target }) {
   )
 }
 
-function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber }) {
+function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber,toPersonal }) {
 
   const [loading, setLoading] = useState(false)
   const [prompt, openPrompt] = useState(false)
@@ -132,6 +141,9 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
     setPassword(e.target.value)
   }
 
+
+  console.log('Receiver->',toPersonal)
+  console.log('Receiver->')
   async function useRequest() {
     if (!password) {
       return
@@ -258,9 +270,18 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
         <div>
           {parseInt(voters) === 0 ? <div>No contributors yet</div> : <CampaignPrograssBar raisedAmount={votes} target={voters} />}
         </div>
-        <div>
-          Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
-        </div>
+        {toPersonal
+        ? (
+          <div>
+            Requested for Personal use.
+          </div>
+        )
+        :(
+          <div>
+            Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
+          </div>
+        )
+        }
         <div className='text-center py-3'>
           {!isOwner
             ? <div><Button variant='outline-success' onClick={handlePrompt} value='allow'>Allow</Button>   <Button onClick={handlePrompt} value='dontAllow' variant='outline-danger'>Dont Allow</Button></div>
@@ -500,7 +521,7 @@ function TransactionsHistory({ tx }) {
   )
 }
 
-function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors }) {
+function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors,userId }) {
   const [show, setShow] = useState(false);
   function handleShow() {
     setShow(!show);
@@ -527,6 +548,7 @@ function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors }) {
                   return (
                     <WithdrawRequests
                       isOwner={isOwner}
+                      toPersonal={userId==data.receiver}
                       key={'votesContainerKey' + i}
                       cid={_id}
                       voters={contributors.length}
@@ -591,15 +613,14 @@ export default function CampaignDetails() {
       <CreatorDetails {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
       <CampaignInfo {...activeCampaign} />
       <CampaignVotesinfo 
-      isOwner={isOwner} 
+      isOwner={isOwner}
+      userId = {userData._id}
       _id={activeCampaign._id}
       contributors={activeCampaign.contributors}
       voteRequests={activeCampaign.voteRequests}
       />
       <ContributeModal {...contributeModalData} />
-      {activeCampaign.campaignTransactions && isOwner
-        ? <TransactionsHistory tx={activeCampaign.campaignTransactions} />
-        : <div className='p-4 display-3'>Only owner can see the transactions</div>
+      {activeCampaign.campaignTransactions && isOwner && <TransactionsHistory tx={activeCampaign.campaignTransactions} />
       }
     </div>
   )

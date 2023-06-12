@@ -211,3 +211,56 @@
     background-color: rgba(0, 0, 0, 0.12);
     cursor: not-allowed;
 }
+
+
+
+
+
+
+
+
+/* .PlanAssociateContainer{
+
+} */
+.UserPlans{
+    overflow-y: hidden;
+    overflow-x: scroll;
+    background: var(--c4);
+    border-radius: 10px;
+    scroll-snap-type: x mandatory;
+    border: 1px solid;
+    box-shadow: inset 0px 0px 20px -10px black;
+}
+
+.UserPlans::-webkit-scrollbar{
+    /* background-color: var(--c4); */
+    background-color: transparent;
+    height: 1rem;
+}
+.UserPlans::-webkit-scrollbar-thumb{
+    border:none;
+    border-radius: 50px;
+    background-color: gray;
+}
+
+
+
+.EachUserPlan{
+    cursor: pointer;
+    flex-basis: 95%;
+    transition-duration: 0.3s;
+    scroll-snap-align: start;
+    border: solid 4px transparent;
+}
+.newEachPlanShadow{
+    box-shadow: 0px 0px 20px -10px rgba(0, 0, 0, 0.9) !important;
+}
+.EachUserPlan:hover{
+    scale: 1 1.05;
+}
+.EachUserPlan .borderE{
+    border: solid 4px green;
+}
+.EachUserPlan .borderS{
+    border: solid 4px var(--cb0);
+}
