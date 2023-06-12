@@ -225,10 +225,8 @@
 .UserPlans{
     overflow-y: hidden;
     overflow-x: scroll;
-    background: var(--c4);
     border-radius: 10px;
     scroll-snap-type: x mandatory;
-    border: 1px solid;
     box-shadow: inset 0px 0px 20px -10px black;
 }
 

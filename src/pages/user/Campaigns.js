@@ -1,4 +1,5 @@
-import React, { useEffect, useState, Fragment, useContext, useRef } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState, Fragment,useRef } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -143,7 +144,6 @@ const StepperFooter = ({
   const submitCurrentStep = async () => {
     nextStepHandler()
   };
-  console.log("LOOKTHIS",stepperContent)
   return (
     <div
       className="stepper-footer"
@@ -363,7 +363,7 @@ function StepperSelectPlanForm({selectedPlan,selectPlan,secondTermsHandler}){
           </div>
           <div className='m-3'>
             <h3>
-              Ohh..., you don't seem to have a plan
+              Oops..., you don't seem to have a plan
             </h3>
             <h6>
               You Must have a plan in order to launch a Campaign
@@ -381,18 +381,6 @@ function StepperSelectPlanForm({selectedPlan,selectPlan,secondTermsHandler}){
   )
 }
 
-
-/*
-createdBy: "643aa85e905bd156f4c63a28"
-duration: 6
-estCost: 14500
-estRevenue: 19600
-executing: false
-requirements: (3) [{…}, {…}, {…}]
-title: "Pulses"
-__v: 0
-_id: "643aa906905bd156f4c63a4f"
-*/
 
 function ModalForm({ show, handleShow }) {
 
@@ -462,7 +450,7 @@ function ModalForm({ show, handleShow }) {
 
     const [enableSecond, setEnableSecond] = useState({
       checked: true,
-      touched: false,
+      touched: true,
     }),
     [enableThird, setEnableThird] = useState({
       checked: false,
@@ -497,18 +485,6 @@ function ModalForm({ show, handleShow }) {
       plansContainerRef.scrollLeft += evt.deltaY;
     });
   },[])
-  // //for demo purposes only
-  // const timeout = (ms) => {
-  //   return new Promise((resolve) => setTimeout(resolve, ms));
-  // };
-
-  // const secondStepAsyncFunc = async () => {
-  //   //it can be an API call
-  //   setIsSecondStepLoading(true);
-  //   await timeout(3000);
-  //   setIsSecondStepLoading(false);
-  //   console.log('second step clicked');
-  // };
 
   const stepperContent= [
     {
@@ -611,11 +587,12 @@ function ModalForm({ show, handleShow }) {
 
   const submitStepper = () => {
     handleSubmit();
-    destroyStepper()
+    destroyStepper();
   };
   const destroyStepper = () => {
+    campaignFormRef.current.reset()
     setEnableSecond({
-      checked: false,
+      checked: true,
       touched: false
     })
     setEnableThird({
@@ -674,15 +651,6 @@ function ModalForm({ show, handleShow }) {
             </div>
           </div>
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="danger" onClick={handleShow}>
-            Discard
-          </Button>
-          <Button className='my-3' type='submit' variant="success" disabled={createCampaignLoading}>{createCampaignLoading ? <>
-            Creating...
-            <div class="spinner-border" role="status"></div>
-          </> : "Create"}</Button>
-        </Modal.Footer> */}
       </Modal>
     </>
   )

@@ -15,3 +15,8 @@
 .campaign-header {
     width: fit-content;
 }
+.campaignDescription .descriptionContent{
+    border: 1px solid green;
+    border-bottom: none;
+    border-right: none;
+}
