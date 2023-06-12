@@ -6,8 +6,11 @@
     bottom: 30px;
     margin-left: 50%;
     transform: translateX(-50%);
-    background-color: antiquewhite;
-    border: 1px solid black;
+    background: #e0e0e0;
+    box-shadow: 20px 20px 60px #bebebe,
+        -20px -20px 60px #ffffff;
+    color: var(--black-text);
+    border: 2px solid #429017;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,7 +36,7 @@
 }
 
 .floating-menu-container ul li:hover {
-    background-color: var(--c1);
+    background-color: #429017;
     color: var(--white-text);
     font-weight: 600;
 }

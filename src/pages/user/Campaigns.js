@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, Fragment,useRef } from 'react'
+import React, { useEffect, useState, Fragment, useRef } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -17,7 +17,7 @@ import LogoImage from '../../assets/logo/logoImg.svg'
 import './Campaigns.css'
 import DatePicker from "react-datepicker"
 import Loader from '../../assets/loader/Loader'
-import {getUserPlans} from '../../interceptors/serverAPIs'
+import { getUserPlans } from '../../interceptors/serverAPIs'
 
 // STEPPER FUNCTIONS START
 const Step = ({
@@ -157,26 +157,27 @@ const StepperFooter = ({
       <Button
         variant="success my-3"
         onClick={
-          currentTabIndex===0
-          ?()=>{createCampaignFormRef.current.checkValidity()
-            ?submitCurrentStep()
-            :toast.warning('Missing or invalid value. Please check the provided details')
-          }
-          :isLastStep
-            ? submitHandler
-            : stepperContent[currentTabIndex].clicked
-              ? () => {stepperContent[currentTabIndex].clicked();submitCurrentStep()}
-              : nextStepHandler
+          currentTabIndex === 0
+            ? () => {
+              createCampaignFormRef.current.checkValidity()
+                ? submitCurrentStep()
+                : toast.warning('Missing or invalid value. Please check the provided details')
+            }
+            : isLastStep
+              ? submitHandler
+              : stepperContent[currentTabIndex].clicked
+                ? () => { stepperContent[currentTabIndex].clicked(); submitCurrentStep() }
+                : nextStepHandler
         }
         disabled={
-          
+
           (isLastStep
             ? stepperContent.some((el) => !el.isComplete)
             : !stepperContent[currentTabIndex].isComplete) ||
           stepperContent[currentTabIndex].isLoading
         }
       >
-        {isLastStep ? !launchLoading? 'Submit':'Launching...' : `Continue to ${stepperContent[currentTabIndex + 1].label}`}
+        {isLastStep ? !launchLoading ? 'Submit' : 'Launching...' : `Continue to ${stepperContent[currentTabIndex + 1].label}`}
       </Button>
     </div>
   );
@@ -202,7 +203,7 @@ StepperFooter.propTypes = {
   ),
 };
 
-let Stepper = ({ launchLoading,campaignFormRef,isRightToLeftLanguage, isVertical, isInline, stepperContent, submitStepper }) => {
+let Stepper = ({ launchLoading, campaignFormRef, isRightToLeftLanguage, isVertical, isInline, stepperContent, submitStepper }) => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0),
     isLastStep = currentTabIndex === stepperContent.length - 1,
     isPrevBtn = currentTabIndex !== 0;
@@ -242,7 +243,7 @@ let Stepper = ({ launchLoading,campaignFormRef,isRightToLeftLanguage, isVertical
         />
         <div className="stepper-body">
           {stepperContent.map((el, i) => (
-            <Fragment key={'StepperContentKey'+i}>{i === currentTabIndex && el.content}</Fragment>
+            <Fragment key={'StepperContentKey' + i}>{i === currentTabIndex && el.content}</Fragment>
           ))}
         </div>
       </div>
@@ -282,100 +283,123 @@ Stepper.propTypes = {
 
 // STEPPER FUNCTIONS END
 
-function StepperSelectPlanForm({selectedPlan,selectPlan,secondTermsHandler}){
-
-  const [plans,setPlans] = useState(null)
-  const [loading,setLoading] = useState(false)
-  useEffect(()=>{
+function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler }) {
+  const { userData } = useUser()
+  const [plans, setPlans] = useState(null)
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
     setLoading(true)
-    getUserPlans().then(e =>{
+    getUserPlans().then(e => {
       console.log(e.data)
-      setPlans(e.data.reverse())
+      if (!userData.currentPlan)
+        setPlans(e.data.reverse())
+      else
+        setPlans(e.data?.filter(p => p.executing == true))
       setLoading(false)
     })
-  },[])
+  }, [userData])
 
 
-  function handleSelectPlan(id,ele){
+  function handleSelectPlan(id, ele) {
     console.log(id)
     console.log(ele)
     selectPlan(id)
     secondTermsHandler()
   }
 
-  return(
+  return (
     <div className='PlanAssociateContainer'>
       <h2>Choose Plan To Associate</h2>
-      <div className='UserPlans d-flex '>
-        {loading
-        ?(<div className='loaderFormSelectPlans text-center'>
-          <Loader height='100px' width='100px' />
-        </div>)
-        :plans?.length
-        ?plans.map((plan,key) => {
-          const styleColor = selectedPlan===plan._id? 'borderS':plan.executing? 'borderE':''
-          return(
-            <div onClick={(e) => handleSelectPlan(plan._id,this)} key={'EachUserPlanKey'+key} className='EachUserPlan col-11'>
-                <div className={`plan planBorder newEachPlanShadow ${styleColor}`} >
-                  <div className="d-flex align-items-center justify-content-between">
-                      <h5>{plan.title}</h5>
-                      {
-                       selectedPlan===plan._id && <div className="alert alert-primary p-1 m-0">&#10004; Selected</div>
-                      }
-                  </div>
-                  <hr className="style-two" />
-                  <div className="plan-details">
-                      <div className="requirements">
-                          <table>
-                              <tbody>
-                                  <tr><th>Item</th><th>Quantity</th></tr>
-                                  {
-                                      plan.requirements.map((req, key) => {
-                                          return (
-                                              <tr key={key}>
-                                                  <td>{req.item}</td>
-                                                  <td>{req.quantity}</td>
-                                              </tr>
-                                          )
-                                      })
-                                  }
-                              </tbody>
-                          </table>
+      <div className="d-flex align-items-center">
+        <div className='UserPlans d-flex w-100'>
+          {loading
+            ? (<div className='loaderFormSelectPlans text-center'>
+              <Loader height='100px' width='100px' />
+            </div>)
+            : plans?.length
+              ? plans.map((plan, key) => {
+                const styleColor = selectedPlan === plan._id ? 'borderS' : plan.executing ? 'borderE' : ''
+                return (
+                  <div onClick={(e) => handleSelectPlan(plan._id, this)} key={'EachUserPlanKey' + key} className='EachUserPlan col-11'>
+                    <div className={`plan planBorder newEachPlanShadow ${styleColor}`} >
+                      <div className="d-flex align-items-center justify-content-between">
+                        <h5>{plan.title}</h5>
+                        {
+                          selectedPlan === plan._id && <div className="alert alert-primary p-1 m-0">&#10004; Selected</div>
+                        }
                       </div>
-                      <div className="specifics">
+                      <hr className="style-two" />
+                      <div className="plan-details">
+                        <div className="requirements">
                           <table>
-                              <tbody>
-                                  <tr><th>Duration</th><th>Estimated Cost</th></tr>
-                                  <tr><td>{plan.duration}</td><td>₹{new Intl.NumberFormat("en-IN").format(plan.estCost)}</td></tr>
-                                  <tr><th>Estimated Revenue</th><th>Estimated {plan.estRevenue - plan.estCost > 0 ? "Profit" : "Loss"}</th></tr>
-                                  <tr><td>₹{new Intl.NumberFormat("en-IN").format(plan.estRevenue)}</td><td>₹{new Intl.NumberFormat("en-IN").format(Math.abs(plan.estRevenue - plan.estCost))}</td></tr>
-                              </tbody>
+                            <tbody>
+                              <tr><th>Item</th><th>Quantity</th></tr>
+                              {
+                                plan.requirements.map((req, key) => {
+                                  return (
+                                    <tr key={key}>
+                                      <td>{req.item}</td>
+                                      <td>{req.quantity}</td>
+                                    </tr>
+                                  )
+                                })
+                              }
+                            </tbody>
                           </table>
+                        </div>
+                        <div className="specifics">
+                          <table>
+                            <tbody>
+                              <tr><th>Duration</th><th>Estimated Cost</th></tr>
+                              <tr><td>{plan.duration}</td><td>₹{new Intl.NumberFormat("en-IN").format(plan.estCost)}</td></tr>
+                              <tr><th>Estimated Revenue</th><th>Estimated {plan.estRevenue - plan.estCost > 0 ? "Profit" : "Loss"}</th></tr>
+                              <tr><td>₹{new Intl.NumberFormat("en-IN").format(plan.estRevenue)}</td><td>₹{new Intl.NumberFormat("en-IN").format(Math.abs(plan.estRevenue - plan.estCost))}</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
+                    </div>
                   </div>
+                )
+              })
+              : <div className='noPlansForForm flex-grow-1 d-flex flex-column align-items-center justify-content-center'>
+                <div className='m-3'>
+                  <img src={LogoImage} width='150px' height='150px' alt='Logo' />
+                </div>
+                <div className='m-3'>
+                  <h3>
+                    Oops..., you don't seem to have a plan
+                  </h3>
+                  <h6>
+                    You Must have a plan in order to launch a Campaign
+                  </h6>
+                </div>
+                <div className='m-3'>
+                  <Link className='btn btn-success' to={'/management/planning'} >
+                    Create one now?
+                  </Link>
+                </div>
+              </div>
+          }
+        </div>
+        {
+          plans?.length === 1 ?
+          <div className="item-hints d-flex flex-row-reverse align-items-center">
+            <div className="hint" data-position="4">
+              <span className="hint-dot d-flex justify-content-center align-items-center fw-bold">i</span>
+              <div className="hint-content bg-success text-white p-2 d-none d-md-block">
+                <p>
+                  Not seeing the plan you created? Make sure you don't have any plans under execution. Only one plan is allowed to execute at one time.
+                </p>
+                <p>
+                  आपके द्वारा बनाई गई योजना को नहीं देख रहे हैं? सुनिश्चित करें कि आपके पास निष्पादन के तहत कोई योजना नहीं है। एक समय में केवल एक ही योजना को क्रियान्वित करने की अनुमति है।
+                </p>
               </div>
             </div>
-          )
-        })
-        :<div className='noPlansForForm flex-grow-1 d-flex flex-column align-items-center justify-content-center'>
-          <div className='m-3'>
-            <img src={LogoImage} width='150px' height='150px' alt='Logo' />
           </div>
-          <div className='m-3'>
-            <h3>
-              Oops..., you don't seem to have a plan
-            </h3>
-            <h6>
-              You Must have a plan in order to launch a Campaign
-            </h6>
-          </div>
-          <div className='m-3'>
-            <Link className='btn btn-success' to={'/management/planning'} >
-              Create one now?
-            </Link>
-          </div>
-        </div>
-      }
+          :
+          <></>
+        }
       </div>
     </div>
   )
@@ -386,37 +410,37 @@ function ModalForm({ show, handleShow }) {
 
   const { userData } = useUser()
   const title = useInput('text', 'Title Goes Here')
-  
-  const [deadline,setDeadline] = useState(new Date())
+
+  const [deadline, setDeadline] = useState(new Date())
   const description = useInput('number', 'Describe your Campaign here')
   const target = useInput('number', 'Target Amount')
   const minContribution = useInput('number', 'Minimum Amount')
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
-  
+
   const campaignFormRef = useRef();
   const plansContainerRef = useRef();
-  
-  const [associatedPlan,setAssociatedPlan] = useState();
+
+  const [associatedPlan, setAssociatedPlan] = useState();
 
   const password = useInput('password', 'Password')
 
-  function changeDeadline(date){
-   
+  function changeDeadline(date) {
+
     setDeadline(date)
   }
-  useEffect(()=>{
-    setEnableThird((prev) => ({ checked: associatedPlan? true:false,touched :false}));
-  },[associatedPlan])
+  useEffect(() => {
+    setEnableThird((prev) => ({ checked: associatedPlan ? true : false, touched: false }));
+  }, [associatedPlan])
 
   async function handleSubmit() {
     // e.preventDefault()
     setCreateCampaignLoading(true)
-    const deadlineToSend = Math.floor(deadline.getTime()/1000)
+    const deadlineToSend = Math.floor(deadline.getTime() / 1000)
     console.log(deadlineToSend)
     const dataToSend = {
       title: title.value,
       deadline: deadlineToSend,
-      description:description.value,
+      description: description.value,
       target: target.value,
       minContribution: minContribution.value,
       password: password.value,
@@ -448,10 +472,10 @@ function ModalForm({ show, handleShow }) {
 
   }
 
-    const [enableSecond, setEnableSecond] = useState({
-      checked: true,
-      touched: true,
-    }),
+  const [enableSecond, setEnableSecond] = useState({
+    checked: true,
+    touched: true,
+  }),
     [enableThird, setEnableThird] = useState({
       checked: false,
       touched: false,
@@ -470,7 +494,7 @@ function ModalForm({ show, handleShow }) {
   };
 
   const secondTermsHandler = () => {
-    setEnableThird((prev) => ({ checked: associatedPlan? true:false , touched: true }));
+    setEnableThird((prev) => ({ checked: associatedPlan ? true : false, touched: true }));
   };
 
   const thirdTermsHandler = () => {
@@ -478,21 +502,21 @@ function ModalForm({ show, handleShow }) {
   };
 
 
-  useEffect(e=>{
+  useEffect(e => {
 
     plansContainerRef.current?.addEventListener("wheel", (evt) => {
       evt.preventDefault();
       plansContainerRef.scrollLeft += evt.deltaY;
     });
-  },[])
+  }, [])
 
-  const stepperContent= [
+  const stepperContent = [
     {
       label: 'Basic Details',
       content: (
         <div>
           <label>
-            <Form ref={campaignFormRef} onSubmit={firstTermsHandler}>{/**/} 
+            <Form ref={campaignFormRef} onSubmit={firstTermsHandler}>{/**/}
               <div className='createCampaginForm d-flex flex-wrap justify-content-center'>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor='createCampTitle'>Title</label>
@@ -505,7 +529,7 @@ function ModalForm({ show, handleShow }) {
                     className='agri-input p-2'
                     minDate={new Date()} // +2592000
                     selected={deadline}
-                    onChange={changeDeadline} 
+                    onChange={changeDeadline}
                   />
                 </fieldset>
                 <fieldset className="col-md-6 p-3">
@@ -529,7 +553,7 @@ function ModalForm({ show, handleShow }) {
               </div>
               <fieldset className="col-12 d-flex flex-column px-3">
                 <label htmlFor='description'>Description</label>
-                <textarea 
+                <textarea
                   required
                   id='description'
                   rows={8}
@@ -567,7 +591,7 @@ function ModalForm({ show, handleShow }) {
           </label>
         </div>
       ),
-      clicked: ()=>{setEnableSubmit((prev) => ({ checked: true, touched: true }))},
+      clicked: () => { setEnableSubmit((prev) => ({ checked: true, touched: true })) },
       isError: !enableFourth.checked && enableFourth.touched,
       isComplete: enableFourth.checked,
     },
@@ -640,13 +664,13 @@ function ModalForm({ show, handleShow }) {
         </Modal.Header>
         <Modal.Body>
           <div className="container">
-            
+
             <div className="">
-              <Stepper 
+              <Stepper
                 campaignFormRef={campaignFormRef}
                 stepperContent={stepperContent}
                 submitStepper={submitStepper}
-                launchLoading={createCampaignLoading}  
+                launchLoading={createCampaignLoading}
               />
             </div>
           </div>
@@ -672,8 +696,7 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
     }
     try {
       const res = await getApproval(toSendData);
-      if (res.status === 'Success') {
-
+      if (!res.error) {
         toast.success(res.message, {
           position: "top-right",
           autoClose: 2000,
@@ -688,6 +711,7 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
         password.onChange('')
         handleShow()
       }
+      else throw new Error(res.message)
     } catch (error) {
 
       toast.error(error.message, {

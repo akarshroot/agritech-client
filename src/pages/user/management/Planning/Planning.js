@@ -220,8 +220,8 @@ function Planning() {
                                                 <div className="requirement-form-group" key={idx} >
                                                     <input placeholder='Item name' onChange={(e) => { handleChange(e, idx) }} type="text" name='item' className='form-input' />
                                                     <div className="yield-section d-flex w-100 align-items-center">
-                                                        <input placeholder='Est. Yield / उपज' min={1} step={0.1} onChange={(e) => { handleChange(e, idx) }} type="number" name='yield' className='form-input' />
-                                                        <div className="item-hints">
+                                                        <input placeholder='Est. Yield / उपज' min={1} step={0.1} onChange={(e) => { handleChange(e, idx) }} type="number" name='yield' className='form-input' hidden={req.category == 'supplement'} />
+                                                        <div className="item-hints"  hidden={req.category == 'supplement'}>
                                                             <div className="hint" data-position="4">
                                                                 <span className="hint-dot d-flex justify-content-center align-items-center fw-bold">i</span>
                                                                 <div className="hint-content bg-success text-white p-2 do--split-children d-none d-md-block">
