@@ -25,7 +25,7 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
     const navigate = useNavigate()
 
     function handleClick(){
-        navigate('/detailedCampaign/'+_id)
+        navigate('/campaign/details/'+_id)
     }
 
 

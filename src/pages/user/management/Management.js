@@ -3,6 +3,8 @@ import { useUser } from '../../../context/UserContext'
 import FloatingMenu from '../../../layout/FloatingMenu'
 import { renderWidget } from '../../../assets/widgets/Widgets'
 import './Management.css'
+import Spinner from 'react-bootstrap/esm/Spinner'
+import Helmet from 'react-helmet'
 
 function Management(props) {
   const [loading, setLoading] = useState(true)
@@ -23,8 +25,8 @@ function Management(props) {
     {
       title: "Current Plan",
       id: "current-plan"
-    },
-  ]
+    }
+  ])
 
   useEffect(() => {
     setTimeout(() => {

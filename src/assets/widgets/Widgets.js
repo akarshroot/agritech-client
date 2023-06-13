@@ -12,6 +12,8 @@ import AlreadyContributed from '../../assets/icons/tick-box.svg'
 import FontAwesome from 'react-fontawesome';
 //Charts
 import { AxisOptions, Chart } from "react-charts";
+import axios from 'axios';
+import Loader from '../loader/Loader';
 
 //Widget renderer
 export function renderWidget(id, props) {
@@ -90,7 +92,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                         </div>
                     </div>
                     <div className="widget-action-center d-flex justify-content-around mt-3">
-                        <Link to={'/detailedCampaign/' + _id} variant='outline-success' >Details</Link>
+                        <Link to={'/campaign/details/' + _id} variant='outline-success' >Details</Link>
                         {props.children}
                     </div>
                 </>
@@ -562,6 +564,35 @@ export function MSPChart() {
             }]
         }
     ])
+    const [crops, setCrops] = useState(["PADDY",
+        "JOWAR",
+        "BAJRA",
+        "MAIZE",
+        "RAGI",
+        "Tur (Arhar)",
+        "MOONG",
+        "URAD",
+        "COTTON",
+        "Groundnut",
+        "SUNFLOWER SEED",
+        "SOYABEAN",
+        "SESAMUM",
+        "NIGERSEED",
+        "WHEAT",
+        "BARLEY",
+        "GRAM",
+        "MASUR (LENTIL)",
+        "Rapeseed & Mustard",
+        "SAFFLOWER",
+        "TORIA",
+        "COPRA",
+        "DE-HUSKED COCONUT",
+        "JUTE"])
+
+    const [chosenFormat, setChosenFormat] = useState("line")
+    const [chartData, setChartData] = useState(lineData)
+    const [loading, setLoading] = useState(false)
+
     const primaryAxis = React.useMemo(
         () => ({
             getValue: (datum) => datum.year,
@@ -578,29 +609,159 @@ export function MSPChart() {
         []
     );
 
-    const [chosenFormat, setChosenFormat] = useState(barData)
+    const getCropMSPData = async (crop) => {
+        const response = await axios.get(`/data/msp/${crop}`)
+        if (response.hasOwnProperty("data")) {
+            return response.data.data
+        }
+        else return response.data
+    }
+
+    const handleCropChange = async (e) => {
+        setLoading(true)
+        const data = await getCropMSPData(e.target.value)
+        setLineData([{ label: data.Commodity + " — MSP", data: data.data }])
+        const barTimeSeries = data.data.map(y => {
+            return {
+                year: y.year.toString() + "-" + (y.year + 1).toString(),
+                msp: y.msp
+            }
+        })
+        setBarData([{ label: data.Commodity + " — MSP", data: barTimeSeries }])
+        setLoading(false)
+    }
+
+    const updateChartData = () => {
+        if (chosenFormat === 'line') setChartData(lineData)
+        else setChartData(barData)
+    }
+
+    useEffect(() => {
+        updateChartData()
+    }, [chosenFormat, lineData, barData])
+
 
     return (
         <>
-            <div className='d-flex flex-column p-1 widget-msp h-100'>
-                <div className="d-flex justify-content-center">
-                    Select Chart Type: &nbsp;
-                    <select onChange={(e) => {
-                        if (e.target.value === "line") setChosenFormat(lineData)
-                        else setChosenFormat(barData)
-                    }}>
-                        <option value="line">Line</option>
-                        <option value="bar" selected>Bar</option>
-                    </select>
+            <div className='d-flex flex-column p-1 h-100'>
+                <div className="d-flex justify-content-center flex-column">
+                    <h4>Minimum Support Price (MSP)</h4>
+                    <div className='d-flex justify-content-center'>
+                        <div>
+                            Select Crop:&nbsp;
+                            <select name="crop" id="crop" onChange={handleCropChange}>
+                                {
+                                    crops?.map(crop => {
+                                        return (
+                                            <><option value={crop}>{crop}</option></>
+                                        )
+                                    })
+                                }
+                            </select>
+                        </div>
+                        &nbsp;
+                        |
+                        &nbsp;
+                        <div>
+                            Select Chart Type: &nbsp;
+                            <select onChange={(e) => {
+                                if (e.target.value === "line") setChosenFormat("line")
+                                else setChosenFormat("bar")
+                            }}>
+                                <option value="line" selected>Line</option>
+                                <option value="bar">Bar</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div className="w-100" style={{ height: "90%" }}>
-                    <Chart
-                        options={{
-                            data: chosenFormat,
-                            primaryAxis,
-                            secondaryAxes,
-                        }}
-                    />
+                <div className="w-100 msp-chart" style={{ height: "90%" }}>
+                    {
+                        loading ?
+                            <div className="d-flex justify-content-center h-75 align-items-center flex-column">
+                                <Loader height="100px" width="100px" />
+                                Loading...
+                            </div>
+                            :
+                            <Chart
+                                options={{
+                                    data: chartData,
+                                    primaryAxis,
+                                    secondaryAxes,
+                                    tooltip: false
+                                }}
+                            />
+                    }
+                </div>
+            </div>
+        </>
+    )
+}
+
+export function WalletBalanceChart() {
+    const [lineData, setLineData] = useState([
+        {
+            label: 'Balance',
+
+        }
+    ])
+    const [loading, setLoading] = useState(false)
+
+    const primaryAxis = React.useMemo(
+        () => ({
+            getValue: (datum) => datum.date,
+        }),
+        []
+    );
+
+    const secondaryAxes = React.useMemo(
+        () => [
+            {
+                getValue: (datum) => datum.balance,
+            },
+        ],
+        []
+    );
+
+    const getGraphPassbookData = async () => {
+        const response = await axios.get(`/data/msp/`)
+        if (response.hasOwnProperty("data")) {
+            return response.data.data
+        }
+        else return response.data
+    }
+
+    useEffect(() => {
+        setLoading(true)
+        getGraphPassbookData().then((data) => {
+            setLineData([{ label: "Balance (KCO)", data: data.data }])
+            setLoading(false)
+        })
+    }, [])
+
+
+    return (
+        <>
+            <div className='d-flex flex-column p-1 h-100'>
+                <div className="d-flex justify-content-center flex-column">
+                    <h4>Balance</h4>
+                    <div className="w-100 msp-chart" style={{ height: "90%" }}>
+                        {
+                            loading ?
+                                <div className="d-flex justify-content-center h-75 align-items-center flex-column">
+                                    <Loader height="100px" width="100px" />
+                                    Loading...
+                                </div>
+                                :
+                                <Chart
+                                    options={{
+                                        data: lineData,
+                                        primaryAxis,
+                                        secondaryAxes,
+                                        tooltip: false
+                                    }}
+                                />
+                        }
+                    </div>
                 </div>
             </div>
         </>

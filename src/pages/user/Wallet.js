@@ -89,7 +89,7 @@ export function Transaction({ showHashes, sno, receiverId, userId, createdAt, am
       <tr>
         <td>{sno}</td>
         {camp
-          ? <td><Link to={'/detailedCampaign/'+receiverId} className='Camplink'>{receiverId}</Link></td>
+          ? <td><Link to={'/campaign/details/'+receiverId} className='Camplink'>{receiverId}</Link></td>
           : <td>{receiverId}</td>
         }
         <td className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}

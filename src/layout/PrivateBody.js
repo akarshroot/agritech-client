@@ -48,7 +48,7 @@ function PrivateNav(props) {
             <div className={`private-nav d-none d-md-block theme-${props.theme}`}>
                 <div className='logoConsole row m-0 align-items-center'>
                     <div className="col"></div>
-                    <div onClick={() => navigate('/', { replace: true })} className='logoLink col  m-1'>
+                    <div onClick={() => navigate('/', { replace: true })} className='logoLink col m-1'>
                         <img src={logoHorizontal} width="40px" alt="AgriTech" /> AgriTech Console
                     </div>
                     <div className="language-setter col d-flex align-items center h-100 justify-content-end">
@@ -71,7 +71,7 @@ function PrivateNav(props) {
             </div >
 
             <div className={`private-nav d-block d-md-none theme-${props.theme}`}>
-                <div className='display-5 logoConsole'>AgriTech Console</div>
+                <div className='logoConsole d-flex align-items-center'><img src={logoHorizontal} width="40px" alt="AgriTech" />&nbsp;AgriTech Console</div>
                 <div className='hamButtonNav'>
                     <FontAwesome name='bars' onClick={() => setHamShow(!hamShow)} className="fa-light fa-bars" />
                     {userData?.admin && < Button variant='success' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
