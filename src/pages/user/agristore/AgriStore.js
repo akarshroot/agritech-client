@@ -9,11 +9,13 @@ function AgriStore() {
   return (
     <div className='row m-3 justify-content-center'>
       <div className="card store-cards shadow col-sm-12 col-md-4 col-lg-3 m-5">
-        <img src={farmFresh} className="card-img-top w-100" alt="..." />
-        <div className="card-body">
-          <h5 className="card-title">FarmFresh</h5>
-          <p className="card-text">Buy Fresh Products from the Farms</p>
-        </div>
+          <Link to='/farmfresh' className='agri-link'>
+              <img src={farmFresh} className="card-img-top w-100" alt="..." />
+              <div className="card-body">
+                <h5 className="card-title">FarmFresh</h5>
+                <p className="card-text">Buy Fresh Products from the Farms</p>
+              </div>
+          </Link>
       </div>
       <div className="card store-cards shadow col-sm-12 col-md-4 col-lg-3 m-5">
         <Link to='/agrineeds' className='agri-link'>

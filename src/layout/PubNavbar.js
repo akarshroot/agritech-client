@@ -4,6 +4,7 @@ import hamburger from '../assets/icons/hamburger-menu.svg'
 import hamburgerDark from '../assets/icons/hamburger-menu-dark.svg'
 import { useNavigate } from "react-router-dom";
 import { useUser } from '../context/UserContext';
+import logo from '../assets/logo/logoCenterText.svg'
 
 function Navbar() {
 
@@ -63,7 +64,9 @@ function Navbar() {
                 <img src={navState ? hamburger : hamburgerDark} alt="" id="hamburger" onClick={openMobileMenu} />
             </div>
             <div className="nav-title">
-                <h1 onClick={() => { navigate("/") }}>AgriTech</h1>
+                <h1 onClick={() => { navigate("/") }}>
+                    <img src={logo} width='70%' alt='' />
+                </h1>
             </div>
             <ul className={screenWidth > 665 ? "nav-tabs-container" : "nav-tabs-container-mobile"} style={screenWidth > 665 ? { marginLeft: "0px" } : (mobileMenuState ? { marginLeft: "0vw" } : { marginLeft: "-200vw" })}>
                 <li id="close-mobile-menu" onClick={closeMobileMenu}>X</li>

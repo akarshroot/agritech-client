@@ -1,13 +1,8 @@
 .product-container {
-    padding: 10px;
     border-radius: 12px;
-    /* display: block; */
-    /* border: 1px solid var(--c1); */
     margin: 10px;
     transition: all 0.3s;
-    /* background-color: #FFF8E1; */
     position: relative;
-    /* box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px; */
 }
 
 .product-container h5 {
@@ -17,11 +12,6 @@
 .product-container h5 {
     cursor: pointer;
 }
-/* .product-container:hover {
-    cursor: pointer;
-    scale: 1.05;
-    
-} */
 
 .product-image {
     width: 100%;
@@ -68,5 +58,4 @@
     cursor: pointer;
     visibility: visible;
     opacity: 1;
-    /* box-shadow: black 0px 0px 60px -22px; */
 }
