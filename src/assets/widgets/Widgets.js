@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/aria-proptypes */
 import React, { useContext, useEffect, useState } from 'react'
-import Button from 'react-bootstrap/Button'
 import './Widgets.css'
 import { getCollectonCampbyId } from '../../interceptors/serverAPIs';
 import CampaignContext from '../../context/CampaignContext';
@@ -583,7 +582,7 @@ export function MSPChart() {
 
     return (
         <>
-            <div className='d-flex flex-column p-1 h-100'>
+            <div className='d-flex flex-column p-1 widget-msp h-100'>
                 <div className="d-flex justify-content-center">
                     Select Chart Type: &nbsp;
                     <select onChange={(e) => {
