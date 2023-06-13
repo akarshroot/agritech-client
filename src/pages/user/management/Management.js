@@ -11,10 +11,6 @@ function Management(props) {
   const { theme } = useUser()
   const widgets=[
     {
-      title: "MSP",
-      id: "msp"
-    },
-    {
       category: "inventory",
       id: "current-inventory"
     },
@@ -26,7 +22,7 @@ function Management(props) {
       title: "Current Plan",
       id: "current-plan"
     }
-  ])
+  ]
 
   useEffect(() => {
     setTimeout(() => {
@@ -35,30 +31,39 @@ function Management(props) {
   }, [])
 
   return (
-    <div className={`theme-${theme} management-widgets-container`}>
-      <h2 className='display-4 m-0 p-3 pt-0'>
-        AgriManage
-      </h2>
-      <div className={`management-widgets w-100`}>
+    <>
+    <Helmet>
+      <title>Management | AgriTech</title>
+    </Helmet>
+      <div className={`theme-${theme} management-widgets w-100`}>
+        <div className="row m-0">
+          <div className='col-md-6 col-lg-8 col-xl-6 p-3'>
+            <div className="widget">
+              {
+                renderWidget('msp')
+              }
+            </div>
+          </div>
           {
             widgets.map((widget) => {
               return (
-                  <React.Fragment key={widget.id}>
+                <div key={widget.id} className='col-md-6 col-lg-4 col-xl-3 p-3'>
+                  <div className={`widget ${loading ? "skeleton-widget" : ""}`}>
                     {
                       loading ? <></> :
-                      <>
-                        {renderWidget(widget.id, widget.data)}
-                      </>
+                        <>
+                          {renderWidget(widget.id, widget.data)}
+                        </>
                     }
-                  </React.Fragment>
+                  </div>
+                </ div>
               )
             })
           }
-          {/* <div> */}
-            <FloatingMenu theme={theme} />
-          {/* </div> */}
+        </div>
+        <FloatingMenu theme={theme} />
       </div>
-    </div>
+    </>
   )
 }
 

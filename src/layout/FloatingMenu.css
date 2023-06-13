@@ -42,8 +42,6 @@
 .floating-menu-container ul li:hover {
     background-color: var(--c5);
     color: var(--white-text);
-    scale: 1.05;
-    bottom: 15px;
     /* font-weight: 600; */
 }
 
