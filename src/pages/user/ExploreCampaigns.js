@@ -36,7 +36,7 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
             <div className='ContributionTick'>
                 <FontAwesome className='text-light' size='2x' name="check"/>
             </div>}
-            <div className='text-start bg-success p-3'>
+            <div className='text-start bg-agriGreen p-3 text-light'>
                 <h3>{title}</h3>
             </div>
             <div className="campaign-progress m-3">
@@ -67,15 +67,8 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
 function ExploreCampaigns() {
     const [loading, setLoading] = useState(false);
     const [campaigns, setCampaigns] = useState([])
-    const { userData } = useUser()
-
     const [showContribute, setShowContribute] = useState(false);
-    const [show, setShow] = useState(false);
     const navigate = useNavigate()
-
-    function handleShow() {
-        setShow(!show)
-    }
 
     function handleShowContribute() {
         setShowContribute(!showContribute)
@@ -84,9 +77,11 @@ function ExploreCampaigns() {
 
     useEffect(() => {
         if (campaigns.length === 0) {
+            setLoading(true)
             getAllCamps().then((res) => {
                 console.log(res)
                 setCampaigns(res)
+                setLoading(false)
             })
         }
     }, [])
@@ -111,9 +106,8 @@ function ExploreCampaigns() {
                 :campaigns?.map((data, i) => {
                         return (
                             <div key={'campaignsKey' + i} className='col-sm-6'>
-                                <CampaignWidgetV2 {...data}>
+                                <CampaignWidgetV2 {...data}/>
                                     {/* <Button onClick={handleShowContribute} variant='success'>Contribute</Button> */}
-                                </CampaignWidgetV2>
                                 <ContributeModal
                                     show={showContribute}
                                     handleShow={handleShowContribute}

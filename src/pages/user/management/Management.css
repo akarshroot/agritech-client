@@ -1,7 +1,54 @@
-.management-widgets {
-    background-color: #f4f6f7;
-    min-height: 100vh;
+.management-widgets-container{
+    background-color: #ebebeb;
+    padding: 2rem 10rem;
+    padding-bottom: 10rem;
 }
+.management-widgets {
+    min-height: 100vh;
+    max-height: 150vh;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-areas:
+    " chart   chart   chart   chart   widget1 widget1"
+    " chart   chart   chart   chart   widget1 widget1"
+    " chart   chart   chart   chart   widget1 widget1"
+    " chart   chart   chart   chart   widget2 widget2"
+    "widget3 widget3 widget4 widget4  widget2 widget2"
+    "widget3 widget3 widget4 widget4  widget2 widget2"
+    ;
+}
+/* .widget-msp{
+    background-color: black;   
+} */
+.management-widgets>div{
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    border-radius: 15px;
+    background: #ffffff;
+    box-shadow:  0px 0px 15px -10px black;
+}
+.management-widgets>div:nth-child(1){
+    grid-area: chart;
+}
+.management-widgets>div:nth-child(2){
+    grid-area: widget1;
+}
+.management-widgets>div:nth-child(3){
+    grid-area: widget2;
+}
+.management-widgets>div:nth-child(4){
+    grid-area: widget3;
+}
+.management-widgets>div:nth-child(5){
+    grid-area: widget4;
+}
+.management-widgets>div:nth-child(6){
+    grid-area: widget5;
+}
+/* div[widget-msp]{
+    background-color: black;
+} */
 
 .skeleton-widget {
     background: linear-gradient(270deg, #ecebeb, #f3f3f3);

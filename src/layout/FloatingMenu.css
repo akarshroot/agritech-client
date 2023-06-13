@@ -1,16 +1,14 @@
 .floating-menu-container {
-    border-radius: 12px;
+    border-radius: 10px;
     min-width: 300px;
     width: 40%;
     position: fixed;
     bottom: 30px;
-    margin-left: 50%;
+    left: 50%;
     transform: translateX(-50%);
     background: #e0e0e0;
-    box-shadow: 20px 20px 60px #bebebe,
-        -20px -20px 60px #ffffff;
     color: var(--black-text);
-    border: 2px solid #429017;
+    border: 2px solid var(--c5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,15 +28,21 @@
 
 .floating-menu-container ul li {
     padding: 10px;
+    padding-bottom: 0px;
+    position: relative;
     border-radius: 5px;
+    bottom: 0px;
     cursor: pointer;
     transition-duration: 400ms;
+    flex-grow: 1;
 }
 
 .floating-menu-container ul li:hover {
-    background-color: #429017;
+    background-color: var(--c5);
     color: var(--white-text);
-    font-weight: 600;
+    scale: 1.05;
+    bottom: 15px;
+    /* font-weight: 600; */
 }
 
 .floating-menu-container ul li img {

@@ -3,12 +3,15 @@ import { useUser } from '../../../context/UserContext'
 import FloatingMenu from '../../../layout/FloatingMenu'
 import { renderWidget } from '../../../assets/widgets/Widgets'
 import './Management.css'
-import Spinner from 'react-bootstrap/esm/Spinner'
 
 function Management(props) {
   const [loading, setLoading] = useState(true)
   const { theme } = useUser()
-  const [widgets, setWidgets] = useState([
+  const widgets=[
+    {
+      title: "MSP",
+      id: "msp"
+    },
     {
       category: "inventory",
       id: "current-inventory"
@@ -21,11 +24,7 @@ function Management(props) {
       title: "Current Plan",
       id: "current-plan"
     },
-    {
-      title: "MSP",
-      id: "msp"
-    }
-  ])
+  ]
 
   useEffect(() => {
     setTimeout(() => {
@@ -34,26 +33,29 @@ function Management(props) {
   }, [])
 
   return (
-    <div className={`p-3 theme-${theme} management-widgets w-100`}>
-      <div className="row">
-        {
-          widgets.map((widget) => {
-            return (
-              <div key={widget.id} className='col-md-6 col-lg-4 col-xl-3 p-3'>
-                <div className={`widget ${loading ? "skeleton-widget" : ""}`}>
-                  {
-                    loading ? <></> :
-                    <>
-                      {renderWidget(widget.id, widget.data)}
-                    </>
-                  }
-                </div>
-              </ div>
-            )
-          })
-        }
+    <div className={`theme-${theme} management-widgets-container`}>
+      <h2 className='display-4 m-0 p-3 pt-0'>
+        AgriManage
+      </h2>
+      <div className={`management-widgets w-100`}>
+          {
+            widgets.map((widget) => {
+              return (
+                  <React.Fragment key={widget.id}>
+                    {
+                      loading ? <></> :
+                      <>
+                        {renderWidget(widget.id, widget.data)}
+                      </>
+                    }
+                  </React.Fragment>
+              )
+            })
+          }
+          {/* <div> */}
+            <FloatingMenu theme={theme} />
+          {/* </div> */}
       </div>
-      <FloatingMenu theme={theme} />
     </div>
   )
 }
