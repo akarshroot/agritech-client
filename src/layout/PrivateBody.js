@@ -13,6 +13,7 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import { ToastContainer, toast } from 'react-toastify'
 import { Helmet } from 'react-helmet'
+import logoHorizontal from '../assets/logo/logoImg.svg'
 
 function PrivateNav(props) {
     const { currentUser, logout, loading, userData, getUserData } = useUser()
@@ -45,15 +46,15 @@ function PrivateNav(props) {
                     src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
             </Helmet>
             <div className={`private-nav d-none d-md-block theme-${props.theme}`}>
-                <div className='logoConsole row m-0'>
+                <div className='logoConsole row m-0 align-items-center'>
                     <div className="col"></div>
-                    <div onClick={() => navigate('/', { replace: true })} className='logoLink col'>
-                        AgriTech Console
+                    <div onClick={() => navigate('/', { replace: true })} className='logoLink col  m-1'>
+                        <img src={logoHorizontal} width="40px" alt="AgriTech" /> AgriTech Console
                     </div>
                     <div className="language-setter col d-flex align-items center h-100 justify-content-end">
                         {userData?.admin && < Button variant='success m-1' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
-                        <Button variant='warning m-1' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
-                        <Button variant='warning m-1' onClick={() => logout()}>Logout</Button>
+                        <Button variant='success m-1' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
+                        <Button variant='success m-1' onClick={() => logout()}>Logout</Button>
                         <div id="google_translate_element"></div>
                     </div>
                 </div>
@@ -74,7 +75,7 @@ function PrivateNav(props) {
                 <div className='hamButtonNav'>
                     <FontAwesome name='bars' onClick={() => setHamShow(!hamShow)} className="fa-light fa-bars" />
                     {userData?.admin && < Button variant='success' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
-                    <Button variant='btn bg-warning bg-opacity-75' onClick={() => logout()}>LOGOUT</Button>
+                    <Button variant='btn bg-primary text-white fw-bold bg-opacity-75' onClick={() => logout()}>LOGOUT</Button>
                 </div>
                 <div className={`dropDownNav ${hamShow ? 'showDropDownNav' : ''}`}>
                     <ul className='links-container p-0 justify-content-center d-flex flex-column align-items-center'>
@@ -85,7 +86,7 @@ function PrivateNav(props) {
                         <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/agristore"><li className={`nav-element ${tab === "agristore" ? "nav-element-selected" : ""}`}>AgriStore</li></Link>
                         <li className={`nav-element ${tab === "agristore" ? "nav-element-selected" : ""}`}>
                             <div className="language-setter">
-                                <Button variant='warning' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
+                                <Button variant='success' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
                                 <div id="google_translate_element"></div>
                             </div>
                         </li>

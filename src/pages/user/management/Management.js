@@ -20,6 +20,10 @@ function Management(props) {
     {
       title: "Current Plan",
       id: "current-plan"
+    },
+    {
+      title: "MSP",
+      id: "msp"
     }
   ])
 

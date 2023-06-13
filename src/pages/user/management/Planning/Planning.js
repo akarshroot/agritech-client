@@ -220,13 +220,15 @@ function Planning() {
                                                 <div className="requirement-form-group" key={idx} >
                                                     <input placeholder='Item name' onChange={(e) => { handleChange(e, idx) }} type="text" name='item' className='form-input' />
                                                     <div className="yield-section d-flex w-100 align-items-center">
-                                                        <input placeholder='Est. Yield / उपज' min={1} step={0.1} onChange={(e) => { handleChange(e, idx) }} type="number" name='yield' className='form-input' />
-                                                        <div class="item-hints">
-                                                            <div class="hint" data-position="4">
-                                                                <span class="hint-dot d-flex justify-content-center align-items-center fw-bold">i</span>
-                                                                <div class="hint-content bg-success text-white p-2 do--split-children d-none d-md-block">
+                                                        <input placeholder='Est. Yield / उपज' min={1} step={0.1} onChange={(e) => { handleChange(e, idx) }} type="number" name='yield' className='form-input' hidden={req.category == 'supplement'} />
+                                                        <div className="item-hints"  hidden={req.category == 'supplement'}>
+                                                            <div className="hint" data-position="4">
+                                                                <span className="hint-dot d-flex justify-content-center align-items-center fw-bold">i</span>
+                                                                <div className="hint-content bg-success text-white p-2 do--split-children d-none d-md-block">
                                                                     <p>
-                                                                        Yield is the seed to crop conversion ratio. Example: If you get 20 Kgs of a crop from 1 Kg of its seeds, yield is 20.<hr />
+                                                                        Yield is the seed to crop conversion ratio. Example: If you get 20 Kgs of a crop from 1 Kg of its seeds, yield is 20.</p>
+                                                                    <hr />
+                                                                    <p>
                                                                         उपज बीज से फसल रूपांतरण अनुपात है। उदाहरण: यदि एक किलो बीज से 20 किलो फसल प्राप्त होती है, तो उपज 20 होती है।</p>
                                                                 </div>
                                                             </div>

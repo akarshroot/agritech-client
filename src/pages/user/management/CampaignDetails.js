@@ -1,26 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react'
-import CampaignContext from '../../../context/CampaignContext'
+import { Link, useParams } from 'react-router-dom'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import { toast } from 'react-toastify'
+
+import { ContributeModal } from '../Campaigns'
 import useInput from '../../../hooks/useInput'
-import { Link, useParams } from 'react-router-dom'
 import { useUser } from '../../../context/UserContext'
 import StoreContext from '../../../context/StoreContext'
-import { ContributeModal } from '../Campaigns'
-import { createVoteReq, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
-import './CampaignDetails.css'
 import Loader from '../../../assets/loader/Loader'
-import { toast } from 'react-toastify'
 import AlreadyContributed from '../../../assets/icons/tick-box.svg'
 import {getCampbyId} from '../../../interceptors/serverAPIs'
+import { createVoteReq, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
+import './CampaignDetails.css'
 
 
 function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal }) {
 
   return (<>
-    <div className='row shadow p-3 rounded'>
+    <div className='row shadow p-3 rounded bg-white'>
       <div className='col-12'>
         <div className='row justify-content-end'>
           <div className='col-5 col-sm-3 col-md-2 pb-4'>
@@ -58,18 +59,27 @@ function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal
   )
 }
 
-function CampaignInfo({ title, raisedAmount, target, contributors }) {
+function CampaignInfo({ title, description, raisedAmount, target, contributors }) {
   const { currentUser } = useUser()
   return (
-    <div className='row mt-4 shadow p-3 rounded justify-content-around'>
+    <div className='row mt-4 shadow p-3 rounded justify-content-around bg-white'>
       <div className='col-12'>
-        <div className='display-2 text-start'>
-          {title}
+        <div className='text-start'>
+          <h1>{title}</h1>
           {
-            contributors.find(contributor => contributor.userId == currentUser) ?
+            contributors.find(contributor => contributor.userId === currentUser) ?
               <img src={AlreadyContributed} width="80px" height="80px" alt="" />
               : <></>
           }
+        </div>
+      <hr />
+        <div className='campaignDescription m-5 text-start'>
+          <h3 className='px-3'>
+            Description
+          </h3>
+          <div className='mx-5 p-2 descriptionContent'>
+            {description.content}
+          </div>
         </div>
       </div>
       <hr />
@@ -121,7 +131,7 @@ function CampaignPrograssBar({ raisedAmount, target }) {
   )
 }
 
-function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber }) {
+function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber,toPersonal }) {
 
   const [loading, setLoading] = useState(false)
   const [prompt, openPrompt] = useState(false)
@@ -132,6 +142,9 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
     setPassword(e.target.value)
   }
 
+
+  console.log('Receiver->',toPersonal)
+  console.log('Receiver->')
   async function useRequest() {
     if (!password) {
       return
@@ -258,9 +271,18 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
         <div>
           {parseInt(voters) === 0 ? <div>No contributors yet</div> : <CampaignPrograssBar raisedAmount={votes} target={voters} />}
         </div>
-        <div>
-          Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
-        </div>
+        {toPersonal
+        ? (
+          <div>
+            Requested for Personal use.
+          </div>
+        )
+        :(
+          <div>
+            Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
+          </div>
+        )
+        }
         <div className='text-center py-3'>
           {!isOwner
             ? <div><Button variant='outline-success' onClick={handlePrompt} value='allow'>Allow</Button>   <Button onClick={handlePrompt} value='dontAllow' variant='outline-danger'>Dont Allow</Button></div>
@@ -412,11 +434,6 @@ function CreateRequestModal({ show, handleShow, vid }) {
                     {cart.length > 0 ?
                       (
                         cart.map(({ product }, i) => {
-                          // return <option 
-                          //         key={'cartSelectKey'+i} 
-                          //         value={product._id}>
-                          //           {product.title}
-                          //         </option>
                           return <SelectFromCartOptions
                             key={'cartSelectKey' + i}
                             hide={handleDropdown}
@@ -500,7 +517,7 @@ function TransactionsHistory({ tx }) {
   )
 }
 
-function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors }) {
+function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors,userId }) {
   const [show, setShow] = useState(false);
   function handleShow() {
     setShow(!show);
@@ -510,7 +527,7 @@ function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors }) {
     handleShow
   }
   return (
-    <div className='row mt-4 shadow p-3 rounded justify-content-around'>
+    <div className='row mt-4 shadow p-3 rounded justify-content-around bg-white'>
       {isOwner && (
         <div className='col-10'>
           <Button onClick={handleShow} variant='success'>+ Make a Request</Button>
@@ -527,6 +544,7 @@ function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors }) {
                   return (
                     <WithdrawRequests
                       isOwner={isOwner}
+                      toPersonal={userId===data.receiver}
                       key={'votesContainerKey' + i}
                       cid={_id}
                       voters={contributors.length}
@@ -539,6 +557,54 @@ function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors }) {
         }
       </div>
       <CreateRequestModal {...modalData} />
+    </div>
+  )
+}
+
+/*
+category: "supplement"
+estCost: 399
+isProduct: false
+item: "Fertilizer"
+quantity: 5
+*/
+
+
+function CampaignPlanDetails({title,requirements,...props}){
+  console.log(props)
+  return(
+    <div className='row mt-4 shadow p-3 rounded bg-white'>
+      <div className='col-12 text-start'>
+        <h3>
+          Plan - {title}
+        </h3>
+        <div className='CampPlanRequirements row justify-content-center'>
+            {requirements.map((e,key) => {
+              return(
+                <div className='col-md-3' key={'campPlanRequirements'+key}>
+                  <div className='eachRequiredProduct m-2 p-3 shadow'>
+                    <Table striped>
+                      <tbody>
+                        <tr>
+                          <th>Type:</th>
+                          <td>{e.category}</td>
+                        </tr>
+                        <tr>
+                          <th>Item:</th>
+                          <td>{e.item}</td>
+                        </tr>
+                        <tr>
+                          <th>Price:</th>
+                          <td>{e.estCost}</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                </div>
+              )
+            })}
+        </div>
+      </div>
     </div>
   )
 }
@@ -584,22 +650,24 @@ export default function CampaignDetails() {
   }
   const isOwner = userData._id === activeCampaign.manager._id
 
-  console.log(isOwner)
+  // console.log(activeCampaign.associatedPlan)
+
+
 
   return (
-    <div className='container py-2'>
+    <div className='container py-4'>
       <CreatorDetails {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
       <CampaignInfo {...activeCampaign} />
+      <CampaignPlanDetails {...activeCampaign.associatedPlan}/>
       <CampaignVotesinfo 
-      isOwner={isOwner} 
-      _id={activeCampaign._id}
-      contributors={activeCampaign.contributors}
-      voteRequests={activeCampaign.voteRequests}
+        isOwner={isOwner}
+        userId = {userData._id}
+        _id={activeCampaign._id}
+        contributors={activeCampaign.contributors}
+        voteRequests={activeCampaign.voteRequests}
       />
       <ContributeModal {...contributeModalData} />
-      {activeCampaign.campaignTransactions && isOwner
-        ? <TransactionsHistory tx={activeCampaign.campaignTransactions} />
-        : <div className='p-4 display-3'>Only owner can see the transactions</div>
+      {activeCampaign.campaignTransactions && isOwner && <TransactionsHistory tx={activeCampaign.campaignTransactions} />
       }
     </div>
   )

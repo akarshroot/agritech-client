@@ -7,6 +7,7 @@ import axios from 'axios'
 // import { SOCKET_URL as socketURL } from './config'
 import CustomImageLoader from 'react-custom-image-loader.'
 import grains from '../assets/icons/grain.png'
+import Loader from '../assets/loader/Loader'
 
 const UserContext = React.createContext()
 
@@ -167,7 +168,8 @@ export function UserProvider({ children }) {
 
     async function getUserData() {
         try {
-            setLoading(true)
+            // if(!loading)
+            //     // setLoading(true)
             if (!currentUser) return
             const response = await axios.post("/user/data", { userId: currentUser })
             if (response.hasOwnProperty("data")) {
@@ -180,12 +182,13 @@ export function UserProvider({ children }) {
         } catch (error) {
             throw error
         }
-        setLoading(false)
+        // setLoading(false)
     }
 
     async function getUserCampaigns() {
         try {
-            setLoading(true)
+            // if(!loading)
+                // setLoading(true)
             if (!currentUser) return
             const response = await axios.post("/user/campaigns", { userId: currentUser })
             if (response.hasOwnProperty("data")) {
@@ -198,7 +201,7 @@ export function UserProvider({ children }) {
         } catch (error) {
             throw error
         }
-        setLoading(false)
+        // setLoading(false)
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -256,7 +259,6 @@ export function UserProvider({ children }) {
     useEffect(() => {
         if (checkTokenCookie)
             checkToken();
-        else setLoading(false)
         console.log(checkTokenCookie);
         // if(!userData) getUserData()
     }, [checkTokenCookie]);
@@ -285,7 +287,7 @@ export function UserProvider({ children }) {
     return (
         <UserContext.Provider value={value}>
             {
-                loading ? <> <div className='d-flex w-100 vh-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'} /></div></>
+                loading ? <> <div className='d-flex w-100 vh-100 justify-content-center align-items-center'><Loader height="300px" width="300px"></Loader></div></>
                     :
                     children
             }
