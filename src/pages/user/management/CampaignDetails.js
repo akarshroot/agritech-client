@@ -15,6 +15,7 @@ import Loader from '../../../assets/loader/Loader'
 import AlreadyContributed from '../../../assets/icons/tick-box.svg'
 import {getCampbyId} from '../../../interceptors/serverAPIs'
 import { createVoteReq, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
+
 import './CampaignDetails.css'
 
 
@@ -78,7 +79,7 @@ function CampaignPledgesAndPromises(){
   return (
     <div className='text-start p-3 ps-5'>
       <h3 className='p-0 m-0'>
-          Description
+          Plegdes and Promises
       </h3>
     </div>
   )

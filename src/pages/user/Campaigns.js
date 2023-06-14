@@ -3,21 +3,22 @@ import React, { useEffect, useState, Fragment, useRef } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import { CampaignWidget } from '../../assets/widgets/Widgets'
-import useInput from '../../hooks/useInput'
-import { createCampaign, getApproval } from '../../interceptors/web3ServerApi'
-import { useUser } from '../../context/UserContext'
-import { Link, useNavigate } from 'react-router-dom'
-import Spinner from 'react-bootstrap/esm/Spinner'
-import '../../index.css'
-import './Campaigns.css'
-import { ToastContainer, toast } from 'react-toastify'
-import PropTypes from 'prop-types'
-import LogoImage from '../../assets/logo/logoImg.svg'
-import './Campaigns.css'
 import DatePicker from "react-datepicker"
+import PropTypes from 'prop-types'
+import FontAwesome from 'react-fontawesome';
+import Spinner from 'react-bootstrap/esm/Spinner'
+import { Link, useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
+
+import useInput from '../../hooks/useInput'
+import { createCampaign, postcontribution } from '../../interceptors/web3ServerApi'
+import { useUser } from '../../context/UserContext'
+import LogoImage from '../../assets/logo/logoImg.svg'
 import Loader from '../../assets/loader/Loader'
-import { getUserPlans } from '../../interceptors/serverAPIs'
+import { getCollectonCampbyId, getUserPlans } from '../../interceptors/serverAPIs'
+
+import './Campaigns.css'
+import '../../index.css'
 
 // STEPPER FUNCTIONS START
 const Step = ({
@@ -294,7 +295,7 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
       if (!userData.currentPlan)
         setPlans(e.data.reverse())
       else
-        setPlans(e.data?.filter(p => p.executing == true))
+        setPlans(e.data?.filter(p => p.executing === true))
       setLoading(false)
     })
   }, [userData])
@@ -405,6 +406,115 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
   )
 }
 
+function EachPledgePlan({plansAllowed,setPlansAllowed,planData,id}){
+  const [saved,setSaved] = useState(false)
+  
+  const headingTop = useInput('text')
+  const investment = useInput('number')
+  const discount = useInput('number')
+  // const headingTop = useInput('text')
+
+  useEffect(()=>{
+    if(planData.headingTop && planData.investment && planData.discount && saved){
+      headingTop.onChange(planData.headingTop)
+      investment.onChange(planData.investment)
+      discount.onChange(planData.discount)
+    }
+  },[handleRemove,handleSave])
+
+  function handleSave(){
+    setSaved(!saved)
+    const index = plansAllowed.findIndex(e => e.id===id)
+    const objUpdate = plansAllowed[index]
+    console.log(index,objUpdate)
+    const filteredArr =plansAllowed.filter(e => e.id!==id)
+
+    objUpdate.headingTop= headingTop.value
+    objUpdate.investment= investment.value
+    objUpdate.discount= discount.value
+
+    filteredArr.splice(index,0,objUpdate)
+    console.log(filteredArr)
+    setPlansAllowed(filteredArr)
+  }
+
+  function handleRemove(){
+    if(plansAllowed.length===1){
+      toast.warn("You must have atleast one return promise in order to proceed")
+      return
+    }
+    const newArr = plansAllowed.filter(e=>e.id!==id);
+    console.log(newArr)
+    setPlansAllowed(newArr)
+  }
+
+  return(
+      <div className='eachPledgePlan m-3'>
+        <header>
+          <div className='d-flex justify-content-between align-items-center'>
+            {saved? <h2>{planData.headingTop}</h2>: <input {...headingTop} />}
+            {saved? <h4>{planData.investment} KCO</h4>: <div>-/-</div>}
+          </div>
+        </header>
+        <hr/>
+        <main>
+          On every {saved? investment.value:<input {...investment}/>} KCO investment,<br/>
+          I pledge to give {saved? discount.value:<input {...discount}/>}% discount on my yield
+          on the FarmFresh platform.
+        </main>
+        <div className='controlsButtonForPledgePlans'>
+          <Button variant='outline-success' onClick={handleSave} >{saved? 'Edit':'Save'}</Button>
+          <Button variant='outline-danger mx-2' onClick={handleRemove}>Remove</Button>
+        </div>
+      </div>
+  )
+}
+
+function PledgeReturnsForm({plansAllowed,setPlansAllowed}){
+  console.log('PlansAllowed',plansAllowed)
+
+  const UsersAllowedLength = 3;
+
+  function addNewPlan(){
+    
+    const prevPlan = plansAllowed[plansAllowed.length-1]
+    console.log(prevPlan)
+    if(!prevPlan.headingTop.length && !prevPlan.investment.length && !prevPlan.discount.length){
+      toast.warn('Save last plan before creating a new one')
+      return
+    }else{
+      const newPlans = [...plansAllowed,{id:('IdForEachPledgePlan'+Date.now())}]
+      setPlansAllowed(newPlans)
+    }
+  }
+
+  return(
+    <div className='pledgeReturnsForm'>
+      <div className='createPledgeContainer'>
+        {plansAllowed.map((e,i) => {return <EachPledgePlan planData={e} plansAllowed={plansAllowed} key={'EachPledgeToCreate'+i} id={e.id} setPlansAllowed={setPlansAllowed} />})}
+        <div className='createNewPlanDiv m-3'>
+          {
+            plansAllowed.length<UsersAllowedLength
+            ?(
+              <div onClick={addNewPlan} className='createNewPlanDivIcon PlusIcon'>
+                <FontAwesome className='LockIcon' name='fas fa-plus' />
+              </div>
+            )
+            :(
+              <div onClick={()=>console.log('coming soon')} className='createNewPlanDivIcon'>
+                <FontAwesome className='LockIcon' name='fas fa-lock' />
+                <div>
+                  ...coming soon
+                </div>
+              </div>
+            )
+          }
+          
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function ModalForm({ show, handleShow }) {
 
@@ -416,16 +526,15 @@ function ModalForm({ show, handleShow }) {
   const target = useInput('number', 'Target Amount')
   const minContribution = useInput('number', 'Minimum Amount')
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
-
   const campaignFormRef = useRef();
-  const plansContainerRef = useRef();
+
+
+  const [plansAllowed,setPlansAllowed] = useState([{id:'INITIALID'}])
+
 
   const [associatedPlan, setAssociatedPlan] = useState();
-
   const password = useInput('password', 'Password')
-
   function changeDeadline(date) {
-
     setDeadline(date)
   }
   useEffect(() => {
@@ -501,14 +610,15 @@ function ModalForm({ show, handleShow }) {
     setEnableFourth((prev) => ({ checked: !prev.checked, touched: true }));
   };
 
+  function handlePledgesSubmission(){
+    const prevPlan = plansAllowed[plansAllowed.length-1]
+    if(plansAllowed.length>=1 && prevPlan.headingTop.length && prevPlan.investment.length && prevPlan.discount.length){
+      thirdTermsHandler()
+    }else{
+      toast.warn("Invalid Pledges")
+    }
+  }
 
-  useEffect(e => {
-
-    plansContainerRef.current?.addEventListener("wheel", (evt) => {
-      evt.preventDefault();
-      plansContainerRef.scrollLeft += evt.deltaY;
-    });
-  }, [])
 
   const stepperContent = [
     {
@@ -516,7 +626,7 @@ function ModalForm({ show, handleShow }) {
       content: (
         <div>
           <label>
-            <Form ref={campaignFormRef} onSubmit={firstTermsHandler}>{/**/}
+            <Form ref={campaignFormRef} onSubmit={firstTermsHandler}>
               <div className='createCampaginForm d-flex flex-wrap justify-content-center'>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor='createCampTitle'>Title</label>
@@ -524,7 +634,6 @@ function ModalForm({ show, handleShow }) {
                 </fieldset>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor='createCampDeadline'>Deadline</label>
-                  {/* <input required className='agri-input p-2' id='createCampDeadline' {...deadline} /> */}
                   <DatePicker
                     className='agri-input p-2'
                     minDate={new Date()} // +2592000
@@ -546,9 +655,11 @@ function ModalForm({ show, handleShow }) {
                 </fieldset>
                 <fieldset className="col-md-6 p-3">
                   <label htmlFor="refund">Refund Unused Funds</label>
-                  <select className="agri-input p-2" id="refund" defaultValue={"allowed"} disabled={true}>
+
+                  <select className="btn disabled btn-secondary agri-input p-2" id="refund" defaultValue={"allowed"} disabled={true}>
                     <option value={"allowed"}>Allowed</option>
                   </select>
+                
                 </fieldset>
               </div>
               <fieldset className="col-12 d-flex flex-column px-3">
@@ -559,7 +670,6 @@ function ModalForm({ show, handleShow }) {
                   rows={8}
                   {...description} />
               </fieldset>
-              {/* <Button type='submit'>SUBMIT</Button> */}
             </Form>
           </label>
         </div>
@@ -578,20 +688,22 @@ function ModalForm({ show, handleShow }) {
       isComplete: enableThird.checked,
     },
     {
-      label: 'Expeced Returns',
+      label: 'Pledge your Returns',
       content: (
         <div>
+          <PledgeReturnsForm plansAllowed={plansAllowed} setPlansAllowed={setPlansAllowed}/>
           <label>
             <input
               type="checkbox"
               checked={enableFourth.checked}
-              onChange={thirdTermsHandler}
+              onChange={handlePledgesSubmission}
             />{' '}
             Accept third terms and conditions
           </label>
         </div>
       ),
-      clicked: () => { setEnableSubmit((prev) => ({ checked: true, touched: true })) },
+      clicked: () => {setEnableSubmit((prev) => ({ checked: true, touched: true })) 
+      },
       isError: !enableFourth.checked && enableFourth.touched,
       isComplete: enableFourth.checked,
     },
@@ -615,6 +727,7 @@ function ModalForm({ show, handleShow }) {
   };
   const destroyStepper = () => {
     campaignFormRef.current.reset()
+    setPlansAllowed([{id:'INITIALID'}])
     setEnableSecond({
       checked: true,
       touched: false
@@ -695,7 +808,7 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
       cid
     }
     try {
-      const res = await getApproval(toSendData);
+      const res = await postcontribution(toSendData);
       if (!res.error) {
         toast.success(res.message, {
           position: "top-right",
@@ -784,6 +897,68 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
   )
 }
 
+function CampaignWidgetV2({ title, target, contributors, _id, ...props }) {
+  const numberOfContributors = contributors?.length
+  const [collection, setCollection] = useState(0)
+
+  useEffect(() => {
+      if (_id)
+          getCollectonCampbyId(_id).then((res) => {
+              setCollection(res.raisedAmount)
+          }).catch((err) => alert(err.message))
+  }, [_id])
+
+
+  return (
+      <div className='widget-container'>
+
+          {(title && target && contributors && _id) ?
+              <>
+                  <h3 className='container'>
+                      {title}
+                  </h3>
+                  <h4>Campaign Progress</h4>
+                  <hr />
+
+
+                  <div className="campaign-progress">
+                      <div className="progress neumorphInto" style={{ height: "30px" }}>
+                          <div className="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
+                              aria-valuenow={parseInt((collection / target) * 100)} aria-valuemin="0" aria-valuemax="100" style={{ width: `${parseInt((collection / target) * 100)}%` }}>
+                              {`${parseInt((collection / target) * 100)}%`}
+                          </div>
+                      </div>
+                      <span className="subtext">
+                          {new Intl.NumberFormat("en-IN").format(collection)} KCO of {new Intl.NumberFormat("en-IN").format(target)} KCO raised
+                      </span>
+                  </div>
+
+
+                  <div className="current-campaign-widget-details">
+                      <div className="contributions">
+                          <span className="quantity">{numberOfContributors > 1000 ? `${numberOfContributors / 1000}k+` : numberOfContributors}</span><br />
+                          <span className="subtext">contributors</span>
+                      </div>
+                      <div className="time-remaining">
+                          <span className="quantity">{parseInt(((props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
+                          <span className="subtext">remaining</span>
+                      </div>
+                  </div>
+                  <div className="widget-action-center d-flex justify-content-around mt-3">
+                      <Link to={'/campaign/details/' + _id} variant='outline-success' >Details</Link>
+                      {props.children}
+                  </div>
+              </>
+              :
+              <h4>
+                  No campaigns yet.
+              </h4>
+          }
+
+      </div>
+  )
+}
+
 function Campaigns() {
   const [showContribute, setShowContribute] = useState(false);
   const [show, setShow] = useState(false);
@@ -823,7 +998,7 @@ function Campaigns() {
       <div className='px-2'>
         <h1 className='display-6 text-start'>Your Campaigns</h1>
         <hr />
-        <div className='row'>
+        <div className=''>
           {loading ? <>Loading...</>
             :
             userCampaigns?.length === 0 ? <>No campaigns created yet.</>
@@ -831,17 +1006,16 @@ function Campaigns() {
               userCampaigns?.map((data, i) => {
                 return (
                   <React.Fragment key={'campaignsKey' + i}>
-                    <div className='widget col-sm-6 col-md-4 col-lg-3 p-4'>
-                      <CampaignWidget {...data}>
-                        <button onClick={handleShowContribute} className='neumorph-btn-green'>Contribute</button>
-                      </CampaignWidget>
-                      <ContributeModal
-                        show={showContribute}
-                        handleShow={handleShowContribute}
-                        cid={data._id}
-                        minContri={data.minContri}
-                      />
+                    {/* <button onClick={handleShowContribute} className='neumorph-btn-green'>Contribute</button> */}
+                    <div className='widget shadow m-3'>
+                      <CampaignWidgetV2 {...data}/>
                     </div>
+                    <ContributeModal
+                      show={showContribute}
+                      handleShow={handleShowContribute}
+                      cid={data._id}
+                      minContri={data.minContri}
+                    />
                   </React.Fragment>
                 )
               })
