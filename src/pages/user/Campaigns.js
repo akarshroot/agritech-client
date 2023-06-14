@@ -162,7 +162,7 @@ const StepperFooter = ({
             ? () => {
               createCampaignFormRef.current.checkValidity()
                 ? submitCurrentStep()
-                : toast.warning('Missing or invalid value. Please check the provided details')
+                : toast.warn('Missing or invalid value. Please check the provided details')
             }
             : isLastStep
               ? submitHandler
