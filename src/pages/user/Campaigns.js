@@ -291,7 +291,6 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
   useEffect(() => {
     setLoading(true)
     getUserPlans().then(e => {
-      console.log(e.data)
       if (!userData.currentPlan)
         setPlans(e.data.reverse())
       else
@@ -302,8 +301,6 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
 
 
   function handleSelectPlan(id, ele) {
-    console.log(id)
-    console.log(ele)
     selectPlan(id)
     secondTermsHandler()
   }
@@ -406,13 +403,12 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
   )
 }
 
-function EachPledgePlan({plansAllowed,setPlansAllowed,planData,id}){
+function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id}){
   const [saved,setSaved] = useState(false)
   
-  const headingTop = useInput('text')
-  const investment = useInput('number')
-  const discount = useInput('number')
-  // const headingTop = useInput('text')
+  const headingTop = useInput('text',"Pledge name")
+  const investment = useInput('number',"KCO")
+  const discount = useInput('number',"Discount")
 
   useEffect(()=>{
     if(planData.headingTop && planData.investment && planData.discount && saved){
@@ -423,18 +419,22 @@ function EachPledgePlan({plansAllowed,setPlansAllowed,planData,id}){
   },[handleRemove,handleSave])
 
   function handleSave(){
+    if(checkedForNext){
+      toast.warn('uncheck terms to edit further')
+      return
+    }
     setSaved(!saved)
+    
     const index = plansAllowed.findIndex(e => e.id===id)
     const objUpdate = plansAllowed[index]
-    console.log(index,objUpdate)
     const filteredArr =plansAllowed.filter(e => e.id!==id)
-
-    objUpdate.headingTop= headingTop.value
-    objUpdate.investment= investment.value
-    objUpdate.discount= discount.value
-
+    if(!saved){
+      objUpdate.headingTop= headingTop.value
+      objUpdate.investment= investment.value
+      objUpdate.discount= discount.value
+    }
+    objUpdate.saved=!saved
     filteredArr.splice(index,0,objUpdate)
-    console.log(filteredArr)
     setPlansAllowed(filteredArr)
   }
 
@@ -444,7 +444,6 @@ function EachPledgePlan({plansAllowed,setPlansAllowed,planData,id}){
       return
     }
     const newArr = plansAllowed.filter(e=>e.id!==id);
-    console.log(newArr)
     setPlansAllowed(newArr)
   }
 
@@ -458,7 +457,7 @@ function EachPledgePlan({plansAllowed,setPlansAllowed,planData,id}){
         </header>
         <hr/>
         <main>
-          On every {saved? investment.value:<input {...investment}/>} KCO investment,<br/>
+          On every {saved? investment.value:<input {...investment}/>} or above KCO investment,<br/>
           I pledge to give {saved? discount.value:<input {...discount}/>}% discount on my yield
           on the FarmFresh platform.
         </main>
@@ -470,20 +469,28 @@ function EachPledgePlan({plansAllowed,setPlansAllowed,planData,id}){
   )
 }
 
-function PledgeReturnsForm({plansAllowed,setPlansAllowed}){
-  console.log('PlansAllowed',plansAllowed)
-
-  const UsersAllowedLength = 3;
-
+function PledgeReturnsForm({plansAllowed,setPlansAllowed,checkedForNext}){
+  const UsersAllowedLength = 2;
   function addNewPlan(){
     
+    if(checkedForNext){
+      toast.warn('Uncheck terms to edit further')
+      return
+    }
     const prevPlan = plansAllowed[plansAllowed.length-1]
-    console.log(prevPlan)
-    if(!prevPlan.headingTop.length && !prevPlan.investment.length && !prevPlan.discount.length){
-      toast.warn('Save last plan before creating a new one')
+    const allForms = plansAllowed.filter(e => !e.saved)
+    if(!prevPlan.headingTop.length || !prevPlan.investment.length || !prevPlan.discount.length || allForms.length){
+      toast.warn('Save/complete all plan before creating a new one')
       return
     }else{
-      const newPlans = [...plansAllowed,{id:('IdForEachPledgePlan'+Date.now())}]
+      const newPlansObj = {
+        id:('IdForEachPledgePlan'+Date.now()),
+        investment:'',
+        headingTop:'',
+        discount:'',
+        saved: false,
+      }
+      const newPlans = [...plansAllowed,newPlansObj]
       setPlansAllowed(newPlans)
     }
   }
@@ -491,7 +498,11 @@ function PledgeReturnsForm({plansAllowed,setPlansAllowed}){
   return(
     <div className='pledgeReturnsForm'>
       <div className='createPledgeContainer'>
-        {plansAllowed.map((e,i) => {return <EachPledgePlan planData={e} plansAllowed={plansAllowed} key={'EachPledgeToCreate'+i} id={e.id} setPlansAllowed={setPlansAllowed} />})}
+      <div className={`disableFormContainer ${!checkedForNext && 'd-none'}`} >
+        <FontAwesome name="check" />
+        All Set
+      </div>
+        {plansAllowed.map((e,i) => {return <EachPledgePlan checkedForNext={checkedForNext} planData={e} plansAllowed={plansAllowed} key={'EachPledgeToCreate'+i} id={e.id} setPlansAllowed={setPlansAllowed} />})}
         <div className='createNewPlanDiv m-3'>
           {
             plansAllowed.length<UsersAllowedLength
@@ -529,8 +540,13 @@ function ModalForm({ show, handleShow }) {
   const campaignFormRef = useRef();
 
 
-  const [plansAllowed,setPlansAllowed] = useState([{id:'INITIALID'}])
-
+  const [plansAllowed,setPlansAllowed] = useState([{
+    id:'INITIALID',
+    investment:'',
+    discount:'',
+    headingTop:'',
+    saved:false,
+  }])
 
   const [associatedPlan, setAssociatedPlan] = useState();
   const password = useInput('password', 'Password')
@@ -545,7 +561,6 @@ function ModalForm({ show, handleShow }) {
     // e.preventDefault()
     setCreateCampaignLoading(true)
     const deadlineToSend = Math.floor(deadline.getTime() / 1000)
-    console.log(deadlineToSend)
     const dataToSend = {
       title: title.value,
       deadline: deadlineToSend,
@@ -557,7 +572,6 @@ function ModalForm({ show, handleShow }) {
       userId: userData._id,
       associatedPlan
     }
-    console.log("Sending Data", dataToSend)
     const res = await createCampaign(dataToSend);
     if (res.status === 'Deployed Successfully') {
       toast.success(res.status, {
@@ -611,11 +625,12 @@ function ModalForm({ show, handleShow }) {
   };
 
   function handlePledgesSubmission(){
+    const allForms = plansAllowed.filter(e => !e.saved)
     const prevPlan = plansAllowed[plansAllowed.length-1]
-    if(plansAllowed.length>=1 && prevPlan.headingTop.length && prevPlan.investment.length && prevPlan.discount.length){
-      thirdTermsHandler()
+    if(!prevPlan.headingTop.length || !prevPlan.investment.length || !prevPlan.discount.length || allForms.length){
+      toast.warn("Invalid/Unsaved Pledges")
     }else{
-      toast.warn("Invalid Pledges")
+      thirdTermsHandler()
     }
   }
 
@@ -625,7 +640,6 @@ function ModalForm({ show, handleShow }) {
       label: 'Basic Details',
       content: (
         <div>
-          <label>
             <Form ref={campaignFormRef} onSubmit={firstTermsHandler}>
               <div className='createCampaginForm d-flex flex-wrap justify-content-center'>
                 <fieldset className="col-md-6 p-3">
@@ -671,7 +685,6 @@ function ModalForm({ show, handleShow }) {
                   {...description} />
               </fieldset>
             </Form>
-          </label>
         </div>
       ),
       isError: !enableSecond.checked && enableSecond.touched,
@@ -691,7 +704,7 @@ function ModalForm({ show, handleShow }) {
       label: 'Pledge your Returns',
       content: (
         <div>
-          <PledgeReturnsForm plansAllowed={plansAllowed} setPlansAllowed={setPlansAllowed}/>
+          <PledgeReturnsForm checkedForNext={enableFourth.checked} plansAllowed={plansAllowed} setPlansAllowed={setPlansAllowed}/>
           <label>
             <input
               type="checkbox"
@@ -727,7 +740,13 @@ function ModalForm({ show, handleShow }) {
   };
   const destroyStepper = () => {
     campaignFormRef.current.reset()
-    setPlansAllowed([{id:'INITIALID'}])
+    setPlansAllowed([{
+      id:'INITIALID',
+      investment:'',
+      discount:'',
+      headingTop:'',
+      saved:false,
+    }])
     setEnableSecond({
       checked: true,
       touched: false
