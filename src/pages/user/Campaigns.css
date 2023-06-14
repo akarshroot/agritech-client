@@ -265,15 +265,13 @@
 
 
 
-
-
-
-
+   
 .createPledgeContainer{
     padding: 1rem;
     overflow-y: hidden;
     overflow-x: scroll;
     display: flex;
+    position: relative;
     min-height: 55vh;
     box-shadow: inset 0px 0px 20px -10px black;
     border-radius: 10px ;
@@ -323,4 +321,21 @@
     padding: 0.5rem;
     bottom:3%;
     right: 3%;
+}
+.disableFormContainer span{
+    color: var(--c5);
+    font-size: 10rem;
+}
+.disableFormContainer{
+    background-color: rgba(128, 128, 128, 0.5);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
 }
