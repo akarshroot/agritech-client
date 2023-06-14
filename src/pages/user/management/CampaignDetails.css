@@ -1,3 +1,30 @@
+.CampaignDetailsPageContainer{
+    min-height: 100vh;
+    max-height: 150vh;
+    display: grid;
+    /* gap: 1rem; */
+    width: 100%;
+    grid-template-areas: 
+    "widget1 widget1 widget1 widget1 widget0"
+    "widget2 widget2 widget2 widget2 widget2"
+    "widget3 widget3 widget3 widget3 widget3"
+    "widget5 widget5 widget5 widget5 widget5"
+    "widget4 widget4 widget4 widget4 widget4"
+    "widget6 widget6 widget6 widget6 widget6"
+    ;
+}
+.CampaignDetailsPageContainer>div{
+    background-color: white;
+    padding: 0.5rem;
+}
+.CampaignDetailsPageContainer>div:nth-child(1){height:100%;grid-area: widget0;} /* User */
+.CampaignDetailsPageContainer>div:nth-child(2){height:100%;grid-area: widget1;} /* Details */
+.CampaignDetailsPageContainer>div:nth-child(3){min-height:20vh;height:100%;grid-area: widget2;} /* Description */
+.CampaignDetailsPageContainer>div:nth-child(4){height:100%;grid-area: widget3;} /* Pledges and Promises */
+.CampaignDetailsPageContainer>div:nth-child(5){height:100%;grid-area: widget4;} /* vote Requests */
+.CampaignDetailsPageContainer>div:nth-child(6){height:100%;grid-area: widget5;} /* Plan */
+.CampaignDetailsPageContainer>div:nth-child(7){height:100%;grid-area: widget6;} /* Transaction History */
+
 .options-Bg{
     background-color: white;
     max-height: 50dvh;
@@ -20,3 +47,7 @@
     border-bottom: none;
     border-right: none;
 }
+/* .CampPlanRequirements{
+    background-color: #eee;
+    box-shadow: inset 0px 0px 20px -15px black;
+} */

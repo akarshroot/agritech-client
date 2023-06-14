@@ -3,7 +3,7 @@ import { useUser } from '../../context/UserContext'
 import { getAllCamps, getCollectonCampbyId } from '../../interceptors/serverAPIs'
 import Button from 'react-bootstrap/esm/Button';
 import { ContributeModal } from './Campaigns';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FontAwesome from 'react-fontawesome';
 import Loader from '../../assets/loader/Loader';
 import './Dashboard.css'
@@ -25,9 +25,10 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
     const navigate = useNavigate()
 
     function handleClick(){
-        navigate('/detailedCampaign/'+_id)
+        navigate('/campaign/details/'+_id)
     }
 
+    const deadline = parseInt(((props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))
 
     return (
         <div onClick={handleClick} className='widget-container-campaign-v2 bg-white rounded m-3'>
@@ -36,7 +37,7 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
             <div className='ContributionTick'>
                 <FontAwesome className='text-light' size='2x' name="check"/>
             </div>}
-            <div className='text-start bg-success p-3'>
+            <div className='text-start bg-agriGreen p-3 text-light'>
                 <h3>{title}</h3>
             </div>
             <div className="campaign-progress m-3">
@@ -56,7 +57,7 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
                     <span className="subtext">contributors</span>
                 </div>
                 <div className="time-remaining">
-                    <span className="quantity">{parseInt(((props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
+                    <span className="quantity">{deadline>0? (deadline+"d"):<span className='text-danger' ><b>Expired</b></span>}</span><br />
                     <span className="subtext">remaining</span>
                 </div>
             </div>
@@ -67,15 +68,8 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
 function ExploreCampaigns() {
     const [loading, setLoading] = useState(false);
     const [campaigns, setCampaigns] = useState([])
-    const { userData } = useUser()
-
     const [showContribute, setShowContribute] = useState(false);
-    const [show, setShow] = useState(false);
     const navigate = useNavigate()
-
-    function handleShow() {
-        setShow(!show)
-    }
 
     function handleShowContribute() {
         setShowContribute(!showContribute)
@@ -84,9 +78,11 @@ function ExploreCampaigns() {
 
     useEffect(() => {
         if (campaigns.length === 0) {
+            setLoading(true)
             getAllCamps().then((res) => {
                 console.log(res)
                 setCampaigns(res)
+                setLoading(false)
             })
         }
     }, [])
@@ -111,9 +107,8 @@ function ExploreCampaigns() {
                 :campaigns?.map((data, i) => {
                         return (
                             <div key={'campaignsKey' + i} className='col-sm-6'>
-                                <CampaignWidgetV2 {...data}>
+                                <CampaignWidgetV2 {...data}/>
                                     {/* <Button onClick={handleShowContribute} variant='success'>Contribute</Button> */}
-                                </CampaignWidgetV2>
                                 <ContributeModal
                                     show={showContribute}
                                     handleShow={handleShowContribute}

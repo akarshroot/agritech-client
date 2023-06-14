@@ -26,7 +26,7 @@ body {
   --c2: #609966;
   --c3: #9DC08B;
   --c4: #EDF1D6;
-  /* --c5: #8390FA; */
+  --c5: #429017;
   --white-text: #ececec;
   --black-text: #0a0a0a;
   --error-text: #c62828;
@@ -145,4 +145,7 @@ textarea{
 }
 .bg-white{
   background-color: white !important;
+}
+.bg-agriGreen{
+  background-color: var(--c5);
 }

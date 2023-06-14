@@ -38,6 +38,7 @@
 
 .all-widgets-container {
   width: 100%;
+  padding-left: 30px;
 }
 
 .widget {
@@ -49,7 +50,6 @@
   box-shadow:  5px 5px 31px #e5e4e4,
                 -5px -5px 31px #ffffff;
 }
-
 .no-skeleton-widget:hover {
   animation: bringFwd 500ms linear;
   z-index: 999;

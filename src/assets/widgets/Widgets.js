@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/aria-proptypes */
 import React, { useContext, useEffect, useState } from 'react'
-import Button from 'react-bootstrap/Button'
 import './Widgets.css'
 import { getCollectonCampbyId } from '../../interceptors/serverAPIs';
 import CampaignContext from '../../context/CampaignContext';
@@ -11,8 +10,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getTransactions } from '../../interceptors/web3ServerApi';
 import AlreadyContributed from '../../assets/icons/tick-box.svg'
 import FontAwesome from 'react-fontawesome';
+import KCO from '../icons/currencyIcon.png'
+
+import CurrencyIconComponent from '../../assets/widgets/CurrencyIconComponent'
+
 //Charts
-import { AxisOptions, Chart } from "react-charts";
+// import { AxisOptions, Chart } from "react-charts";
+import Chart from 'chart.js/auto'
+
+import axios from 'axios';
+import Loader from '../loader/Loader';
 
 //Widget renderer
 export function renderWidget(id, props) {
@@ -35,6 +42,8 @@ export function renderWidget(id, props) {
             return <CurrentPlan {...props} />
         case "msp":
             return <MSPChart {...props} />
+        case "wallet-balance":
+            return <WalletBalanceChart {...props} />
         default:
             return <></>
     }
@@ -91,7 +100,7 @@ export function CampaignWidget({ title, target, contributors, _id, ...props }) {
                         </div>
                     </div>
                     <div className="widget-action-center d-flex justify-content-around mt-3">
-                        <Link to={'/detailedCampaign/' + _id} variant='outline-success' >Details</Link>
+                        <Link to={'/campaign/details/' + _id} variant='outline-success' >Details</Link>
                         {props.children}
                     </div>
                 </>
@@ -209,9 +218,9 @@ export function TransactionHistory(props) {
         getTransactions().then(e => {
             setTxLen(e.wallet.length)
             if (e.wallet.length > 3) {
-                setTx(e.wallet.reverse().slice(0, 3))
+                setTx(e.wallet.slice(0, 3))
             } else {
-                setTx(e.wallet.reverse())
+                setTx(e.wallet)
             }
         })
     }, [])
@@ -451,121 +460,211 @@ export function CurrentPlan(props) {
 export function MSPChart() {
     const [lineData, setLineData] = useState([
         {
-            label: 'MSP',
-            data: [{
-                year: 2010,
-                msp: 1000
-            },
-            {
-                year: 2011,
-                msp: 1080
-            },
-            {
-                year: 2012,
-                msp: 1250
-            },
-            {
-                year: 2013,
-                msp: 1310
-            },
-            {
-                year: 2014,
-                msp: 1360
-            },
-            {
-                year: 2015,
-                msp: 1410
-            },
-            {
-                year: 2016,
-                msp: 1470
-            },
-            {
-                year: 2017,
-                msp: 1550
-            },
-            {
-                year: 2018,
-                msp: 1750
-            },
-            {
-                year: 2019,
-                msp: 1815
-            },
-            {
-                year: 2020,
-                msp: 1868
-            },
-            {
-                year: 2021,
-                msp: 1940
-            },
-            {
-                year: 2022,
-                msp: 2040
-            }]
-        }
-    ])
-    const [barData, setBarData] = useState([
+            year: 2010,
+            msp: 1000
+        },
         {
-            label: "MSP",
-            data: [{
-                year: "2010-11",
-                msp: 1000
-            },
-            {
-                year: "2011-12",
-                msp: 1080
-            },
-            {
-                year: "2012-13",
-                msp: 1250
-            },
-            {
-                year: "2013-14",
-                msp: 1310
-            },
-            {
-                year: "2014-15",
-                msp: 1360
-            },
-            {
-                year: "2015-16",
-                msp: 1410
-            },
-            {
-                year: "2016-17",
-                msp: 1470
-            },
-            {
-                year: "2017-18",
-                msp: 1550
-            },
-            {
-                year: "2018-19",
-                msp: 1750
-            },
-            {
-                year: "2019-20",
-                msp: 1815
-            },
-            {
-                year: "2020-21",
-                msp: 1868
-            },
-            {
-                year: "2021-22",
-                msp: 1940
-            },
-            {
-                year: "2022-23",
-                msp: 2040
-            }]
+            year: 2011,
+            msp: 1080
+        },
+        {
+            year: 2012,
+            msp: 1250
+        },
+        {
+            year: 2013,
+            msp: 1310
+        },
+        {
+            year: 2014,
+            msp: 1360
+        },
+        {
+            year: 2015,
+            msp: 1410
+        },
+        {
+            year: 2016,
+            msp: 1470
+        },
+        {
+            year: 2017,
+            msp: 1550
+        },
+        {
+            year: 2018,
+            msp: 1750
+        },
+        {
+            year: 2019,
+            msp: 1815
+        },
+        {
+            year: 2020,
+            msp: 1868
+        },
+        {
+            year: 2021,
+            msp: 1940
+        },
+        {
+            year: 2022,
+            msp: 2040
         }
     ])
+    const [crops, setCrops] = useState(["PADDY",
+        "JOWAR",
+        "BAJRA",
+        "MAIZE",
+        "RAGI",
+        "Tur (Arhar)",
+        "MOONG",
+        "URAD",
+        "COTTON",
+        "Groundnut",
+        "SUNFLOWER SEED",
+        "SOYABEAN",
+        "SESAMUM",
+        "NIGERSEED",
+        "WHEAT",
+        "BARLEY",
+        "GRAM",
+        "MASUR (LENTIL)",
+        "Rapeseed & Mustard",
+        "SAFFLOWER",
+        "TORIA",
+        "COPRA",
+        "DE-HUSKED COCONUT",
+        "JUTE"])
+
+    const [chosenFormat, setChosenFormat] = useState("line")
+    const [chartData, setChartData] = useState(lineData)
+    const [loading, setLoading] = useState(false)
+    const [chart, setChart] = useState()
+
+    const getCropMSPData = async (crop) => {
+        const response = await axios.get(`/data/msp/${crop}`)
+        if (response.hasOwnProperty("data")) {
+            return response.data.data
+        }
+        else return response.data
+    }
+
+    const handleCropChange = async (e) => {
+        setLoading(true)
+        chart.destroy()
+        const data = await getCropMSPData(e.target.value)
+        console.log(data);
+        setChartData(data.data)
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        if(chart) chart.destroy()
+        const mspChart = new Chart(
+            document.getElementById('acquisitions-balance'),
+            {
+                type: chosenFormat,
+                data: {
+                    labels: chartData.map(row => row.year),
+                    datasets: [
+                        {
+                            label: 'MSP (in ₹)',
+                            data: chartData.map(row => row.msp)
+                        }
+                    ]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Year"
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: "MSP (in ₹)"
+                            }
+                        }
+                    }
+                }
+            }
+        )
+        setChart(mspChart)
+    }, [chartData, chosenFormat])
+
+    return (
+        <>
+            <div className='d-flex flex-column p-1 h-100'>
+                <div className="d-flex justify-content-center flex-column">
+                    <h4>Minimum Support Price (MSP)</h4>
+                    <div className='d-flex justify-content-center'>
+                        <div>
+                            Select Crop:&nbsp;
+                            <select name="crop" id="crop" onChange={handleCropChange}>
+                                {
+                                    crops?.map(crop => {
+                                        return (
+                                            <><option value={crop}>{crop}</option></>
+                                        )
+                                    })
+                                }
+                            </select>
+                        </div>
+                        &nbsp;
+                        |
+                        &nbsp;
+                        <div>
+                            Select Chart Type: &nbsp;
+                            <select onChange={(e) => {
+                                if (e.target.value === "line") setChosenFormat("line")
+                                else setChosenFormat("bar")
+                            }}>
+                                <option value="line" selected>Line</option>
+                                <option value="bar">Bar</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div className="w-100 msp-chart" style={{ height: "90%" }}>
+                    {
+                        loading ?
+                            <div className="d-flex justify-content-center h-75 align-items-center flex-column">
+                                <Loader height="100px" width="100px" />
+                                Loading...
+                            </div>
+                            :
+                            // <Chart
+                            //     options={{
+                            //         data: chartData,
+                            //         primaryAxis,
+                            //         secondaryAxes,
+                            //         tooltip: false
+                            //     }}
+                            // />
+                            <></>
+                    }
+                    <canvas className='w-100' id="acquisitions-balance"></canvas>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export function WalletBalanceChart() {
+    const [balance, setBalance] = useState(0)
+    const [loading, setLoading] = useState(false)
+
     const primaryAxis = React.useMemo(
         () => ({
-            getValue: (datum) => datum.year,
+            getValue: (datum) => datum.date,
         }),
         []
     );
@@ -573,37 +672,108 @@ export function MSPChart() {
     const secondaryAxes = React.useMemo(
         () => [
             {
-                getValue: (datum) => datum.msp,
+                getValue: (datum) => datum.balance,
             },
         ],
         []
     );
 
-    const [chosenFormat, setChosenFormat] = useState(barData)
+    const getGraphPassbookData = async () => {
+        const response = await axios.get(`/web3/wallet/transactions`)
+        if (response.hasOwnProperty("data")) {
+            const data = response.data.allTransactions.map(transaction => {
+                return {
+                    date: new Date(transaction.createdAt).getTime(),
+                    balance: transaction.balance
+                }
+            })
+            return data
+        }
+        else return response.data
+    }
+
+    useEffect(() => {
+        setLoading(true)
+        getGraphPassbookData().then((data) => {
+            setLoading(false)
+            setBalance(data[data.length - 1].balance)
+            data = data.splice(0, 11)
+            new Chart(
+                document.getElementById('acquisitions-balance'),
+                {
+                    type: 'line',
+                    data: {
+                        labels: data.map(row => new Date(row.date).toLocaleString()),
+                        datasets: [
+                            {
+                                label: 'Balance (KCO)',
+                                data: data.map(row => row.balance)
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "Date & Time"
+                                },
+                                ticks: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: "Balance (KCO)"
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        })
+
+    }, [])
+
 
     return (
         <>
             <div className='d-flex flex-column p-1 h-100'>
-                <div className="d-flex justify-content-center">
-                    Select Chart Type: &nbsp;
-                    <select onChange={(e) => {
-                        if (e.target.value === "line") setChosenFormat(lineData)
-                        else setChosenFormat(barData)
-                    }}>
-                        <option value="line">Line</option>
-                        <option value="bar" selected>Bar</option>
-                    </select>
+                <div className="d-flex justify-content-center align-items-center flex-column">
+                    <div className="d-flex flex-column align-items-start justify-content-start w-100 p-3">
+                        <div className='small'>Total Balance</div>
+                        <div className='notranslate h4 d-flex align-items-end m-0'><img src={KCO} width="25px" alt="KCO" />&nbsp;{balance}.00</div>
+                        <hr className='hr hr-blurry w-100 m-2' />
+                    </div>
+                    <div className="w-100" style={{ height: "90%" }}>
+                        {
+                            loading ?
+                                <div className="d-flex justify-content-center h-75 align-items-center flex-column">
+                                    <Loader height="100px" width="100px" />
+                                    Loading...
+                                </div>
+                                :
+                                // <Chart
+                                //     options={{
+                                //         data: lineData,
+                                //         primaryAxis,
+                                //         secondaryAxes,
+                                //         tooltip: false
+                                //     }}
+                                // />
+                                <></>
+                        }
+                        <canvas className='w-100' id="acquisitions-balance"></canvas>
+                    </div>
                 </div>
-                <div className="w-100" style={{ height: "90%" }}>
-                    <Chart
-                        options={{
-                            data: chosenFormat,
-                            primaryAxis,
-                            secondaryAxes,
-                        }}
-                    />
-                </div>
-            </div>
+
+            </div >
         </>
     )
 }

@@ -1,7 +1,15 @@
-.management-widgets {
-    background-color: #f4f6f7;
-    min-height: 100vh;
+.management-widgets-container{
+    background-color: #ebebeb;
+    padding: 2rem 10rem;
+    padding-bottom: 10rem;
 }
+.management-widgets {
+    min-height: 100vh;
+    padding-bottom: 20vh;
+}
+/* div[widget-msp]{
+    background-color: black;
+} */
 
 .skeleton-widget {
     background: linear-gradient(270deg, #ecebeb, #f3f3f3);

@@ -16,7 +16,7 @@ export function CampaignContextProvider({children}) {
         const res = await getCampbyId(idtoUse)
         setActiveCampaign(res)
         localStorage.setItem('activeCamp',idtoUse)
-        navigate('/detailedCampaign',{replace:true})
+        navigate('/campaign/details',{replace:true})
     }
     const values = {
         activeCampaign,

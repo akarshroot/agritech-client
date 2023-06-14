@@ -23,7 +23,7 @@ function Dashboard() {
         {
             title: "Contribution History",
             id: "contribution-history"
-        },
+        }
     ])
 
     useEffect(() => {
@@ -44,14 +44,19 @@ function Dashboard() {
                 </div>
 
                 <div className="all-widgets-container row">
+                    <div className='col-md-6 col-lg-8 col-xl-4 p-3'>
+                        <div className="widget balance-widget">
+                            {renderWidget('wallet-balance')}
+                        </div>
+                    </div>
                     {
                         widgets.map((widget, key) => {
                             return (
-                                <div key={"DASHBOARD_WIDGETS_"+key} className='col-md-4 col-xl-3 m-5'>
+                                <div key={"DASHBOARD_WIDGETS_" + key} className='col-md-6 col-lg-4 col-xl-4 p-3'>
                                     <div className={`widget   ${loading ? "skeleton-widget" : ""}`} >
                                         {
                                             loading ? <></> :
-                                            <>
+                                                <>
                                                     {renderWidget(widget.id, widget.data)}
                                                 </>
                                         }
@@ -60,7 +65,7 @@ function Dashboard() {
                             )
                         })
                     }
-                    <div className="col-md-4 col-xl-3 m-5">
+                    <div className="col-md-4 col-xl-3 p-3">
                         <div className='widget'>
                             <CampaignWidget title={campaignWidget?.title} target={campaignWidget?.target} _id={campaignWidget?._id} contributors={campaignWidget?.contributors} deadline={campaignWidget?.deadline} dateCreated={campaignWidget?.dateCreated} />
                         </div>

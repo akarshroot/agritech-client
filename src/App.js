@@ -56,7 +56,7 @@ function App() {
                   <Route exact path='/farmfresh' element={<PrivateBody body={FarmFresh} />} />
 
                   <Route exact path='/agristore/product/:id' element={<PrivateBody body={ProductDetails} />} />
-                  <Route exact path='/detailedCampaign/:id' element={<PrivateBody body={CampaignDetails} />} />
+                  <Route exact path='/campaign/details/:id' element={<PrivateBody body={CampaignDetails} />} />
                   <Route exact path='/admin/panel' element={<PrivateBody body={AdminConsole} restricted={true} />} />
                   <Route exact path='/forbidden' element={<PublicBody body={Forbidden}/>} />
 
