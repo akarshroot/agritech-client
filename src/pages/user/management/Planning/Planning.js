@@ -175,6 +175,12 @@ function Planning() {
         setTimeout(() => { window.location.reload() }, 2000)
     }
 
+    const [launchCampaignModalShow, setLaunchCampaignModalShow] = useState(false)
+
+    function promptLaunchCampaign() {
+        setLaunchCampaignModalShow(!launchCampaignModalShow)
+    }
+
     useEffect(() => {
         if (currentUser) fetchUserPlans()
     }, [currentUser])
@@ -221,7 +227,7 @@ function Planning() {
                                                     <input placeholder='Item name' onChange={(e) => { handleChange(e, idx) }} type="text" name='item' className='form-input' />
                                                     <div className="yield-section d-flex w-100 align-items-center">
                                                         <input placeholder='Est. Yield / उपज' min={1} step={0.1} onChange={(e) => { handleChange(e, idx) }} type="number" name='yield' className='form-input' hidden={req.category == 'supplement'} />
-                                                        <div className="item-hints"  hidden={req.category == 'supplement'}>
+                                                        <div className="item-hints" hidden={req.category == 'supplement'}>
                                                             <div className="hint" data-position="4">
                                                                 <span className="hint-dot d-flex justify-content-center align-items-center fw-bold">i</span>
                                                                 <div className="hint-content bg-success text-white p-2 do--split-children d-none d-md-block">
@@ -273,6 +279,22 @@ function Planning() {
                     </Modal.Footer>
                 </Modal>
 
+                <Modal show={launchCampaignModalShow} onHide={setLaunchCampaignModalShow}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Launch a campign?</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Do you wish to launch a campaign alongside this plan?
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={setLaunchCampaignModalShow}>
+                            Cancel
+                        </Button>
+                        <Button type='submit' form="create-plan" variant="success" onClick={()=> navigate('/campaigns?launchcampaign=true')}>
+                            Sure, Lets Launch!
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
                 <div className="current-plans">
                     {
                         userPlans.length === 0 ? <>No plans created yet.</>
@@ -314,7 +336,7 @@ function Planning() {
                                                 </table>
                                             </div>
                                             <div className="action-center">
-                                                <button className="button-28" onClick={() => executePlan(plan._id)} disabled={plan.executing}>Execute Plan</button>
+                                                <button className="button-28" onClick={() => promptLaunchCampaign()} disabled={plan.executing}>Execute Plan</button>
                                                 <button className="button-28 delete-plan" onClick={() => deletePlan(plan._id)} disabled={plan.executing}>Delete Plan</button>
                                             </div>
                                         </div>
@@ -327,5 +349,5 @@ function Planning() {
         </div >
     )
 }
-
+// executePlan(plan._id)
 export default Planning

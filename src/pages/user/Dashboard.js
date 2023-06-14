@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { CampaignWidget, renderWidget } from '../../assets/widgets/Widgets'
 import { useUser } from '../../context/UserContext'
 import './Dashboard.css'
+import { Helmet } from 'react-helmet'
 
 function Dashboard() {
 
@@ -38,6 +39,9 @@ function Dashboard() {
 
     return (
         <>
+            <Helmet>
+                <title>Dashboard | AgriTech</title>
+            </Helmet>
             <div className={`dashboard-container px-3 theme-${theme}`}>
                 <div className='welcome-user'>
                     <h2>Welcome, {userData?.name}! </h2>
