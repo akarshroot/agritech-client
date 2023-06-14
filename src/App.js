@@ -26,6 +26,7 @@ import AdminConsole from './pages/user/AdminConsole';
 import Forbidden from './pages/public/Forbidden';
 import Loader from './assets/loader/Loader'
 import AgriNeeds from './pages/user/agristore/AgriNeeds';
+import Whitepaper from './pages/public/Whitepaper';
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
                   <Route exact path='/agristore/product/:id' element={<PrivateBody body={ProductDetails} />} />
                   <Route exact path='/campaign/details/:id' element={<PrivateBody body={CampaignDetails} />} />
                   <Route exact path='/admin/panel' element={<PrivateBody body={AdminConsole} restricted={true} />} />
+                  <Route exact path='/docs/whitepaper' element={<PublicBody body={Whitepaper}/>} />
                   <Route exact path='/forbidden' element={<PublicBody body={Forbidden}/>} />
 
 

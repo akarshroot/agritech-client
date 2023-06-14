@@ -16,6 +16,7 @@ import QRCodeStyling from "qr-code-styling";
 import { ToastContainer, toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import { renderWidget } from '../../assets/widgets/Widgets'
+import { Helmet } from 'react-helmet'
 
 function TransferModule() {
   const [show, setShow] = useState(false)
@@ -359,7 +360,9 @@ function Wallet() {
 
   return (
     <div className="container py-2">
-
+      <Helmet>
+        <title>Wallet | AgriTech</title>
+      </Helmet>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -416,7 +419,7 @@ function Wallet() {
         <div className='col-xl-4 col-md-5 col-sm-12 m-3 neumorphism-container'>
           {renderWidget('wallet-balance')}
         </div>
-        <div className='col-xl-3 col-md-12 col-sm-12 m-3 mb-md-4 neumorphism-container'>
+        <div className='col-xl-3 col-md-12 col-sm-12 m-3 mb-md-4 mb-xl-3 neumorphism-container'>
           <TransferModule />
         </div>
       </div>
