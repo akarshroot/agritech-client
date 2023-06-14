@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import ManagementContext from '../../../context/ManagementContext';
 import Product from './Product';
 import './FarmFresh.css'
+import Button from 'react-bootstrap/esm/Button';
 
 export default function FarmFresh() {
   const productSelect = [{
@@ -83,7 +84,7 @@ export default function FarmFresh() {
 
   return (
     <>
-      <div className='p-5 d-flex justify-content-around'>
+      <div className='p-5 d-flex justify-content-around shadow  outer-prod'>
         <h2>Buy Exclusive Products Direct From The Farms</h2>
         <button onClick={showModal} className='btn btn-primary'>Add products from the inventory</button>
       </div>
@@ -133,18 +134,28 @@ export default function FarmFresh() {
             (receiverProduct.map((e,i)=>{
               if(i!==0){
               return (
-              <div className="col-md-3 card m-3">
-                <div className="card-body d-flex justify-content-between">
-                  <div className='d-flex flex-column'>
-                    <div><h4>Category : {e.category}</h4></div>
-                    <div><h4>Item : {e.item}</h4></div>
-                  </div>
-                  <div className='d-flex flex-column'>
-                    <div><h5>Quantity : {e.quantity}</h5></div>
-                    {e.estCost && <div>{e.estCost} KCO</div>}
-                  </div>
-                </div>
-              </div>
+                <div className=' product-container col-md-3 border shadow p-5'>
+                    <h5>{e.item}</h5>
+                    <h5>({e.category})</h5>
+                    <hr className='style-two' />
+                    <span>Price: {e.estCost} KCO</span>
+                    <div>Quantity: {e.quantity}</div>
+                    <hr className='style-two' />
+                    <div className='overlay-box'>
+                        <div className='inner d-flex justify-content-center align-items-center'>
+                            <div className="d-flex justify-content-around flex-column">
+                                <div>
+                                    <Button variant="warning w-100" >Add To Cart</Button>
+                                </div>
+                                <div className='my-4'>
+                                    <Button variant="success p-2 w-100">Buy Now</Button>
+                                </div>
+                                <Button variant="outline-success w-100" >View Details</Button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+              
             )}
           }))
           :

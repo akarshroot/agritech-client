@@ -1,3 +1,39 @@
 .inventory-drop{
     color: #003580;
 }
+
+.product-container {
+    border-radius: 12px;
+    margin: 10px;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.outer-prod{
+    background-color: #f4f6f7;
+}
+
+.overlay-box{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    opacity: 0;
+    border-radius: 5px;
+    visibility: hidden;
+    transition: 0.5s;
+}
+
+.inner{
+    position: relative;
+    height: 100%;
+}
+
+.product-container:hover .overlay-box{
+    cursor: pointer;
+    visibility: visible;
+    opacity: 1;
+}
