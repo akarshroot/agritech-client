@@ -3,7 +3,7 @@ import { useUser } from '../../context/UserContext'
 import { getAllCamps, getCollectonCampbyId } from '../../interceptors/serverAPIs'
 import Button from 'react-bootstrap/esm/Button';
 import { ContributeModal } from './Campaigns';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FontAwesome from 'react-fontawesome';
 import Loader from '../../assets/loader/Loader';
 import './Dashboard.css'
@@ -28,6 +28,7 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
         navigate('/campaign/details/'+_id)
     }
 
+    const deadline = parseInt(((props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))
 
     return (
         <div onClick={handleClick} className='widget-container-campaign-v2 bg-white rounded m-3'>
@@ -56,7 +57,7 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }){
                     <span className="subtext">contributors</span>
                 </div>
                 <div className="time-remaining">
-                    <span className="quantity">{parseInt(((props.deadline * 1000) - Date.now()) / (1000 * 60 * 60 * 24))}d</span><br />
+                    <span className="quantity">{deadline>0? (deadline+"d"):<span className='text-danger' ><b>Expired</b></span>}</span><br />
                     <span className="subtext">remaining</span>
                 </div>
             </div>

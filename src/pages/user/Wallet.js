@@ -11,7 +11,6 @@ import CurrencyIconComponent from '../../assets/widgets/CurrencyIconComponent'
 import Spinner from 'react-bootstrap/Spinner'
 import './Wallet.css'
 import StoreContext from '../../context/StoreContext'
-import QRCode from 'qrcode'
 import KCO from '../../assets/icons/currencyIcon.png'
 import QRCodeStyling from "qr-code-styling";
 import { ToastContainer, toast } from 'react-toastify'
@@ -126,21 +125,23 @@ export function TransactionHistory({ label, userId, tx, links }) {
     <div className='col-12 table-responsive'>
       <legend>{label}</legend>
       <p onClick={hideShowHashes} className='text-end Camplink'>{!showHashes ? 'Show' : 'Hide'} hashes</p>
-      <Table className='w-100' striped bordered>
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th>To/From</th>
-            <th>Amount</th>
-            <th>Time</th>
-            {showHashes && <th>TransactionHash</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {userId && tx.length ? tx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} {...options} />)
-            : <tr><td colSpan='5'>No transactions yet</td></tr>}
-        </tbody>
-      </Table>
+      <div className={`${label.split(' ').join('-')}-Table`}>
+        <Table className='w-100' striped bordered>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>To/From</th>
+              <th>Amount</th>
+              <th>Time</th>
+              {showHashes && <th>TransactionHash</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {userId && tx.length ? tx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} {...options} />)
+              : <tr><td colSpan='5'>No transactions yet</td></tr>}
+          </tbody>
+        </Table>
+      </div>
     </div>
   )
 }

@@ -44,3 +44,11 @@ box-shadow:  5px 5px 31px #cccccc,
              -5px -5px 31px #ffffff;
              margin-bottom: 30px;
 }
+
+.Wallet-Transactions-Table{
+    max-height: 50vh;
+    overflow-y: scroll;
+}
+.Your-Contributions-Table{
+
+}
