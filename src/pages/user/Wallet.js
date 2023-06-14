@@ -14,7 +14,8 @@ import StoreContext from '../../context/StoreContext'
 import KCO from '../../assets/icons/currencyIcon.png'
 import QRCodeStyling from "qr-code-styling";
 import { ToastContainer, toast } from 'react-toastify'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { renderWidget } from '../../assets/widgets/Widgets'
 
 function TransferModule() {
   const [show, setShow] = useState(false)
@@ -79,7 +80,7 @@ function TransferModule() {
   )
 }
 
-export function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, txHash, camp }) {
+export function Transaction({ showHashes, sno, receiverId, userId, createdAt, amount, balance, txHash, camp }) {
 
   const recivedPaid = receiverId === userId
   const formattedDate = new Date(createdAt).toISOString().replace(/T/, ' ').replace(/\..+/, '').split(' ')
@@ -88,11 +89,12 @@ export function Transaction({ showHashes, sno, receiverId, userId, createdAt, am
       <tr>
         <td>{sno}</td>
         {camp
-          ? <td><Link to={'/campaign/details/'+receiverId} className='Camplink'>{receiverId}</Link></td>
+          ? <td><Link to={'/campaign/details/' + receiverId} className='Camplink'>{receiverId}</Link></td>
           : <td>{receiverId}</td>
         }
         <td className={`text-${userId && (recivedPaid ? 'success' : 'danger')}`}
         >{userId && (recivedPaid ? '+' : '-')}{amount}</td>
+        <td>{balance}</td>
         <td>
           <h6 className='d-inline'>on:</h6> {formattedDate[0]}
           <br />
@@ -125,23 +127,22 @@ export function TransactionHistory({ label, userId, tx, links }) {
     <div className='col-12 table-responsive'>
       <legend>{label}</legend>
       <p onClick={hideShowHashes} className='text-end Camplink'>{!showHashes ? 'Show' : 'Hide'} hashes</p>
-      <div className={`${label.split(' ').join('-')}-Table`}>
-        <Table className='w-100' striped bordered>
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>To/From</th>
-              <th>Amount</th>
-              <th>Time</th>
-              {showHashes && <th>TransactionHash</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {userId && tx.length ? tx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} {...options} />)
-              : <tr><td colSpan='5'>No transactions yet</td></tr>}
-          </tbody>
-        </Table>
-      </div>
+      <Table className='w-100' striped bordered>
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>To/From</th>
+            <th>Amount</th>
+            <th>Balance (KCO)</th>
+            <th>Time</th>
+            {showHashes && <th>TransactionHash</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {userId && tx.length ? tx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} {...options} />)
+            : <tr><td colSpan='6'>No transactions yet</td></tr>}
+        </tbody>
+      </Table>
     </div>
   )
 }
@@ -339,8 +340,8 @@ function Wallet() {
       getBalanceFormServer(userData.walletAddress)
       getTransactions().then(e => {
         console.log(e)
-        setWalletTx(e.wallet.reverse())
-        setCampsTx(e.camps.reverse())
+        setWalletTx(e.wallet)
+        setCampsTx(e.camps)
 
       })
     } else getUserData()
@@ -357,7 +358,7 @@ function Wallet() {
   }
 
   return (
-    <div className="container py-4">
+    <div className="container py-2">
 
       <ToastContainer
         position="top-right"
@@ -372,15 +373,13 @@ function Wallet() {
         theme="light"
       />
       <div className='row align-items-center'>
-        <div className='col-xl-2 col-md-5 mb-3'>
+        <div className='col-xl-4 col-md-6 col-sm-12 p-3 justify-content-center d-flex flex-column align-items-center'>
           <div className='qr-code-scan'>
             <div>
               <div className='qrcode-container' ref={canvasRef} />
             </div>
-            scan to get Address
+            <div className='w-100'>Scan to get address</div>
           </div>
-        </div>
-        <div className='col-xl-5 col-md-7 p-4'>
           <Table responsive>
             <tbody>
               {
@@ -397,8 +396,7 @@ function Wallet() {
                   </td>
                 </tr>
               }
-
-              <tr>
+              {/* <tr>
                 <td>
                   <h3>Balance:</h3>
                 </td>
@@ -406,7 +404,7 @@ function Wallet() {
                   <h4 className='notranslate'> <CurrencyIconComponent size='35' adjustY={'-3%'} /> {!balanceLoader ? balance : "Loading..."} KCO
                   </h4>
                 </td>
-              </tr>
+              </tr> */}
 
             </tbody>
           </Table>
@@ -415,7 +413,10 @@ function Wallet() {
             <AddKCOModal {...buyModalOptions} />
           </div>
         </div>
-        <div className='col-xl-5 p-4 neumorphism-container'>
+        <div className='col-xl-4 col-md-5 col-sm-12 m-3 neumorphism-container'>
+          {renderWidget('wallet-balance')}
+        </div>
+        <div className='col-xl-3 col-md-12 col-sm-12 m-3 mb-md-4 neumorphism-container'>
           <TransferModule />
         </div>
       </div>

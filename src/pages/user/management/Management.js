@@ -37,7 +37,7 @@ function Management(props) {
     </Helmet>
       <div className={`theme-${theme} management-widgets w-100`}>
         <div className="row m-0">
-          <div className='col-md-6 col-lg-8 col-xl-6 p-3'>
+          <div className='col-md-6 col-lg-8 col-xl-5 p-3'>
             <div className="widget">
               {
                 renderWidget('msp')
