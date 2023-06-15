@@ -10,6 +10,7 @@ import farmFresh from '../../../assets/images/farmFresh.jpg'
 import SideBar from './SideBar';
 import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent';
 import tag from '../../../assets/images/tag.png'
+import logo from '../../../assets/images/logoFF.png'
 import rating from '../../../assets/images/rating.png'
 
 export default function FarmFresh() {
@@ -89,9 +90,9 @@ export default function FarmFresh() {
 
   return (
     <>
-      <div className='p-5 d-flex justify-content-around shadow  outer-prod'>
-        <h2>Buy Exclusive Products Direct From The Farms</h2>
-        <button onClick={showModal} className='btn btn-primary'>Add products from the inventory</button>
+      <div className=' row justify-content-around shadow  outer-prod'>
+        <h2 className='col-md-8'><img src={logo} alt='' width='20%' />  Buy Exclusive Products Direct From The Farms</h2>
+        <div className='col-md-4 d-flex align-items-center'><button onClick={showModal} className='btn btn-primary'>Add products from the inventory</button></div>
       </div>
       <Modal show={isOpen} onHide={hideModal}>
         <Modal.Header>
