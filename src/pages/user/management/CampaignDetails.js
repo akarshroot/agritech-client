@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import DOMPurify from 'dompurify'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
@@ -19,24 +20,24 @@ import { createVoteReq, usevoteReq, voteForReq } from '../../../interceptors/web
 import './CampaignDetails.css'
 
 
-function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal }) {
+function CreatorDetails({ refPass,isOwner, imgUrl, name, email, walletAddress, openModal }) {
   const [showWalletAdd,setShowWalletAdd] = useState(false);
-  return (<>
-    <div>
+  return (
+    <div ref={refPass}>
       <div>
         <div className='d-flex justify-content-end pe-1 pt-1'>
-          <Button onClick={openModal} variant='success'>Contribute Here</Button>
+          <button onClick={openModal} className='campDonateButton'>Contribute Here</button>
         </div>
       </div>
-      <div className='d-flex flex-column justify-content-around m-3'>
+      <div className='d-flex flex-column justify-content-center p-3 m-3 border h-100'>
+        {!isOwner
+          ? <legend>Creator</legend>
+          : <legend className='bg-success bg-opacity-50 rounded '>Your Campaign</legend>
+        }
         <div className='p-2'>
           <img height='156px' width='156px' className='rounded-circle' src={imgUrl} alt='User profile Img here' />
         </div>
         <div>
-          {!isOwner
-            ? <legend>Creator</legend>
-            : <legend className='bg-success bg-opacity-50 rounded '>Your Campaign</legend>
-          }
           <Table responsive>
             <tbody className='text-start'>
               <tr>
@@ -56,37 +57,49 @@ function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal
             </tbody>
           </Table>
           <span onClick={()=>{setShowWalletAdd(!showWalletAdd)}} className='Camplink m-4'>{!showWalletAdd? "Show" : "Hide"} Wallet Address</span>
+          <div className='ViewProfileButtonContainer'>
+              <button className='ViewProfileButton'>
+                View Profile
+              </button>
+          </div>
         </div>
       </div>
     </div>
-  </>
   )
 }
-function CampaignDescription({description}){
+
+function CampaignDescription({refPass,description}){
   return (
-    <div className='text-start p-3 ps-5'>
+    <div ref={refPass} className='text-start p-3 ps-5'>
       <h3 className='p-0 m-0'>
           Description
       </h3>
       <hr/>
-      <div className='descriptionContent' dangerouslySetInnerHTML={{__html: description}}>
+      <div className='descriptionContent'>
+        <div dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(description)}}>
+        </div>
+      </div>
+      <hr/>
+    </div>
+  )
+}
+
+function CampaignPledgesAndPromises({refPass}){
+  return (
+    <div ref={refPass}>
+      <div className='text-start p-3'>
+        <h3 className='p-0 m-0'>
+            Plegdes and Promises
+        </h3>
       </div>
     </div>
   )
 }
-function CampaignPledgesAndPromises(){
-  return (
-    <div className='text-start p-3 ps-5'>
-      <h3 className='p-0 m-0'>
-          Plegdes and Promises
-      </h3>
-    </div>
-  )
-}
-function CampaignInfo({ title, raisedAmount, target, contributors }) {
+
+function CampaignInfo({ refPass,title, raisedAmount, target, contributors,featuredImage }) {
   const { currentUser } = useUser()
   return (
-    <div>
+    <div ref={refPass}>
       <div className='p-3'>
         <div className='text-start'>
           <h1>{title}</h1>
@@ -98,36 +111,168 @@ function CampaignInfo({ title, raisedAmount, target, contributors }) {
         </div>
       </div>
       <hr />
-      <div className='col-10 ms-4 text-start'>
+      <div className='campFeaturedImageContainer' >
+          <img className='campFeaturedImage w-100' src={featuredImage} alt='FeaturedImage' />
+      </div>
+      <div className='mx-5 text-start '>
         <div>
           <CampaignPrograssBar
             raisedAmount={raisedAmount}
             target={target}
           />
         </div>
-        <Table>
+        <div className=''>
+          <Table>
+            <tbody>
+              <tr>
+                <th>Amount Raised so far:</th>
+                <td>{raisedAmount}</td>
+                <td>KCO</td>
+              </tr>
+              <tr>
+                <th>Amount Target:</th>
+                <td>{target}</td>
+                <td>KCO</td>
+              </tr>
+              <tr>
+                <th>Amount Required:</th>
+                <td>{parseInt(target) - parseInt(raisedAmount)}</td>
+                <td>KCO</td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TransactionsHistory({ refPass,tx }) {
+  return (
+    <div ref={refPass}>
+      <div>
+        <legend>Campaign Transactions</legend>
+        <Table striped bordered size="sm">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>To</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>TransactionHash</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr>
-              <th>Amount Raised so far:</th>
-              <td>{raisedAmount}</td>
-              <td>KCO</td>
-            </tr>
-            <tr>
-              <th>Amount Target:</th>
-              <td>{target}</td>
-              <td>KCO</td>
-            </tr>
-            <tr>
-              <th>Amount Required:</th>
-              <td>{parseInt(target) - parseInt(raisedAmount)}</td>
-              <td>KCO</td>
-            </tr>
+            {tx.length ? tx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} />)
+              : <tr><td colSpan='5'>No transactions yet</td></tr>}
           </tbody>
         </Table>
       </div>
     </div>
   )
 }
+
+function CampaignVotesinfo({ refPass,isOwner, voteRequests, _id, contributors,userId }) {
+  const [show, setShow] = useState(false);
+  function handleShow() {
+    setShow(!show);
+  }
+  const modalData = {
+    show,
+    handleShow
+  }
+  return (
+    <div ref={refPass}>
+      {isOwner && (
+          <Button onClick={handleShow} variant='success'>+ Make a Request</Button>
+      )}
+      <div>
+        {voteRequests.length === 0 ? <div className='py-3'>No Requests</div>
+          : (
+            <div>
+              <hr />
+              <div className='row'>
+                {voteRequests?.map((data, i) => {
+                  console.log(data)
+                  return (
+                    <WithdrawRequests
+                      isOwner={isOwner}
+                      toPersonal={userId===data.receiver}
+                      key={'votesContainerKey' + i}
+                      cid={_id}
+                      voters={contributors.length}
+                      {...data} />
+                  )
+                })}
+              </div>
+            </div>
+          )
+        }
+      </div>
+      <CreateRequestModal {...modalData} />
+    </div>
+  )
+}
+
+function CampaignPlanDetails({refPass,title,requirements,...props}){
+  return(
+    <div ref={refPass}>
+      <div className='p-3 text-start'>
+        <h3 className='p-0 m-0'>
+          Plan - {title}
+        </h3>
+      </div>
+      <div className='CampPlanRequirements rounded row m-0 p-2'>
+          {requirements.map((e,key) => {
+            return(
+              <div className='col-md-4' key={'campPlanRequirements'+key}>
+                <div className='eachRequiredProduct rounded bg-white p-3 shadow'>
+                  <Table striped>
+                    <tbody>
+                      <tr>
+                        <th>Type:</th>
+                        <td>{e.category}</td>
+                      </tr>
+                      <tr>
+                        <th>Item:</th>
+                        <td>{e.item}</td>
+                      </tr>
+                      <tr>
+                        <th>Price:</th>
+                        <td>{e.estCost}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
+              </div>
+            )
+          })}
+      </div>
+    </div>
+  )
+}
+
+function CampaignNavigation({refs,title}){
+  console.log(refs)
+  return(
+    <div className='CampaignNavigationNavigation p-3'>
+      <div className='innerCampaignNavigationNavigation p-4 shadow rounded'>
+        <h5 className='m-0'>
+          {title}
+        </h5>
+        <hr/>
+        <ul>
+          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.details.current.scrollIntoView()}}>Start</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.description.current.scrollIntoView()}}>Description</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.pledges.current.scrollIntoView()}}>Plegdes and Promises</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.votes.current.scrollIntoView()}}>Withdraw requests</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.plans.current.scrollIntoView()}}>Plan</button></li>
+        </ul>
+      </div>
+    </div>
+  )
+}
+
 ///
 function CampaignPrograssBar({ raisedAmount, target }) {
 
@@ -507,120 +652,6 @@ function Transaction({ sno, receiverId, createdAt, amount, txHash }) {
   )
 }
 ///
-function TransactionsHistory({ tx }) {
-  return (
-    <div>
-      <div>
-        <legend>Campaign Transactions</legend>
-        <Table striped bordered size="sm">
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>To</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>TransactionHash</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tx.length ? tx.map((e, i) => <Transaction key={'transactionHashKey' + i} sno={i + 1} {...e} />)
-              : <tr><td colSpan='5'>No transactions yet</td></tr>}
-          </tbody>
-        </Table>
-      </div>
-    </div>
-  )
-}
-
-function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors,userId }) {
-  const [show, setShow] = useState(false);
-  function handleShow() {
-    setShow(!show);
-  }
-  const modalData = {
-    show,
-    handleShow
-  }
-  return (
-    <div>
-      {isOwner && (
-          <Button onClick={handleShow} variant='success'>+ Make a Request</Button>
-      )}
-      <div>
-        {voteRequests.length === 0 ? <div className='py-3'>No Requests</div>
-          : (
-            <div>
-              <hr />
-              <div className='row'>
-                {voteRequests?.map((data, i) => {
-                  console.log(data)
-                  return (
-                    <WithdrawRequests
-                      isOwner={isOwner}
-                      toPersonal={userId===data.receiver}
-                      key={'votesContainerKey' + i}
-                      cid={_id}
-                      voters={contributors.length}
-                      {...data} />
-                  )
-                })}
-              </div>
-            </div>
-          )
-        }
-      </div>
-      <CreateRequestModal {...modalData} />
-    </div>
-  )
-}
-
-function CampaignPlanDetails({title,requirements,...props}){
-  console.log(props)
-  return(
-    <div>
-      <div className='text-start'>
-        <div className='p-4'>
-          <h3>
-            Plan - {title}
-          </h3>
-        </div>
-        <div className='CampPlanRequirements rounded row m-0 p-2'>
-            {requirements.map((e,key) => {
-              return(
-                <div className='col-md-4' key={'campPlanRequirements'+key}>
-                  <div className='eachRequiredProduct rounded bg-white p-3 shadow'>
-                    <Table striped>
-                      <tbody>
-                        <tr>
-                          <th>Type:</th>
-                          <td>{e.category}</td>
-                        </tr>
-                        <tr>
-                          <th>Item:</th>
-                          <td>{e.item}</td>
-                        </tr>
-                        <tr>
-                          <th>Price:</th>
-                          <td>{e.estCost}</td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </div>
-                </div>
-              )
-            })}
-        </div>
-      </div>
-    </div>
-  )
-}
-/*
-category: "supplement"
-estCost: 399
-isProduct: false
-item: "Fertilizer"
-quantity: 5
-*/
 
 
 export default function CampaignDetails() {
@@ -629,13 +660,31 @@ export default function CampaignDetails() {
   const { userData, loadingUser, getUserData } = useUser()
   const [show, setShow] = useState(false);
   const params = useParams()
+  //REFERENCES
+  
+  const CreatorDetailsID = useRef()
+  const CampaignDescriptionID = useRef()
+  const CampaignPledgesAndPromisesIDs = useRef()
+  const CampaignInfoID = useRef()
+  const CampaignPlanDetailsID = useRef()
+  const CampaignVotesinfoID = useRef()
+
+  const refSForNav={
+    details:CreatorDetailsID,
+    description:CampaignDescriptionID,
+    pledges:CampaignPledgesAndPromisesIDs,
+    info:CampaignInfoID,
+    plans:CampaignPlanDetailsID,
+    votes:CampaignVotesinfoID
+
+  }
+  //REFERENCES
 
   function handleShow() {
     setShow(!show)
   }
   async function getCampaignData(id){
     const resdata = await getCampbyId(id)
-    console.log("Campdata",resdata)
     changeActiveCampaign(resdata)
   }
 
@@ -664,27 +713,28 @@ export default function CampaignDetails() {
   }
   const isOwner = userData._id === activeCampaign.manager._id
 
-  console.log(activeCampaign)
+  console.log("Active Campaign--->",activeCampaign)
 
 
+  const valuesForCampaignVotesInfo= {
+    isOwner:isOwner, 
+    userId : userData._id,
+    _id:activeCampaign._id,
+    contributors:activeCampaign.contributors,
+    voteRequests:activeCampaign.voteRequests
+  }
 
   return (
     <div className='container py-4'>
       <div className='CampaignDetailsPageContainer shadow'>
-        <CreatorDetails {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
-        <CampaignInfo {...activeCampaign} />
-        <CampaignDescription description={activeCampaign.description} />
-        <CampaignPledgesAndPromises />
-        <CampaignPlanDetails {...activeCampaign.associatedPlan}/>
-        <CampaignVotesinfo 
-          isOwner={isOwner} 
-          userId = {userData._id}
-          _id={activeCampaign._id}
-          contributors={activeCampaign.contributors}
-          voteRequests={activeCampaign.voteRequests}
-        />
-        {activeCampaign.campaignTransactions && isOwner && <TransactionsHistory tx={activeCampaign.campaignTransactions} />
-        }
+        <CreatorDetails refPass={CreatorDetailsID} {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
+        <CampaignInfo refPass={CampaignInfoID} {...activeCampaign} />
+        <CampaignDescription refPass={CampaignDescriptionID} description={activeCampaign.description} />
+        <CampaignPledgesAndPromises refPass={CampaignPledgesAndPromisesIDs} />
+        <CampaignPlanDetails refPass={CampaignPlanDetailsID} {...activeCampaign.associatedPlan}/>
+        <CampaignVotesinfo refPass={CampaignVotesinfoID} {...valuesForCampaignVotesInfo} />
+        {(activeCampaign.campaignTransactions && isOwner)? <TransactionsHistory tx={activeCampaign.campaignTransactions} />:<div></div>}
+        <CampaignNavigation refs={refSForNav} title={activeCampaign.title} />
         <ContributeModal {...contributeModalData} />
       </div>
     </div>
