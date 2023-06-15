@@ -6,24 +6,100 @@
     width: 100%;
     grid-template-areas: 
     "widget1 widget1 widget1 widget1 widget0"
-    "widget2 widget2 widget2 widget2 widget2"
-    "widget3 widget3 widget3 widget3 widget3"
-    "widget5 widget5 widget5 widget5 widget5"
-    "widget4 widget4 widget4 widget4 widget4"
-    "widget6 widget6 widget6 widget6 widget6"
+    "widget7 widget7 widget2 widget2 widget2"
+    "widget7 widget7 widget3 widget3 widget3"
+    "widget7 widget7 widget5 widget5 widget5"
+    "widget7 widget7 widget4 widget4 widget4"
+    "widget7 widget7 widget6 widget6 widget6"
     ;
+    /* grid-template-columns:1fr; */
 }
 .CampaignDetailsPageContainer>div{
     background-color: white;
     padding: 0.5rem;
+    height:100%;
 }
-.CampaignDetailsPageContainer>div:nth-child(1){height:100%;grid-area: widget0;} /* User */
-.CampaignDetailsPageContainer>div:nth-child(2){height:100%;grid-area: widget1;} /* Details */
-.CampaignDetailsPageContainer>div:nth-child(3){min-height:20vh;height:100%;grid-area: widget2;} /* Description */
-.CampaignDetailsPageContainer>div:nth-child(4){height:100%;grid-area: widget3;} /* Pledges and Promises */
-.CampaignDetailsPageContainer>div:nth-child(5){height:100%;grid-area: widget4;} /* vote Requests */
-.CampaignDetailsPageContainer>div:nth-child(6){height:100%;grid-area: widget5;} /* Plan */
-.CampaignDetailsPageContainer>div:nth-child(7){height:100%;grid-area: widget6;} /* Transaction History */
+.CampaignDetailsPageContainer>div:nth-child(1){grid-area: widget0;} /* User */
+.CampaignDetailsPageContainer>div:nth-child(2){grid-area: widget1;} /* Details */
+.CampaignDetailsPageContainer>div:nth-child(3){grid-area: widget2;} /* Description */
+.CampaignDetailsPageContainer>div:nth-child(4){grid-area: widget3;} /* Pledges and Promises */
+.CampaignDetailsPageContainer>div:nth-child(5){grid-area: widget4;} /* vote Requests */
+.CampaignDetailsPageContainer>div:nth-child(6){grid-area: widget5;} /* Plan */
+.CampaignDetailsPageContainer>div:nth-child(7){grid-area: widget6;} /* Transaction History */
+
+.CampaignNavigationNavigation{
+    height:100%;
+    grid-area: widget7;
+    position: relative;
+}
+.innerCampaignNavigationNavigation{
+    position: sticky;
+    top: 5%;
+}
+.CampaignNavigationNavigation ul{
+    padding: 1rem;
+    list-style: '↳';
+}
+.CampaignNavigationNavigation ul li{
+    text-align: left;
+    padding: 0.5rem 0;
+}
+
+.campNavInternalLinkingButton{
+    background-color: transparent;
+    border: none;
+    color: var(--c1);
+    text-decoration: underline;
+}
+.campNavInternalLinkingButton:hover{
+    color: var(--c0);
+}
+.campFeaturedImageContainer{
+    overflow: hidden;
+}
+.campFeaturedImage{
+    aspect-ratio:2;
+    transition-duration: 0.3s;
+    scale: 1.1;
+}
+.campFeaturedImage:hover{
+    scale: 1;
+}
+.campDonateButton{
+    background-color: var(--c1);
+    color: white;
+    padding: 0.5rem 4rem 0.5rem 3rem;
+    font-weight: 500;
+    font-size: 2rem;
+    border-radius: 10px;
+    border: none;
+    position: relative;
+    transition-duration: 0.3s;
+}
+.campDonateButton::after{
+    position: absolute;
+    content: '➔';
+    transition-duration: 0.3s;
+    padding-left: 0.5rem;
+}
+.campDonateButton:hover.campDonateButton::after{
+    padding-left: 1rem;
+}
+.ViewProfileButton{
+    background-color: var(--c2);
+    color: white;
+    padding: 0.5rem 2rem;
+    font-weight: 500;
+    border-radius: 10px;
+    border: none;
+    margin: 2rem;
+    transition-duration: 0.3s;
+}
+.ViewProfileButton:hover{
+    background-color: var(--c1);
+}
+
+
 
 .options-Bg{
     background-color: white;
@@ -47,7 +123,17 @@
     border-bottom: none;
     border-right: none;
 }
-/* .CampPlanRequirements{
-    background-color: #eee;
-    box-shadow: inset 0px 0px 20px -15px black;
+/* .descriptionContent{
+    text-align: justify;
+    padding: 1rem 5rem;
+}
+.descriptionContent img{
+    height: 45% !important;
+    width: 45% !important;
+    position: relative;
+    left: 50%;
+    translate: -50% 0%;
+    border-radius: 10px;
+    padding: 0.25rem;
+    border: solid 1px gray;
 } */

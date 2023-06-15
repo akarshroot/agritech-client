@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import DatePicker from "react-datepicker"
-import PropTypes from 'prop-types'
+import PropTypes, {func} from 'prop-types'
 import FontAwesome from 'react-fontawesome';
 import Spinner from 'react-bootstrap/esm/Spinner'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
@@ -306,8 +306,8 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
   }, [userData])
 
 
-  function handleSelectPlan(id, ele) {
-    selectPlan(id)
+  function handleSelectPlan(plan) {
+    selectPlan(plan)
     secondTermsHandler()
   }
 
@@ -322,14 +322,14 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
             </div>)
             : plans?.length
               ? plans.map((plan, key) => {
-                const styleColor = selectedPlan === plan._id ? 'borderS' : plan.executing ? 'borderE' : ''
+                const styleColor = selectedPlan?._id === plan._id ? 'borderS' : plan.executing ? 'borderE' : ''
                 return (
-                  <div onClick={(e) => handleSelectPlan(plan._id, this)} key={'EachUserPlanKey' + key} className='EachUserPlan col-11'>
+                  <div onClick={() => handleSelectPlan(plan)} key={'EachUserPlanKey' + key} className='EachUserPlan col-11'>
                     <div className={`plan planBorder newEachPlanShadow ${styleColor}`} >
                       <div className="d-flex align-items-center justify-content-between">
                         <h5>{plan.title}</h5>
                         {
-                          selectedPlan === plan._id && <div className="alert alert-primary p-1 m-0">&#10004; Selected</div>
+                          selectedPlan._id === plan._id && <div className="alert alert-primary p-1 m-0">&#10004; Selected</div>
                         }
                       </div>
                       <hr className="style-two" />
@@ -409,12 +409,78 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
   )
 }
 
-function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id}){
-  const [saved,setSaved] = useState(false)
+/*
+{
+  crop:'',
+  quantity:'',
+  discount:'',
+  unit:'Kg',
+}
+{crop:'',quantity:'',discount:'',unit:'Kg'}
+*/
+
+function DiscountPromise({cropsArr,promises,setPromises,handleAddPromise,KCOLimit}){
   
+  const [crop,setCrop] = useState(cropsArr[0].item)
+  const quantityInput = useInput('number','quantity?')
+  const discountInput = useInput('number','discount here')
+  const [unit,setUnit] = useState('kilogram')
+  
+  console.log(crop)
+
+  function handleFormSubmit(e){
+    e.preventDefault()
+    // saved,crop,quantity,discount,unitKg'
+    handleAddPromise(true,crop,quantityInput.value,discountInput.value,unit)
+    setCrop(cropsArr[0].item)
+    quantityInput.onChange('')
+    discountInput.onChange('')
+    setUnit('kilogram')
+  }
+
+  return(
+    <div className='border border-1 border-success rounded p-1'>
+      <form onSubmit={handleFormSubmit}>
+        <input {...discountInput} />
+        % discount on my yeild of <br/>
+        <select onChange={(e) => {setCrop(e.target.value)}}>
+          {cropsArr.map((e,i) => (
+            <option value={e.item} key={'eachCropOption'+i+'for'+promises[promises.length-1]?.promiseId}>
+              {e.item}
+            </option>))}
+        </select>for up to <br/>
+        <input {...quantityInput} /> 
+         <br/>
+        <select defaultValue={'kilogram'} onChange={(e)=>setUnit(e.target.value)}>
+          <option value={'kilogram'}>{'(Kg)'}Kilogram</option>
+          <option value={'gram'}>{'(g)'}Gram</option>
+          <option value={'quintal'}>{'(q)'}Quintal</option>
+          <option value={'tonne'}>{'(ton)'}Tonne</option>
+          <option value={'Pounds'}>{'(lbs)'}Pounds</option>
+        </select>
+        <div className='m-1 d-flex justify-content-end'>
+          <button className='btn btn-sm btn-outline-success'>
+            + Add this Promise
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+function EachPledgePlan({associatedPlan,checkedForNext,plansAllowed,setPlansAllowed,planData,id}){
+  const [saved,setSaved] = useState(planData.saved)
+  const [promises,setPromises] = useState(planData.selectedCrops)
+
   const headingTop = useInput('text',"Pledge name")
   const investment = useInput('number',"KCO")
   const discount = useInput('number',"Discount")
+  
+  
+  
+  const cropsArr = associatedPlan.requirements.filter(e => e.category==='crop')
+  
+  console.log("Promise-->",promises)
 
   useEffect(() => {
     if (planData.headingTop && planData.investment && planData.discount && saved) {
@@ -424,9 +490,15 @@ function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id
     }
   }, [handleRemove, handleSave])
 
+  const unsavedPromises = promises.filter(e => !e.saved)
+
   function handleSave(){
     if(checkedForNext){
       toast.warn('uncheck terms to edit further')
+      return
+    }
+    if(!promises.length){
+      toast.warn('Must Have atleat 1 promise')
       return
     }
     setSaved(!saved)
@@ -435,9 +507,9 @@ function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id
     const objUpdate = plansAllowed[index]
     const filteredArr =plansAllowed.filter(e => e.id!==id)
     if(!saved){
-      objUpdate.headingTop= headingTop.value
-      objUpdate.investment= investment.value
-      objUpdate.discount= discount.value
+      objUpdate.selectedCrops= promises
+      objUpdate.KCOLimit= investment.value
+      objUpdate.name= headingTop.value
     }
     objUpdate.saved=!saved
     filteredArr.splice(index,0,objUpdate)
@@ -453,19 +525,64 @@ function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id
     setPlansAllowed(newArr)
   }
 
+
+
+
+  function handleAddPromise(saved=false,crop='',quantity=0,discount=0,unit='Kg'){
+    const newPromiseObj = {
+      saved,
+      crop,
+      quantity,
+      discount,
+      unit,
+      promiseId:("promiseOnPlan"+id+"for"+Date.now())
+  }
+    if(unsavedPromises.length){
+      toast.warn('Already a promise is in editing')
+      return
+    }
+    setPromises((prev)=>([...prev,newPromiseObj]))
+  }
+
+  function handlePromiseRemove(promiseId){
+    setPromises(prev => {
+      return [...prev.filter(e => e.promiseId!==promiseId)]
+    })
+  }
+
+  
   return(
       <div className='eachPledgePlan m-3'>
         <header>
           <div className='d-flex justify-content-between align-items-center'>
-            {saved? <h2>{planData.headingTop}</h2>: <input {...headingTop} />}
-            {saved? <h4>{planData.investment} KCO</h4>: <div>-/-</div>}
+            {saved? <h2>{planData.name}</h2>: <input {...headingTop} />}
+            {saved? <h4>{planData.KCOLimit} KCO</h4>: <input className='w-25' {...investment} />}
           </div>
         </header>
         <hr/>
         <main>
-          On every {saved? investment.value:<input {...investment}/>} or above KCO investment,<br/>
-          I pledge to give {saved? discount.value:<input {...discount}/>}% discount on my yield
-          on the FarmFresh platform.
+          {promises.map(({crop,quantity,unit,discount,promiseId},key) => (
+            <div key={'promiseOnPlan'+id+'for'+key}>
+              <div>
+                {!saved && <button onClick={()=>handlePromiseRemove(promiseId)} className='btn btn-outline-danger'>Remove</button>}<br/>
+                {discount}% discount
+                on my yeild of {crop} for up
+                to {quantity} {unit}
+              </div>
+              <hr/>
+            </div>
+          ))}
+          {!saved &&
+          <div className='mb-5'>
+            <DiscountPromise 
+              setPromises={setPromises} 
+              promises={promises}
+              cropsArr={cropsArr}
+              handleAddPromise={handleAddPromise}
+            />
+            <hr/>
+          </div>
+          }
         </main>
         <div className='controlsButtonForPledgePlans'>
           <Button variant='outline-success' onClick={handleSave} >{saved? 'Edit':'Save'}</Button>
@@ -475,8 +592,9 @@ function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id
   )
 }
 
-function PledgeReturnsForm({plansAllowed,setPlansAllowed,checkedForNext}){
-  const UsersAllowedLength = 2;
+function PledgeReturnsForm({associatedPlan,plansAllowed,setPlansAllowed,checkedForNext,manager}){
+
+
   function addNewPlan(){
     
     if(checkedForNext){
@@ -484,16 +602,17 @@ function PledgeReturnsForm({plansAllowed,setPlansAllowed,checkedForNext}){
       return
     }
     const prevPlan = plansAllowed[plansAllowed.length-1]
+    console.log(prevPlan)
     const allForms = plansAllowed.filter(e => !e.saved)
-    if(!prevPlan.headingTop.length || !prevPlan.investment.length || !prevPlan.discount.length || allForms.length){
+    if(!prevPlan.name.length || !prevPlan.KCOLimit || !prevPlan.selectedCrops.length || allForms.length){
       toast.warn('Save/complete all plan before creating a new one')
       return
     }else{
       const newPlansObj = {
         id:('IdForEachPledgePlan'+Date.now()),
-        investment:'',
-        headingTop:'',
-        discount:'',
+        KCOLimit:0,
+        name:'',
+        selectedCrops:[],
         saved: false,
       }
       const newPlans = [...plansAllowed,newPlansObj]
@@ -516,15 +635,15 @@ function PledgeReturnsForm({plansAllowed,setPlansAllowed,checkedForNext}){
         pauseOnHover
         theme="light"
       />
-      <div className='createPledgeContainer'>
-      <div className={`disableFormContainer ${!checkedForNext && 'd-none'}`} >
-        <FontAwesome name="check" />
-        All Set
-      </div>
-        {plansAllowed.map((e,i) => {return <EachPledgePlan checkedForNext={checkedForNext} planData={e} plansAllowed={plansAllowed} key={'EachPledgeToCreate'+i} id={e.id} setPlansAllowed={setPlansAllowed} />})}
+      <div className={`createPledgeContainer ${checkedForNext && 'overflow-hidden'}`}>
+        <div className={`disableFormContainer ${!checkedForNext && 'd-none'}`} >
+          <FontAwesome name="check" />
+          All Set
+        </div>
+        {plansAllowed.map((e,i) => {return <EachPledgePlan associatedPlan={associatedPlan} checkedForNext={checkedForNext} planData={e} plansAllowed={plansAllowed} key={'EachPledgeToCreate'+i} id={e.id} setPlansAllowed={setPlansAllowed} />})}
         <div className='createNewPlanDiv m-3'>
           {
-            plansAllowed.length < UsersAllowedLength
+            plansAllowed.length < manager.allowedCampaignReturnSlots
               ? (
                 <div onClick={addNewPlan} className='createNewPlanDivIcon PlusIcon'>
                   <FontAwesome className='LockIcon' name='fas fa-plus' />
@@ -575,13 +694,13 @@ function ModalForm({ show, handleShow }) {
 
   const [plansAllowed,setPlansAllowed] = useState([{
     id:'INITIALID',
-    investment:'',
-    discount:'',
-    headingTop:'',
+    KCOLimit:0,
+    selectedCrops:[],
+    name:'',
     saved:false,
   }])
 
-  const [associatedPlan, setAssociatedPlan] = useState();
+  const [associatedPlan, setAssociatedPlan] = useState({_id:''});
   const password = useInput('password', 'Password')
   function changeDeadline(date) {
     setDeadline(date)
@@ -594,6 +713,23 @@ function ModalForm({ show, handleShow }) {
     // e.preventDefault()
     setCreateCampaignLoading(true)
     const deadlineToSend = Math.floor(deadline.getTime() / 1000)
+
+
+    console.log('planAllowed',plansAllowed)
+        
+    const formedPlansAllowed = plansAllowed.map(e => {
+      const {id,saved,...toSend} = e
+      console.log('toSend',toSend)
+      const ans = toSend.selectedCrops.map(f => {
+        const {saved,promiseId,...r3} = f
+        return r3
+      })
+      toSend.selectedCrops = ans
+      return toSend
+    })
+
+    console.log('preform',formedPlansAllowed)
+
     const dataToSend = {
       title: title.value,
       deadline: deadlineToSend,
@@ -603,11 +739,12 @@ function ModalForm({ show, handleShow }) {
       password: password.value,
       walletAddress: userData.walletAddress,
       userId: userData._id,
-      associatedPlan: associatedPlan,
-      pledges: plansAllowed,
-      featuredImage: featuredImage
+      pledges: formedPlansAllowed,
+      featuredImage: featuredImage,
+      associatedPlan:associatedPlan._id
     }
     const res = await createCampaign(dataToSend);
+    // const res = ''
     if (res.status === 'Deployed Successfully') {
       toast.success(res.status, {
         position: "top-right",
@@ -662,7 +799,7 @@ function ModalForm({ show, handleShow }) {
   function handlePledgesSubmission(){
     const allForms = plansAllowed.filter(e => !e.saved)
     const prevPlan = plansAllowed[plansAllowed.length-1]
-    if(!prevPlan.headingTop.length || !prevPlan.investment.length || !prevPlan.discount.length || allForms.length){
+    if(!prevPlan.name.length || !prevPlan.KCOLimit.length || !prevPlan.selectedCrops.length || allForms.length){
       toast.warn("Invalid/Unsaved Pledges")
     }else{
 
@@ -755,7 +892,7 @@ function ModalForm({ show, handleShow }) {
       label: 'Pledge your Returns',
       content: (
         <div>
-          <PledgeReturnsForm checkedForNext={enableFourth.checked} plansAllowed={plansAllowed} setPlansAllowed={setPlansAllowed}/>
+          <PledgeReturnsForm associatedPlan={associatedPlan} manager={userData} checkedForNext={enableFourth.checked} plansAllowed={plansAllowed} setPlansAllowed={setPlansAllowed}/>
           <label>
             <input
               type="checkbox"
@@ -791,16 +928,26 @@ function ModalForm({ show, handleShow }) {
     destroyStepper();
   };
   const destroyStepper = () => {
-    campaignFormRef.current.reset()
+    // console.log(campaignFormRef)
+    // campaignFormRef.current.reset()
+    title.onChange('')
+    setDescription('')
+    setDeadline(new Date())
+    password.onChange('')
+    minContribution.onChange('')
+    target.onChange('')
+    setFeaturedImage(null)
+
+    setAssociatedPlan({_id:''})
     setPlansAllowed([{
       id:'INITIALID',
-      investment:'',
-      discount:'',
-      headingTop:'',
+      KCOLimit:'',
+      selectedCrops:[],
+      name:'',
       saved:false,
     }])
     setEnableSecond({
-      checked: true,
+      checked: false,
       touched: false
     })
     setEnableThird({

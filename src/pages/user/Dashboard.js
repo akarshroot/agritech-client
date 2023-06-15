@@ -53,6 +53,7 @@ function Dashboard() {
                             {renderWidget('wallet-balance')}
                         </div>
                     </div>
+                    
                     {
                         widgets.map((widget, key) => {
                             return (
@@ -74,6 +75,7 @@ function Dashboard() {
                             <CampaignWidget title={campaignWidget?.title} target={campaignWidget?.target} _id={campaignWidget?._id} contributors={campaignWidget?.contributors} deadline={campaignWidget?.deadline} dateCreated={campaignWidget?.dateCreated} />
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </>
