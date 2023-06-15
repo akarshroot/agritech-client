@@ -62,15 +62,14 @@ function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal
   </>
   )
 }
-function CampaignDescription({content}){
+function CampaignDescription({description}){
   return (
     <div className='text-start p-3 ps-5'>
       <h3 className='p-0 m-0'>
           Description
       </h3>
       <hr/>
-      <div className='descriptionContent'>
-        {content}
+      <div className='descriptionContent' dangerouslySetInnerHTML={{__html: description}}>
       </div>
     </div>
   )
@@ -674,7 +673,7 @@ export default function CampaignDetails() {
       <div className='CampaignDetailsPageContainer shadow'>
         <CreatorDetails {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
         <CampaignInfo {...activeCampaign} />
-        <CampaignDescription {...activeCampaign.description} />
+        <CampaignDescription description={activeCampaign.description} />
         <CampaignPledgesAndPromises />
         <CampaignPlanDetails {...activeCampaign.associatedPlan}/>
         <CampaignVotesinfo 

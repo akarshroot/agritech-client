@@ -144,7 +144,8 @@ const StepperFooter = ({
   stepperContent,
   currentTabIndex,
   createCampaignFormRef,
-  launchLoading
+  launchLoading,
+  descriptionField
 }) => {
   const submitCurrentStep = async () => {
     nextStepHandler()
@@ -164,7 +165,7 @@ const StepperFooter = ({
         onClick={
           currentTabIndex === 0
             ? () => {
-              createCampaignFormRef.current.checkValidity()
+              createCampaignFormRef.current.checkValidity() && descriptionField != ""
                 ? submitCurrentStep()
                 : toast.warn('Missing or invalid value. Please check the provided details')
             }
@@ -208,7 +209,7 @@ StepperFooter.propTypes = {
   ),
 };
 
-let Stepper = ({ launchLoading, campaignFormRef, isRightToLeftLanguage, isVertical, isInline, stepperContent, submitStepper }) => {
+let Stepper = ({ launchLoading, campaignFormRef, isRightToLeftLanguage, isVertical, isInline, stepperContent, submitStepper, descriptionField }) => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0),
     isLastStep = currentTabIndex === stepperContent.length - 1,
     isPrevBtn = currentTabIndex !== 0;
@@ -263,6 +264,7 @@ let Stepper = ({ launchLoading, campaignFormRef, isRightToLeftLanguage, isVertic
         currentTabIndex={currentTabIndex}
         createCampaignFormRef={campaignFormRef}
         launchLoading={launchLoading}
+        descriptionField={descriptionField}
       />
     </div>
   );
@@ -548,7 +550,7 @@ function ModalForm({ show, handleShow }) {
 
   const { userData } = useUser()
   const title = useInput('text', 'Title Goes Here')
-
+  const [featuredImage, setFeaturedImage] = useState()
   const [deadline, setDeadline] = useState(new Date())
   const [description, setDescription] = useState("")
   const [descriptionFormat, setDescriptionFormat] = useState([
@@ -570,7 +572,6 @@ function ModalForm({ show, handleShow }) {
   const minContribution = useInput('number', 'Minimum Amount')
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
   const campaignFormRef = useRef();
-
 
   const [plansAllowed,setPlansAllowed] = useState([{
     id:'INITIALID',
@@ -602,7 +603,9 @@ function ModalForm({ show, handleShow }) {
       password: password.value,
       walletAddress: userData.walletAddress,
       userId: userData._id,
-      associatedPlan
+      associatedPlan: associatedPlan,
+      pledges: plansAllowed,
+      featuredImage: featuredImage
     }
     const res = await createCampaign(dataToSend);
     if (res.status === 'Deployed Successfully') {
@@ -662,6 +665,7 @@ function ModalForm({ show, handleShow }) {
     if(!prevPlan.headingTop.length || !prevPlan.investment.length || !prevPlan.discount.length || allForms.length){
       toast.warn("Invalid/Unsaved Pledges")
     }else{
+
       thirdTermsHandler()
     }
   }
@@ -710,7 +714,7 @@ function ModalForm({ show, handleShow }) {
               </fieldset>
               <fieldset className="col-md-6 p-3">
                 <label htmlFor='createCampFeatureImg'>Featured Image</label>
-                <input required type='file' name='featured-image' className='agri-input p-2' id='createCampFeatureImg' accept="image/png, image/jpeg, image/svg" />
+                <input required onChange={(e) => setFeaturedImage(e.target.files[0])} type='file' name='featured-image' className='agri-input p-2' id='createCampFeatureImg' accept="image/png, image/jpeg, image/svg" />
               </fieldset>
               <fieldset className="col-md-6 p-3">
                 <label htmlFor="refund">Refund Unused Funds</label>
@@ -728,7 +732,7 @@ function ModalForm({ show, handleShow }) {
                   formats={descriptionFormat}
                   theme="snow"
                 />
-                <input type='text' style={{ visibility: "hidden" }} value={description} required />
+                {/* <input type='text' style={{ visibility: "hidden" }} value={description} required /> */}
               </fieldset>
             </div>
           </Form>
@@ -851,6 +855,7 @@ function ModalForm({ show, handleShow }) {
                 stepperContent={stepperContent}
                 submitStepper={submitStepper}
                 launchLoading={createCampaignLoading}
+                descriptionField={description}
               />
             </div>
           </div>

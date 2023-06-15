@@ -16,7 +16,11 @@ async function getTransactions() {
 
 
 async function createCampaign(data) {
-    const res = await axios.post(funUrl + 'deployContract/', data)
+    const res = await axios.post(funUrl + 'deployContract/', data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    })
     return res.data
 }
 async function transferKCO(data) {
