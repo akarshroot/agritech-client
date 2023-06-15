@@ -250,7 +250,7 @@ function Inventory() {
                         <td className='d-flex justify-content-center'>
                           <Button className='m-1' variant='danger' disabled={deleteLoader} onClick={(e) => deleteItem(item._id)}>{deleteLoader ?
                             <>
-                              <div class="spinner-border" role="status"></div>
+                              <div className="spinner-border" role="status"></div>
                             </> : <>&#10008;</>}
                           </Button>
                           <Button className='m-1' variant='success' disabled={deleteLoader} onClick={(e) => { setUseItemModal(!useItemModal); setSelectedItem(item) }}>

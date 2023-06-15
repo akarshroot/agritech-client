@@ -24,6 +24,10 @@ import { StoreContextProvider } from './context/StoreContext';
 import { ManagementContextProvider } from './context/ManagementContext';
 import AdminConsole from './pages/user/AdminConsole';
 import Forbidden from './pages/public/Forbidden';
+import Loader from './assets/loader/Loader'
+import AgriNeeds from './pages/user/agristore/AgriNeeds';
+import FarmFresh from './pages/user/agristore/FarmFresh';
+import Whitepaper from './pages/public/Whitepaper';
 
 function App() {
   return (
@@ -49,11 +53,17 @@ function App() {
                   <Route exact path='/campaigns' element={<PrivateBody body={Campaigns} />} />
                   <Route exact path='/campaigns/all' element={<PrivateBody body={ExploreCampaigns} />} />
                   <Route exact path='/agristore' element={<PrivateBody body={AgriStore} />} />
+                  <Route exact path='/agrineeds' element={<PrivateBody body={AgriNeeds} />} />
+                  <Route exact path='/farmfresh' element={<PrivateBody body={FarmFresh} />} />
 
                   <Route exact path='/agristore/product/:id' element={<PrivateBody body={ProductDetails} />} />
-                  <Route exact path='/detailedCampaign' element={<PrivateBody body={CampaignDetails} />} />
+                  <Route exact path='/campaign/details/:id' element={<PrivateBody body={CampaignDetails} />} />
                   <Route exact path='/admin/panel' element={<PrivateBody body={AdminConsole} restricted={true} />} />
+                  <Route exact path='/docs/whitepaper' element={<PublicBody body={Whitepaper}/>} />
                   <Route exact path='/forbidden' element={<PublicBody body={Forbidden}/>} />
+
+
+                  <Route exact path='/loader' element={<Loader height='50px' width='50px' />} />
                 </Routes>
               </ManagementContextProvider>
             </StoreContextProvider>

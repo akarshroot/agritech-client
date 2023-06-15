@@ -5,10 +5,7 @@
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
-  /* background-size: cover; */
-  /* background-color: rgb(239, 234, 234); */
-  background-color: #f5f8f9;
-  /* background-size: 600px; */
+  background-color: #f4f6f7;
   z-index: 0;
 }
 
@@ -40,25 +37,19 @@
 }
 
 .all-widgets-container {
-  display: flex;
   width: 100%;
-  /* justify-content: center; */
-  padding-left: 40px;
-  /* height: 100vh; */
+  padding-left: 30px;
 }
 
 .widget {
-  min-width: 300px;
-  margin: 20px;
-  /* border-radius: 12px; */
-  /* background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px; */
-    border-radius: 39px;
-    background: #ffffff;
-    box-shadow:  5px 5px 31px #cccccc,
-                 -5px -5px 31px #ffffff;
+  position: relative;
+  overflow: hidden;
+  /* margin: 20px; */
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow:  5px 5px 31px #e5e4e4,
+                -5px -5px 31px #ffffff;
 }
-
 .no-skeleton-widget:hover {
   animation: bringFwd 500ms linear;
   z-index: 999;

@@ -1,17 +1,49 @@
+@font-face {
+  font-family: 'Hind-Regular';
+  src: url('./assets/fonts/Hind-Regular.ttf')
+}
+
+@font-face {
+  font-family: 'Hind-Light';
+  src: url('./assets/fonts/Hind-Light.ttf')
+}
 body {
   margin: 0;
+  background-color: #ebebeb !important;
   max-width: 100dvw;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    sans-serif, 'Hindi-Regular';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   overflow-y: overlay;
 }
 
+:root{
+  --c0: #40513B;
+  --c1: #5d9900;
+  --c2: #609966;
+  --c3: #9DC08B;
+  --c4: #EDF1D6;
+  --c5: #429017;
+  --white-text: #ececec;
+  --black-text: #0a0a0a;
+  --error-text: #c62828;
+  --error-background: #fbe9e7;
+  --warning-text: goldenrod;
+  --warning-background: #ffcc0057;
+  --gradient: linear-gradient(to right, #d99e38, #ffcb74);
+
+  --cb0:#4bb2dc;
+  --cb1:#b0d8ff;
+  --cb2:#4c76b2;
+  --cb3:#003580;
+}
+
 .theme-dark {
-  --c1: #40513B;
+  --c0: #40513B;
+  --c1: #5d9900;
   --c2: #609966;
   --c3: #9DC08B;
   --c4: #EDF1D6;
@@ -23,13 +55,17 @@ body {
   --warning-text: goldenrod;
   --warning-background: #ffcc0057;
   --gradient: linear-gradient(to right, #d99e38, #ffcb74);
+
+  --cb0:#4bb2dc;
 }
 
 .theme-light {
-  --c1: #40513B;
+  --c0: #40513B;
+  --c1: #5d9900;
   --c2: #609966;
   --c3: #9DC08B;
   --c4: #EDF1D6;
+  --cb0:#4bb2dc;
   --white-text: #ececec;
   --black-text: #0a0a0a;
   --error-text: #c62828;
@@ -42,7 +78,7 @@ body {
 .link {
   text-decoration: none;
   cursor: pointer;
-  color: inherit;
+  color: #0163b1;
 }
 
 .link:hover {
@@ -76,4 +112,40 @@ hr.style-two {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.agri-input{
+  width: 100%;
+  border-radius: 3px;
+  /* padding: 1rem; */
+  border: solid 1px gray;
+  outline: none;
+}
+.agri-input:focus-visible,
+.agri-input:focus{
+  border: solid 2px green !important;
+}
+
+
+
+
+
+.createCampaginForm fieldset{
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+textarea{
+  resize: none !important;
+}
+
+.button-blue{
+  background-color: #4bb2dc;
+  color: white;
+}
+.bg-white{
+  background-color: white !important;
+}
+.bg-agriGreen{
+  background-color: var(--c5);
 }

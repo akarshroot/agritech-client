@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/esm/Button'
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import StoreContext from '../../../context/StoreContext'
+import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent'
 import './Cart.css'
 import { useNavigate } from 'react-router-dom'
 
@@ -33,7 +34,7 @@ export function Cart() {
                 !cartLoading ?
                     <>
                         <div className={`cart theme-${theme}`}>
-                            <Button variant="warning cart-btn" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;View Cart <b>({cart.length})</b></Button>
+                            <Button variant="primary cart-btn" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;View Cart <b>({cart.length})</b></Button>
                         </div>
                         <Modal
                             show={showCart}
@@ -58,7 +59,8 @@ export function Cart() {
                                                                 <img src={productDetails.imgUrl} alt="" width="20%" />
                                                                 <div className='m-3'>
                                                                     <h5>{productDetails.title}</h5>
-                                                                    {INR.format(productDetails.price)}
+                                                                    {/* {INR.format(productDetails.price)} */}
+                                                                    <CurrencyIconComponent size={'25px'} adjustY={'-2px'} /> {productDetails.price} KCO
                                                                 </div>
                                                             </div>
                                                             <Button variant='danger' onClick={() => { setCartTotal(cartTotal - productDetails.price); deleteCartItem(item._id) }}>Remove</Button>
@@ -66,7 +68,7 @@ export function Cart() {
                                                 )
                                             })
                                     }
-                                    <li className='list-group-item w-100 d-flex justify-content-between active'><div>Total</div><div>{INR.format(cartTotal)}</div></li>
+                                    <li className='list-group-item w-100 d-flex justify-content-between active'><div>Total</div><div>{cartTotal} KCO</div></li>
                                 </ul>
                             </Modal.Body>
                             <Modal.Footer>

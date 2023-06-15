@@ -1,17 +1,18 @@
-.options-bar ul {
-    list-style: none;
+.agri-link{
+    text-decoration: none;
+    color: inherit;
 }
 
-.options-bar ul li {
-    cursor: pointer;
+.agri-link:hover{
+    color : inherit;
 }
 
-
-.list-group .active {
-    background-color: var(--c2) !important;
-    border: 1px solid var(--c1) !important;
+.store-cards{
+    padding: 0 !important;
+    background-color: #f1f8e9 !important;
+    transition: all 0.5s;
 }
 
-.agristore-content{
-    padding-left: 10%;
+.store-cards:hover{
+    transform: scale(0.9);
 }

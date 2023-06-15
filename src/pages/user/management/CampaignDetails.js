@@ -1,70 +1,97 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import CampaignContext from '../../../context/CampaignContext'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import { toast } from 'react-toastify'
+
+import { ContributeModal } from '../Campaigns'
 import useInput from '../../../hooks/useInput'
-import { Link, Navigate } from 'react-router-dom'
 import { useUser } from '../../../context/UserContext'
 import StoreContext from '../../../context/StoreContext'
-import { ContributeModal } from '../Campaigns'
-import { createVoteReq, getTransactionsForCamp, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
-import './CampaignDetails.css'
-import { toast } from 'react-toastify'
+import Loader from '../../../assets/loader/Loader'
 import AlreadyContributed from '../../../assets/icons/tick-box.svg'
+import {getCampbyId} from '../../../interceptors/serverAPIs'
+import { createVoteReq, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
+
+import './CampaignDetails.css'
 
 
 function CreatorDetails({ isOwner, imgUrl, name, email, walletAddress, openModal }) {
-
+  const [showWalletAdd,setShowWalletAdd] = useState(false);
   return (<>
-    <div className='row shadow p-3 rounded'>
-      <div className='col-12'>
-        <div className='row justify-content-end'>
-          <div className='col-5 col-sm-3 col-md-2 pb-4'>
-            <Button onClick={openModal} variant='success'>Contribute Here</Button>
-          </div>
+    <div>
+      <div>
+        <div className='d-flex justify-content-end pe-1 pt-1'>
+          <Button onClick={openModal} variant='success'>Contribute Here</Button>
         </div>
       </div>
-      <div className='col-md-4'>
-        <img height='156px' width='156px' className='rounded-circle' src={imgUrl} alt='User profile Img here' />
-      </div>
-      <div className='col-md-8'>
-        {!isOwner
-          ? <legend>Creator</legend>
-          : <legend className='bg-success bg-opacity-50 rounded '>Your Campaign</legend>
-        }
-        <Table responsive>
-          <tbody className='text-start'>
-            <tr>
-              <th>Name</th>
-              <td>{name}</td>
-            </tr>
-            <tr>
-              <th>Email</th>
-              <td>{email}</td>
-            </tr>
-            <tr>
-              <th>WalletAddress</th>
-              <td>{walletAddress}</td>
-            </tr>
-          </tbody>
-        </Table>
+      <div className='d-flex flex-column justify-content-around m-3'>
+        <div className='p-2'>
+          <img height='156px' width='156px' className='rounded-circle' src={imgUrl} alt='User profile Img here' />
+        </div>
+        <div>
+          {!isOwner
+            ? <legend>Creator</legend>
+            : <legend className='bg-success bg-opacity-50 rounded '>Your Campaign</legend>
+          }
+          <Table responsive>
+            <tbody className='text-start'>
+              <tr>
+                <th>Name</th>
+                <td>{name}</td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td>{email}</td>
+              </tr>
+              {showWalletAdd
+                &&(<tr>
+                    <th>WalletAddress</th>
+                    <td>{showWalletAdd? walletAddress:<p className='CampLink'>Show Address</p>}</td>
+                  </tr>)
+              }
+            </tbody>
+          </Table>
+          <span onClick={()=>{setShowWalletAdd(!showWalletAdd)}} className='Camplink m-4'>{!showWalletAdd? "Show" : "Hide"} Wallet Address</span>
+        </div>
       </div>
     </div>
   </>
   )
 }
-
+function CampaignDescription({description}){
+  return (
+    <div className='text-start p-3 ps-5'>
+      <h3 className='p-0 m-0'>
+          Description
+      </h3>
+      <hr/>
+      <div className='descriptionContent' dangerouslySetInnerHTML={{__html: description}}>
+      </div>
+    </div>
+  )
+}
+function CampaignPledgesAndPromises(){
+  return (
+    <div className='text-start p-3 ps-5'>
+      <h3 className='p-0 m-0'>
+          Plegdes and Promises
+      </h3>
+    </div>
+  )
+}
 function CampaignInfo({ title, raisedAmount, target, contributors }) {
   const { currentUser } = useUser()
   return (
-    <div className='row mt-4 shadow p-3 rounded justify-content-around'>
-      <div className='col-12'>
-        <div className='display-2 text-start'>
-          {title}
+    <div>
+      <div className='p-3'>
+        <div className='text-start'>
+          <h1>{title}</h1>
           {
-            contributors.find(contributor => contributor.userId == currentUser) ?
+            contributors.find(contributor => contributor.userId === currentUser) ?
               <img src={AlreadyContributed} width="80px" height="80px" alt="" />
               : <></>
           }
@@ -82,15 +109,18 @@ function CampaignInfo({ title, raisedAmount, target, contributors }) {
           <tbody>
             <tr>
               <th>Amount Raised so far:</th>
-              <td>{raisedAmount} KCO</td>
+              <td>{raisedAmount}</td>
+              <td>KCO</td>
             </tr>
             <tr>
               <th>Amount Target:</th>
-              <td>{target} KCO</td>
+              <td>{target}</td>
+              <td>KCO</td>
             </tr>
             <tr>
               <th>Amount Required:</th>
-              <td>{parseInt(target) - parseInt(raisedAmount)} KCO</td>
+              <td>{parseInt(target) - parseInt(raisedAmount)}</td>
+              <td>KCO</td>
             </tr>
           </tbody>
         </Table>
@@ -98,12 +128,13 @@ function CampaignInfo({ title, raisedAmount, target, contributors }) {
     </div>
   )
 }
-
+///
 function CampaignPrograssBar({ raisedAmount, target }) {
 
   const progress = parseInt((raisedAmount / target) * 100)
   return (
     <div className="campaign-progress my-4">
+      Progress-
       <div className="progress" style={{ height: "30px" }}>
         <div className="progress-bar bg-success progress-bar-striped progress-bar-animated"
           role="progressbar"
@@ -118,9 +149,9 @@ function CampaignPrograssBar({ raisedAmount, target }) {
     </div>
   )
 }
+function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber,toPersonal }) {
 
-function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber }) {
-
+  const [loading, setLoading] = useState(false)
   const [prompt, openPrompt] = useState(false)
   const [password, setPassword] = useState("")
 
@@ -129,6 +160,9 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
     setPassword(e.target.value)
   }
 
+
+  console.log('Receiver->',toPersonal)
+  console.log('Receiver->')
   async function useRequest() {
     if (!password) {
       return
@@ -139,6 +173,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
       cid
     }
     console.log(dataToSend)
+    setLoading(true)
     const res = await usevoteReq(dataToSend)
     handlePrompt()
     if (res.error) {
@@ -165,13 +200,14 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
         theme: "light",
       });
     }
+    setLoading(false)
   }
-
 
   async function voteRequest(e) {
     if (!password) {
       return
     }
+    setLoading(true)
     console.log(e.target.value)
     const dataToSend = {
       voteNumber,
@@ -181,17 +217,31 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
     }
     const res = await voteForReq(dataToSend)
     handlePrompt()
-
-    toast.success(res.message, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    if (res.error) {
+      toast.error(res.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    else {
+      toast.success(res.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    setLoading(false)
   }
 
   return (
@@ -209,7 +259,7 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
             Cancel
           </Button>
           <Button type='submit' form="create-plan" variant="success" onClick={isOwner ? useRequest : voteRequest}>
-            Proceed
+            {loading ? "Please wait..." : "Proceed"}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -239,27 +289,35 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
         <div>
           {parseInt(voters) === 0 ? <div>No contributors yet</div> : <CampaignPrograssBar raisedAmount={votes} target={voters} />}
         </div>
-        <div>
-          Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
-        </div>
+        {toPersonal
+        ? (
+          <div>
+            Requested for Personal use.
+          </div>
+        )
+        :(
+          <div>
+            Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
+          </div>
+        )
+        }
         <div className='text-center py-3'>
           {!isOwner
             ? <div><Button variant='outline-success' onClick={handlePrompt} value='allow'>Allow</Button>   <Button onClick={handlePrompt} value='dontAllow' variant='outline-danger'>Dont Allow</Button></div>
-            : <Button onClick={handlePrompt} variant='danger'>Use Request</Button>
+            : <Button onClick={handlePrompt} variant='danger' disabled={loading}>{loading ? "Please wait..." : "Use Request"}</Button>
           }
         </div>
       </div>
     </div>
   )
 }
-
 function SelectFromCartOptions({ setProd, product, hide }) {
   function changeSelectId() {
     setProd(product)
     hide()
   }
   return (
-    <div onClick={changeSelectId} value={product.id} className='row align-items-center p-3 m-0 border rounded custom-Options'>
+    <div onClick={changeSelectId} value={product.id} className='row align-items-center p-0 border rounded custom-Options'>
       {product.imgUrl && (
         <div className='col-2'>
           <img src={product.imgUrl} alt='Product' />
@@ -272,7 +330,6 @@ function SelectFromCartOptions({ setProd, product, hide }) {
     </div>
   )
 }
-
 function CreateRequestModal({ show, handleShow, vid }) {
 
   const productSelect = {
@@ -287,14 +344,14 @@ function CreateRequestModal({ show, handleShow, vid }) {
     _id: 'personalUse',
     price: ''
   }
-
+  const [loading, setLoading] = useState(false)
   const reason = useInput('text', 'Tell them what you want')
   const amount = useInput('number', 'How much?')
   const password = useInput('password', 'enter password to confirm')
   const [dropdown, setDropdown] = useState(false)
   const [receiverProduct, setReceiverProduct] = useState(productSelect)
-  const { activeCampaign } = useContext(CampaignContext)
   const { cart } = useContext(StoreContext)
+  const urlParams = useParams();
 
   function handleDropdown() {
     setDropdown(!dropdown)
@@ -316,11 +373,13 @@ function CreateRequestModal({ show, handleShow, vid }) {
       password: password.value,
       receiverProduct: receiverProduct._id,
       amount: amount.value ? amount.value : 'GetFromProduct',
-      campaignId: activeCampaign._id
+      campaignId: urlParams.id
     }
+    setLoading(true)
     const res = await createVoteReq(dataToSend)
-    if (res.response.data.error) {
-      toast.error(res.response.data.message, {
+    console.log(res);
+    if (res.error) {
+      toast.error(res.status + " " + res.message, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -332,7 +391,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
       });
     }
     else {
-      toast.success(res.response.data.message, {
+      toast.success(res.message, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -343,6 +402,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
         theme: "light",
       });
     }
+    setLoading(false)
   }
 
   return (
@@ -390,11 +450,6 @@ function CreateRequestModal({ show, handleShow, vid }) {
                     {cart.length > 0 ?
                       (
                         cart.map(({ product }, i) => {
-                          // return <option 
-                          //         key={'cartSelectKey'+i} 
-                          //         value={product._id}>
-                          //           {product.title}
-                          //         </option>
                           return <SelectFromCartOptions
                             key={'cartSelectKey' + i}
                             hide={handleDropdown}
@@ -425,7 +480,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
               <label htmlFor={'voteCampPassFor' + vid}>Confirm with password</label><br />
               <input id={'voteCampPassFor' + vid} {...password} />
             </fieldset>
-            <Button className='my-3' type='submit' variant="warning">Create Request</Button>
+            <Button className='my-3' type='submit' variant="warning" disabled={loading}>{loading ? "Creating..." : "Create Request"}</Button>
           </div>
 
         </Form>
@@ -438,7 +493,6 @@ function CreateRequestModal({ show, handleShow, vid }) {
     </Modal>
   )
 }
-
 function Transaction({ sno, receiverId, createdAt, amount, txHash }) {
   return (
     <>
@@ -452,7 +506,7 @@ function Transaction({ sno, receiverId, createdAt, amount, txHash }) {
     </>
   )
 }
-
+///
 function TransactionsHistory({ tx }) {
   return (
     <div>
@@ -478,10 +532,8 @@ function TransactionsHistory({ tx }) {
   )
 }
 
-function CampaignVotesinfo({ isOwner }) {
+function CampaignVotesinfo({ isOwner, voteRequests, _id, contributors,userId }) {
   const [show, setShow] = useState(false);
-  const { activeCampaign } = useContext(CampaignContext)
-  const voteRequests = activeCampaign.voteRequests
   function handleShow() {
     setShow(!show);
   }
@@ -490,11 +542,9 @@ function CampaignVotesinfo({ isOwner }) {
     handleShow
   }
   return (
-    <div className='row mt-4 shadow p-3 rounded justify-content-around'>
+    <div>
       {isOwner && (
-        <div className='col-10'>
           <Button onClick={handleShow} variant='success'>+ Make a Request</Button>
-        </div>
       )}
       <div>
         {voteRequests.length === 0 ? <div className='py-3'>No Requests</div>
@@ -503,12 +553,14 @@ function CampaignVotesinfo({ isOwner }) {
               <hr />
               <div className='row'>
                 {voteRequests?.map((data, i) => {
+                  console.log(data)
                   return (
                     <WithdrawRequests
                       isOwner={isOwner}
+                      toPersonal={userId===data.receiver}
                       key={'votesContainerKey' + i}
-                      cid={activeCampaign._id}
-                      voters={activeCampaign.contributors.length}
+                      cid={_id}
+                      voters={contributors.length}
                       {...data} />
                   )
                 })}
@@ -522,24 +574,87 @@ function CampaignVotesinfo({ isOwner }) {
   )
 }
 
+function CampaignPlanDetails({title,requirements,...props}){
+  console.log(props)
+  return(
+    <div>
+      <div className='text-start'>
+        <div className='p-4'>
+          <h3>
+            Plan - {title}
+          </h3>
+        </div>
+        <div className='CampPlanRequirements rounded row m-0 p-2'>
+            {requirements.map((e,key) => {
+              return(
+                <div className='col-md-4' key={'campPlanRequirements'+key}>
+                  <div className='eachRequiredProduct rounded bg-white p-3 shadow'>
+                    <Table striped>
+                      <tbody>
+                        <tr>
+                          <th>Type:</th>
+                          <td>{e.category}</td>
+                        </tr>
+                        <tr>
+                          <th>Item:</th>
+                          <td>{e.item}</td>
+                        </tr>
+                        <tr>
+                          <th>Price:</th>
+                          <td>{e.estCost}</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                </div>
+              )
+            })}
+        </div>
+      </div>
+    </div>
+  )
+}
+/*
+category: "supplement"
+estCost: 399
+isProduct: false
+item: "Fertilizer"
+quantity: 5
+*/
+
+
 export default function CampaignDetails() {
 
-  const { activeCampaign, changeActiveCampaign } = useContext(CampaignContext)
-  const { userData, loadingUser, getUserData, currentUser } = useUser()
+  const [activeCampaign, changeActiveCampaign] = useState(null)
+  const { userData, loadingUser, getUserData } = useUser()
   const [show, setShow] = useState(false);
+  const params = useParams()
+
   function handleShow() {
     setShow(!show)
   }
+  async function getCampaignData(id){
+    const resdata = await getCampbyId(id)
+    console.log("Campdata",resdata)
+    changeActiveCampaign(resdata)
+  }
+
   useEffect(() => {
     if (loadingUser || !userData) {
       getUserData()
     }
     if (!activeCampaign) {
-      changeActiveCampaign()
+      getCampaignData(params.id)
     }
   }, [])
+
+
   if (!activeCampaign || !userData || loadingUser) {
-    return <div>Loading...</div>
+    return (
+      <div style={{height:'90vh'}} className='d-flex justify-content-center align-items-center'>
+        <Loader height='150px' width='150px' />
+      </div>
+      )
   }
   const contributeModalData = {
     show,
@@ -549,18 +664,29 @@ export default function CampaignDetails() {
   }
   const isOwner = userData._id === activeCampaign.manager._id
 
-  console.log(isOwner)
+  console.log(activeCampaign)
+
+
 
   return (
-    <div className='container py-2'>
-      <CreatorDetails {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
-      <CampaignInfo {...activeCampaign} />
-      <CampaignVotesinfo isOwner={isOwner} />
-      <ContributeModal {...contributeModalData} />
-      {activeCampaign.campaignTransactions && isOwner
-        ? <TransactionsHistory tx={activeCampaign.campaignTransactions} />
-        : <div className='p-4 display-3'>Only owner can see the transactions</div>
-      }
+    <div className='container py-4'>
+      <div className='CampaignDetailsPageContainer shadow'>
+        <CreatorDetails {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
+        <CampaignInfo {...activeCampaign} />
+        <CampaignDescription description={activeCampaign.description} />
+        <CampaignPledgesAndPromises />
+        <CampaignPlanDetails {...activeCampaign.associatedPlan}/>
+        <CampaignVotesinfo 
+          isOwner={isOwner} 
+          userId = {userData._id}
+          _id={activeCampaign._id}
+          contributors={activeCampaign.contributors}
+          voteRequests={activeCampaign.voteRequests}
+        />
+        {activeCampaign.campaignTransactions && isOwner && <TransactionsHistory tx={activeCampaign.campaignTransactions} />
+        }
+        <ContributeModal {...contributeModalData} />
+      </div>
     </div>
   )
 }

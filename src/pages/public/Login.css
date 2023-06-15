@@ -31,7 +31,7 @@
     transform: translateX(-50%);
 }
 .login-container {
-    background-color: var(--c2);
+    /* background-color: var(--c2); */
     position: relative;
     padding: 50px;
 }

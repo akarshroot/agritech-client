@@ -101,11 +101,11 @@ function Signup() {
             />
             <div className="bg-signup"></div>
             <div className="bg-overlay"></div>
-            <div className={`bg-success bg-opacity-50 text-light signup-container theme-${theme}`}>
+            <div className={`text-light signup-container theme-${theme}`}>
                 <h1 className='mb-3'>SIGN UP</h1>
                 {/* <div className="error-message" hidden={!error}>{error}</div> */}
                 <div className='row justify-content-center'>
-                    <form className='col-md-4' onSubmit={(e) => processSignup(e)} id="signup">
+                    <form className='col-md-3' onSubmit={(e) => processSignup(e)} id="signup">
                         <input ref={name}  className='form-control' placeholder='Full Name' type="text" id="name" required /><br/>
                         <input ref={email} className='form-control' placeholder='Email' type="email" id="email" required /><br/>
                         <input ref={phno} className='form-control' placeholder='Phone Number' type="number" max="9999999999" min="1000000000" id="phno" required onInvalid={()=>{showWarning('Invalid PhoneNumber')}} /><br/>

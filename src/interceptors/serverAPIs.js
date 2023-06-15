@@ -15,9 +15,19 @@ async function getCollectonCampbyId(id) {
     if(res.hasOwnProperty("data")) return res.data
     else throw new Error("Internal Server Error")
 }
-
+async function getUserPlans() {
+    try {
+        const response = await axios.get("/management/plan/all")
+        if (response.hasOwnProperty("data"))
+            return response.data
+        else throw response.response.data
+    } catch (error) {
+        return error
+    }
+  }
 export {
     getAllCamps,
     getCampbyId,
-    getCollectonCampbyId
+    getCollectonCampbyId,
+    getUserPlans
 }

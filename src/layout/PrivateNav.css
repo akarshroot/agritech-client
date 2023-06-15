@@ -1,5 +1,6 @@
 .private-nav {
-    background-color: rgb(241, 232, 146);
+    /* background-color: #b1d8fe; */
+    background-color: #429017;
     height: fit-content;
     position: relative;
     top: 0px;
@@ -9,7 +10,8 @@
 .links-container {
     list-style: none;
 }
-.links-container a{
+
+.links-container a {
     padding: 0;
     margin: 0;
 }
@@ -17,7 +19,7 @@
 .nav-element {
     width: 200px;
     padding: 2px;
-    color: var(--black-text);
+    color: var(--white-text);
     font-size: large;
 }
 
@@ -25,7 +27,7 @@
     color: var(--white-text);
     /* background-color: var(--c1); */
     /* background-color: #064635; */
-    background-color: #4c8757;
+    background-color: #003580;
     border-radius: 0 0 15px 15px;
     /* transition: 0.25s ease-out; */
 
@@ -45,33 +47,40 @@
 }
 
 .nav-element-btn:hover {
-    background-color: var(--c3);
+    background-color: #116912;
     color: var(--black-text);
 }
 
-.logoConsole{
+.logoConsole {
     width: 100%;
     display: flex;
     justify-content: center;
     color: var(--white-text);
     /* background-color: #064635; */
-    background-color: #4c8757;
+    /* background-color: #e0e0e0; */
+    background-color: #003580;
     margin: 0px;
-    padding: 0.7rem;
+    /* padding: 0.7rem; */
     /* display: flex;
     justify-content: center; */
-    font-size : 1.7rem;
+    font-size: 1.7rem;
     font-weight: 600;
 }
 
 .admin-btn {
-    margin-left: 10px;
+    color: white;
 }
 
-.logoLink{
+.logoLink {
     cursor: pointer;
-}
-.hamButtonNav{
+    color: whitesmoke;
+    /* font-style: italic; */
+    /* background: #e0e0e0;
+    box-shadow: inset -20px 20px 60px #bebebe,
+                inset 20px -20px 60px #ffffff; */
+    }
+
+.hamButtonNav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -79,17 +88,27 @@
     text-align: start;
     padding: 1rem;
 }
-.dropDownNav{
-    height: 0;
+
+.dropDownNav {
+    max-height: 0;
     overflow: hidden;
     transition: all 0.3s;
 }
-.showDropDownNav{
-    height: 220px !important;
+
+.showDropDownNav {
+    max-height: 100vh !important;
 }
+
 /* .LogoutButtonNav{
     position: absolute;
     top: calc(1.275rem + 0.3vw + 13px);
     padding: 4px;
     right: 0%;
 } */
+
+.language-setter {
+    height: 30px;
+    font-size: medium;
+    /* position: absolute; */
+    right: 20px;
+}
