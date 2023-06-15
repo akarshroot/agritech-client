@@ -156,23 +156,23 @@ export default function FarmFresh() {
 
         <div className='d-flex col-md-10 justify-content-around flex-wrap'>
         {
-          (inventory.length>0) ?
+          (inventory && inventory.length>0) ?
             (inventory.map((e,i)=>{
               return (
-                <div className=' product-container col-md-10 border shadow p-3'>
-                <div className='d-flex col-md-10 justify-content-between'>
-                  <div className='col-md-4'>
+                <div className=' product-container col-12 col-sm-10 border shadow p-3'>
+                <div className='d-flex flex-wrap col-12 col-sm-10 justify-content-between'>
+                  <div className='col-12 col-sm-3'>
                     <img src={farmFresh} width='100%' alt='' />
                   </div>
-                  <div className='d-flex col-md-4 flex-column justify-content-center'>
+                  <div className='d-flex col-10 col-sm-5 flex-column justify-content-center'>
                     <h5>{e.item}</h5>
                     <h5>({e.category})</h5>
                     <hr className='style-two' />
-                    <span>Price:<CurrencyIconComponent size='30' adjustY={'-10%'} />KCO {e.estCost} /-</span>
+                    <span>Price:<CurrencyIconComponent size='30' adjustY={'-10%'} />KCO {e.estCost}/-</span>
                     <div className='text-danger'>Only {e.quantity} left</div>
                     <hr className='style-two' />
                   </div>
-                    <div className='col-md-2'>
+                    <div className='col-2 col-sm-2'>
                       <img src={tag} alt='' /><br/>
                       <img src={rating} alt='' />
                     </div>
