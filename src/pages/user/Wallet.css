@@ -1,12 +1,54 @@
-.Camplink{
-    color: cornflowerblue;
-    text-decoration: underline;
-}
-.Camplink:hover{
-    cursor: pointer;
-    color: purple;
+.Camplink {
+    color: green;
     text-decoration: none;
 }
-.AddressClass:hover{
+
+.Camplink:hover {
     cursor: pointer;
+    color: rgb(40, 66, 0);
+    text-decoration: none;
+}
+
+.AddressClassTD {
+    overflow-y: hidden;
+}
+
+.AddressClass {
+    font-size: 1rem;
+}
+
+.AddressClass:hover {
+    cursor: pointer;
+}
+
+.qr-code-scan{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.qrcode-container {
+    width: 210px;
+    /* border-radius: 50px; */
+    background: #ffffff;
+    box-shadow: 20px 20px 40px #d9d9d9,
+        -20px -20px 40px #ffffff;
+}
+
+.neumorphism-container{
+    /* background-color: red; */
+    border-radius: 12px;
+background: #ffffff;
+box-shadow:  5px 5px 31px #cccccc,
+             -5px -5px 31px #ffffff;
+             margin-bottom: 30px;
+}
+
+.Wallet-Transactions-Table{
+    max-height: 50vh;
+    overflow-y: scroll;
+}
+.Your-Contributions-Table{
+
 }

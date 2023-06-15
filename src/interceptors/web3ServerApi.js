@@ -28,12 +28,12 @@ async function contribute(data) {
     const res = await axios.post(funUrl + 'contribute', data)
     return res.data
 }
-async function getApproval(data) {
-    const res = await axios.post(funUrl + 'getApproval', data)
+async function postcontribution(data) {
+    const res = await axios.post(funUrl + 'postcontribution', data)
     return res.data
 }
-// async function getApproval(data) {
-//     const res = await axios.post(funUrl + 'getApproval', data)
+// async function postcontribution(data) {
+//     const res = await axios.post(funUrl + 'postcontribution', data)
 //     console.log(res.response.data);
 //     if(res.hasOwnProperty("data"))
 //         return res.data
@@ -42,15 +42,21 @@ async function getApproval(data) {
 
 async function createVoteReq(data) {
     const res = await axios.post(voteURL + 'makeRequest', data)
-    return res.data
+    if (res.hasOwnProperty("data"))
+        return res.data
+    else return res.response.data
 }
 async function voteForReq(data) {
     const res = await axios.post(voteURL + 'vote', data)
-    return res.data
+    if (res.hasOwnProperty("data"))
+        return res.data
+    else return res.response.data
 }
 async function usevoteReq(data) {
     const res = await axios.post(voteURL + 'useRequestedMoney', data)
-    return res.data
+    if (res.hasOwnProperty("data"))
+        return res.data
+    else return res.response.data
 }
 
 
@@ -59,7 +65,7 @@ export {
     createCampaign,
     transferKCO,
     contribute,
-    getApproval,
+    postcontribution,
     createVoteReq,
     voteForReq,
     usevoteReq,

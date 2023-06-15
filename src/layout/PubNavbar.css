@@ -9,9 +9,10 @@
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     animation: drop-nav 800ms;
     position: sticky;
-    background-color: var(--c1);
+    /* background-color: var(--c1); */
+    background-color: #106812;
     color: var(--white-text);
-    border-bottom: 4px solid var(--c4);
+    border-bottom: 4px solid green;
     height: 80px;
     transition-duration: 300ms;
 }
@@ -39,7 +40,7 @@
 .nav-tabs-container-mobile {
     position: absolute;
     background-color: var(--c1);
-    color: var(--c3);
+    color: var(--white-text);
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -69,19 +70,19 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-right: 10px;
 }
 
-/* .nav-tab-hover:hover {
-    border-bottom: 4px solid var(--c1);
-} */
+.nav-tab-hover:hover {
+    border-bottom: 4px solid green;
+}
 
 .nav-tab-hover-dark:hover {
-    border-bottom: 4px solid var(--c4);
+    border-bottom: 4px solid green;
 }
 
 .nav-tab-btn {
     border-radius: 5px;
-    border: 2px solid var(--c1);
     height: fit-content;
     padding: 8px;
     cursor: pointer;
@@ -99,7 +100,7 @@
 
 .nav-tab-btn-hover-dark:hover {
     background-color: var(--c3);
-    color: var(--c1);
+    color: #003580;
 }
 
 .nav-icon-container {

@@ -1,36 +1,36 @@
 .private-nav {
-    background-color: var(--c4);
+    /* background-color: #b1d8fe; */
+    background-color: #429017;
     height: fit-content;
-    position: sticky;
+    position: relative;
     top: 0px;
     z-index: 999;
 }
 
-.private-nav h4 {
-    color: var(--white-text);
-    padding: 5px;
-    background-color: var(--c1);
-    margin: 0px;
+.links-container {
+    list-style: none;
 }
 
-.links-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    list-style: none;
-    margin: 0px;
+.links-container a {
+    padding: 0;
+    margin: 0;
 }
 
 .nav-element {
     width: 200px;
-    padding: 10px;
-    color: var(--black-text);
+    padding: 2px;
+    color: var(--white-text);
+    font-size: large;
 }
 
 .nav-element-selected {
     color: var(--white-text);
-    background-color: var(--c1);
+    /* background-color: var(--c1); */
+    /* background-color: #064635; */
+    background-color: #003580;
+    border-radius: 0 0 15px 15px;
+    /* transition: 0.25s ease-out; */
+
 }
 
 .nav-element-btn {
@@ -47,12 +47,68 @@
 }
 
 .nav-element-btn:hover {
-    background-color: var(--c3);
+    background-color: #116912;
     color: var(--black-text);
 }
 
-@media screen and (max-width: 768px) {
-    .private-nav {
-        position: static;
+.logoConsole {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: var(--white-text);
+    /* background-color: #064635; */
+    /* background-color: #e0e0e0; */
+    background-color: #003580;
+    margin: 0px;
+    /* padding: 0.7rem; */
+    /* display: flex;
+    justify-content: center; */
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+.admin-btn {
+    color: white;
+}
+
+.logoLink {
+    cursor: pointer;
+    color: whitesmoke;
+    /* font-style: italic; */
+    /* background: #e0e0e0;
+    box-shadow: inset -20px 20px 60px #bebebe,
+                inset 20px -20px 60px #ffffff; */
     }
+
+.hamButtonNav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 2.8rem;
+    text-align: start;
+    padding: 1rem;
+}
+
+.dropDownNav {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.showDropDownNav {
+    max-height: 100vh !important;
+}
+
+/* .LogoutButtonNav{
+    position: absolute;
+    top: calc(1.275rem + 0.3vw + 13px);
+    padding: 4px;
+    right: 0%;
+} */
+
+.language-setter {
+    height: 30px;
+    font-size: medium;
+    /* position: absolute; */
+    right: 20px;
 }

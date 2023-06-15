@@ -7,6 +7,7 @@ import axios from 'axios'
 // import { SOCKET_URL as socketURL } from './config'
 import CustomImageLoader from 'react-custom-image-loader.'
 import grains from '../assets/icons/grain.png'
+import Loader from '../assets/loader/Loader'
 
 const UserContext = React.createContext()
 
@@ -25,6 +26,7 @@ export function UserProvider({ children }) {
     const checkTokenCookie = cookies.get("isLoggedIn");
     const [currentUser, setCurrentUser] = useState()
     const [userData, setUserData] = useState()
+    const [adminData, setAdminData] = useState()
     const [userCampaigns, setUserCampaigns] = useState()
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
@@ -113,6 +115,32 @@ export function UserProvider({ children }) {
         }
     };
 
+
+    async function getAdminData() {
+        try {
+            const response = await axios.post("/user/admin/data", { userId: currentUser })
+            if (response.hasOwnProperty("data")) {
+                setAdminData(response.data.data)
+                return response.data
+            }
+            else throw response
+        } catch (error) {
+            return error.response.data
+        }
+    }
+
+    async function verifyUserEmail(otp) {
+        try {
+            const response = await axios.post("/auth/otp/verify", { userId: currentUser, code: otp })
+            if(response.hasOwnProperty("data")) {
+                return response.data
+            }
+            else throw response
+        } catch (error) {
+            return error.response.data
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////AUTH FUNCTIONS END HERE//////////////////////////////
     ////////////////////////////////////////////////////////////
@@ -140,7 +168,8 @@ export function UserProvider({ children }) {
 
     async function getUserData() {
         try {
-            setLoading(true)
+            // if(!loading)
+            //     // setLoading(true)
             if (!currentUser) return
             const response = await axios.post("/user/data", { userId: currentUser })
             if (response.hasOwnProperty("data")) {
@@ -153,12 +182,13 @@ export function UserProvider({ children }) {
         } catch (error) {
             throw error
         }
-        setLoading(false)
+        // setLoading(false)
     }
 
     async function getUserCampaigns() {
         try {
-            setLoading(true)
+            // if(!loading)
+                // setLoading(true)
             if (!currentUser) return
             const response = await axios.post("/user/campaigns", { userId: currentUser })
             if (response.hasOwnProperty("data")) {
@@ -171,7 +201,7 @@ export function UserProvider({ children }) {
         } catch (error) {
             throw error
         }
-        setLoading(false)
+        // setLoading(false)
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -185,7 +215,10 @@ export function UserProvider({ children }) {
     async function getOrderId(purchaseData) {
         try {
             const response = await axios.post("/wallet/order/create", purchaseData)
-            if(response.hasOwnProperty("data"))
+            if (response.data.error) {
+                return response.data
+            }
+            if (response.hasOwnProperty("data"))
                 return response.data.data
             else throw response
         } catch (error) {
@@ -196,11 +229,26 @@ export function UserProvider({ children }) {
     async function verifyPayment(paymentData) {
         try {
             const response = await axios.post("/wallet/payment/verify", paymentData)
-            if(response.hasOwnProperty("data"))
+            if (response.hasOwnProperty("data"))
                 return response.data.data
             else throw response
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async function getProductData(prodId) {
+        try {
+            const response = await axios.get("/store/products/" + prodId)
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data)
+                return response.data.data
+            } else {
+                console.log(response)
+                throw response
+            }
+        } catch (error) {
+            throw error
         }
     }
 
@@ -211,14 +259,13 @@ export function UserProvider({ children }) {
     useEffect(() => {
         if (checkTokenCookie)
             checkToken();
-        else setLoading(false)
         console.log(checkTokenCookie);
         // if(!userData) getUserData()
     }, [checkTokenCookie]);
 
 
     const value = {
-        loadingUser:loading,
+        loadingUser: loading,
         currentUser,
         userData,
         theme,
@@ -232,12 +279,15 @@ export function UserProvider({ children }) {
         getUserCampaigns,
         userCampaigns,
         getOrderId,
-        verifyPayment
+        verifyPayment,
+        getAdminData,
+        adminData,
+        verifyUserEmail
     }
     return (
         <UserContext.Provider value={value}>
             {
-                loading ? <> <div className='d-flex w-100 vh-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'}/></div></>
+                loading ? <> <div className='d-flex w-100 vh-100 justify-content-center align-items-center'><Loader height="300px" width="300px"></Loader></div></>
                     :
                     children
             }

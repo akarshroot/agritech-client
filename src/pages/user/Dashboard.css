@@ -1,66 +1,82 @@
-.bg-dashboard {
-    background-image: url(../../assets/backgrounds/stacked-peaks.svg);
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: -10;
+.dashboard-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  background-color: #f4f6f7;
+  z-index: 0;
 }
 
-.dashboard-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 100vh;
+.welcome-user {
+  padding: 30px 0 40px 40px;
+  /* width: 100vw; */
 }
 
 .profile-section {
-    background-color: var(--c3);
-    color: var(--black-text);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border-left: 2px solid var(--c1);
-    border-right: 2px solid var(--c1);
+  background-color: var(--c3);
+  color: var(--black-text);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid var(--c1);
+  border-right: 2px solid var(--c1);
 }
 
 .profile-image-container img {
-    border-radius: 50%;
-    aspect-ratio: 1;
-    max-width: 80%;
-    border: 2px solid var(--c4);
-    margin: 20px 20px 5px;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  max-width: 80%;
+  border: 2px solid var(--c4);
+  margin: 20px 20px 5px;
 }
 
 .details-section-element {
-    margin: 10px;
+  margin: 10px;
 }
 
-.widgets-section {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+.all-widgets-container {
+  width: 100%;
+  padding-left: 30px;
 }
 
 .widget {
-    min-width: 300px;
-    height: 300px;
-    margin: 20px;
-    border-radius: 12px;
-    background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+  position: relative;
+  overflow: hidden;
+  /* margin: 20px; */
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow:  5px 5px 31px #e5e4e4,
+                -5px -5px 31px #ffffff;
 }
-
 .no-skeleton-widget:hover {
-    animation: bringFwd 500ms linear;
-    z-index: 999;
+  animation: bringFwd 500ms linear;
+  z-index: 999;
 }
 
 @keyframes bringFwd {
-    from {
-        z-index: 0;
-    }
-    to {
-        z-index: 12;
-    }
+  from {
+    z-index: 0;
+  }
+  to {
+    z-index: 12;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .all-widgets-container {
+    /* display: flex; */
+    /* width: 100%; */
+    justify-content: center;
+    padding-left: 20px;
+    /* height: 100vh; */
+  }
+  .widget {
+    width: 100%;
+  }
+  .welcome-user > h2 {
+    text-align: center;
+    padding: 0;
+  }
 }

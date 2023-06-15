@@ -1,0 +1,14 @@
+.cart-btn{
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 12;
+}
+
+.cart-img{
+    height: 40px;
+}
+
+.cart-list:hover{
+    cursor: pointer;
+}

@@ -59,7 +59,7 @@ export function StoreContextProvider({ children }) {
     }
 
     function addToCart(product) {
-        setCart([...cart, {product: product}])
+        setCart([...cart, { product: product }])
         setCartTotal(cartTotal + product.price)
         saveCart(product._id)
     }
@@ -90,7 +90,7 @@ export function StoreContextProvider({ children }) {
     async function saveCart(productId) {
         try {
             const response = await axios.post("/user/cart/", { userId: currentUser, productId: productId })
-            if(!response.hasOwnProperty("data")) throw response
+            if (!response.hasOwnProperty("data")) throw response
             getUserCart()
         } catch (error) {
             console.log(error);
@@ -101,17 +101,17 @@ export function StoreContextProvider({ children }) {
         try {
             setCart(cart.filter(item => item._id != itemId))
             const response = await axios.delete("/user/cart/" + itemId)
-            if(!response.hasOwnProperty("data")) throw response
+            if (!response.hasOwnProperty("data")) throw response
         } catch (error) {
             console.log(error);
         }
     }
-    
+
     async function getUserCart() {
         try {
             setCartLoading(true)
             const response = await axios.get("/user/cart?user=" + currentUser)
-            if(response.hasOwnProperty("data")) {
+            if (response.hasOwnProperty("data")) {
                 setCart(response.data.data)
                 setCartTotal(response.data.cartTotal)
                 setCartLoading(false)
@@ -124,12 +124,24 @@ export function StoreContextProvider({ children }) {
         }
     }
 
+    async function createOrder(productId, password) {
+        try {
+            const response = await axios.post("/store/order/create", { userId: currentUser, product: productId, password: password })
+            if(response.hasOwnProperty("data"))
+                return response.data
+            else throw response
+        } catch (error) {
+            console.log(error.response.data.message);
+            return error.response.data
+        }
+    }
+
     useEffect(() => {
         setSkip(shopContent.length)
     }, [shopContent])
-    
-    useEffect(()=> {
-        if(currentUser) {
+
+    useEffect(() => {
+        if (currentUser) {
             getUserCart()
         }
     }, [currentUser])
@@ -155,7 +167,8 @@ export function StoreContextProvider({ children }) {
         cartTotal,
         setCartTotal,
         cartLoading,
-        deleteCartItem
+        deleteCartItem,
+        createOrder
     }
     return (
         <StoreContext.Provider value={values}>

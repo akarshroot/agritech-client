@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap');
 
+.bg-img{
+    background-image: url('../../assets/backgrounds/bg.jpg');
+    height: 260vh;
+    background-size: cover;
+}
 
 .hero-sec{
     margin-top: 150px;
@@ -9,23 +14,28 @@
     font-size: 60px !important;
     color: #40513b;
 }
-
+/* 
 h2{
     color: #40513b;
-}
+} */
 
 .img-hero{
     text-align: right;
     position: relative;
 }
 
+.img-hero-main{
+    position: relative;
+    z-index: 20;
+}
 
 .creative-shape{
     position: absolute;
     bottom: 0;
     width: 100%;
+    transition: all 4s;
     height: auto;
-    z-index: -1;
+    z-index: 15;
     left: -4%;
 }
 
@@ -34,8 +44,9 @@ h2{
     position: absolute;
     bottom: 0;
     width: 100%;
+    transition: all 4s;
     height: auto;
-    z-index: -1;
+    z-index: 7;
     left: -1%;
 }
 
@@ -52,10 +63,15 @@ img{
     position: relative;
     left: -200px;
     height: 100%;
+    transition: all 2s;
+    border: solid green;
+    overflow: hidden;
     /* height: 30%; */
     /* top: 90px; */
 }
-
+.feat-img img{
+    object-fit: cover;
+}
 .text-left{
     text-align: left !important;
     margin: 30px;
@@ -72,86 +88,55 @@ img{
     top: 40px;
     z-index: -1;
 }
-
-
-/* .home-container {
-    display: flex;
-    flex-direction: column;
+.BorderAnimation{
+    border: solid green;
+    background-color: green;
+    opacity: 30%;
+    position: absolute;
+    border-radius: 30% 45% 50% 40%;
     width: 100%;
-    background: rgb(221, 221, 221);
-    background: linear-gradient(144deg, rgba(221, 221, 221, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    aspect-ratio: 1;
+    z-index: -1;
+    rotate: 0deg;
 }
-
-.section {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+.preFade{
+    opacity: 0;
+    transition: all 1s ease-in;
+    translate: -5%;
 }
-
-.section h1 {
-    font-family: "Tilt Warp";
-    font-size: 50px;
-    text-align: left;
+.preFadeRight{
+    opacity: 0;
+    transition: all 1s ease-in;
+    translate: 5%;
 }
-
-.section h2 {
-    font-family: "Tilt Warp";
-    font-size: 35px;
-    text-align: left;
+.preFadeBottom{
+    opacity: 0;
+    transition: all 1s ease-in;
+    translate: 0% -5vh;
 }
-
-.section .subtext {
-    font-family: sans-serif;
-    font-size: 20px;
-    color: grey;
-    text-align: left;
+.preFadeUp{
+    opacity: 0;
+    transition: all 1s ease-in;
+    translate: 0% 5vh;
 }
-
-.section img {
-    width: 80%;
-    border-radius: 12px;
+.fadeIn{
+    opacity: 1;
+    translate: 0%;
 }
-
-.left-img {
-    padding: 0px;
-    display: flex;
-    justify-content: left;
+.rotateIn{
+    transition: all 3s ease-in-out;
+    rotate: 270deg;
 }
-
-.left-img img {
-    border-bottom-left-radius: 0px;
-    border-top-left-radius: 0px;
+.loopRotate{
+    animation-name: loopRotateAnimate;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
 }
-
-.right-img {
-    padding: 0px;
-    display: flex;
-    justify-content: right;
+@keyframes loopRotateAnimate {
+    0%{
+        rotate: 0deg;
+    }
+    100%{
+        rotate: 360deg;
+    }
 }
-
-.right-img img {
-    border-bottom-right-radius: 0px;
-    border-top-right-radius: 0px;
-}
-
-.left,
-.right {
-    width: 50%;
-    padding-top: 20px;
-}
-
-.left .section-text {
-    margin-left: 20%;
-}
-
-.right .section-text {
-    margin-left: 5%;
-}
-
-.section-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-} */
