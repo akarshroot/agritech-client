@@ -34,7 +34,7 @@ export function Cart() {
                 !cartLoading ?
                     <>
                         <div className={`cart theme-${theme}`}>
-                            <Button variant="warning cart-btn" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;View Cart <b>({cart.length})</b></Button>
+                            <Button variant="primary cart-btn" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;View Cart <b>({cart.length})</b></Button>
                         </div>
                         <Modal
                             show={showCart}

@@ -26,6 +26,7 @@ import AdminConsole from './pages/user/AdminConsole';
 import Forbidden from './pages/public/Forbidden';
 import Loader from './assets/loader/Loader'
 import AgriNeeds from './pages/user/agristore/AgriNeeds';
+import FarmFresh from './pages/user/agristore/FarmFresh';
 import Whitepaper from './pages/public/Whitepaper';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
                   <Route exact path='/campaigns/all' element={<PrivateBody body={ExploreCampaigns} />} />
                   <Route exact path='/agristore' element={<PrivateBody body={AgriStore} />} />
                   <Route exact path='/agrineeds' element={<PrivateBody body={AgriNeeds} />} />
+                  <Route exact path='/farmfresh' element={<PrivateBody body={FarmFresh} />} />
 
                   <Route exact path='/agristore/product/:id' element={<PrivateBody body={ProductDetails} />} />
                   <Route exact path='/campaign/details/:id' element={<PrivateBody body={CampaignDetails} />} />

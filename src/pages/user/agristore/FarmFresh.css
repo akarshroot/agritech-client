@@ -1,3 +1,22 @@
+.inventory-drop{
+    color: #003580;
+}
+
+.product-container {
+    border-radius: 12px;
+    margin: 10px;
+    transition: all 0.4s;
+    position: relative;
+}
+
+.product-container:hover{
+    transform: scale(0.95);
+}
+
+.outer-prod{
+    background-color: #c5e1a5;
+}
+
 .sidebar {
     /* position: fixed;
     top: 112px;
