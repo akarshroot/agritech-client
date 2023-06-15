@@ -6,6 +6,11 @@ import ManagementContext from '../../../context/ManagementContext';
 import Product from './Product';
 import './FarmFresh.css'
 import Button from 'react-bootstrap/esm/Button';
+import farmFresh from '../../../assets/images/farmFresh.jpg'
+import SideBar from './SideBar';
+import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent';
+import tag from '../../../assets/images/tag.png'
+import rating from '../../../assets/images/rating.png'
 
 export default function FarmFresh() {
   const productSelect = [{
@@ -99,7 +104,7 @@ export default function FarmFresh() {
                   <div className='row p-0 m-0 rounded '>
                     <div className='col-8 d-flex flex-column justify-content-center'>
                       <div>{receiverProduct[0].title}</div>
-                      {receiverProduct[0].estCost && <div>{receiverProduct[0].estCost} KCO</div>}
+                      {receiverProduct[0].estCost && <div>{receiverProduct[0].estCost} /-</div>}
                     </div>
                   </div>
                   {dropdown && (
@@ -128,40 +133,60 @@ export default function FarmFresh() {
         </Modal.Footer>
       </Modal>
 
-      <div className='d-flex p-5 justify-content-around flex-wrap'>
+      <div className='row'>
+        <nav id="sidebarMenu" className="d-lg-block sidebar bg-white col-md-2 position-relative">
+          <div className="side-position">
+            <div className="list-group list-group-flush mx-3 mt-4">
+              <li className="list-group-item side-list active">Category</li>
+              <li className="list-group-item side-list ">Fruits</li>
+              <li className="list-group-item side-list ">Vegetables</li>
+              <li className="list-group-item side-list ">Herbs & Seasoning</li>
+              <li className="list-group-item side-list ">Cuts & Sprouts</li>
+              
+              <li className="list-group-item side-list active">Prices</li>
+              <li className="list-group-item side-list ">Less than 20 KCO</li>
+              <li className="list-group-item side-list ">21 KCO to 50 KCO</li>
+              <li className="list-group-item side-list ">51 KCO to 100 KCO</li>
+              <li className="list-group-item side-list ">101 KCO to 200 KCO</li>
+              <li className="list-group-item side-list ">201 KCO to 500 KCO</li>
+              <li className="list-group-item side-list ">More than 501 KCO</li>
+            </div>
+          </div>
+        </nav>
+
+        <div className='d-flex col-md-10 justify-content-around flex-wrap'>
         {
-          (receiverProduct.length>1) ?
-            (receiverProduct.map((e,i)=>{
-              if(i!==0){
+          (inventory.length>0) ?
+            (inventory.map((e,i)=>{
               return (
-                <div className=' product-container col-md-3 border shadow p-5'>
+                <div className=' product-container col-md-10 border shadow p-3'>
+                <div className='d-flex col-md-10 justify-content-between'>
+                  <div className='col-md-4'>
+                    <img src={farmFresh} width='100%' alt='' />
+                  </div>
+                  <div className='d-flex col-md-4 flex-column justify-content-center'>
                     <h5>{e.item}</h5>
                     <h5>({e.category})</h5>
                     <hr className='style-two' />
-                    <span>Price: {e.estCost} KCO</span>
-                    <div>Quantity: {e.quantity}</div>
+                    <span>Price:<CurrencyIconComponent size='30' adjustY={'-10%'} />KCO {e.estCost} /-</span>
+                    <div className='text-danger'>Only {e.quantity} left</div>
                     <hr className='style-two' />
-                    <div className='overlay-box'>
-                        <div className='inner d-flex justify-content-center align-items-center'>
-                            <div className="d-flex justify-content-around flex-column">
-                                <div>
-                                    <Button variant="warning w-100" >Add To Cart</Button>
-                                </div>
-                                <div className='my-4'>
-                                    <Button variant="success p-2 w-100">Buy Now</Button>
-                                </div>
-                                <Button variant="outline-success w-100" >View Details</Button>
-                            </div>
-                        </div>
+                  </div>
+                    <div className='col-md-2'>
+                      <img src={tag} alt='' /><br/>
+                      <img src={rating} alt='' />
                     </div>
-                    </div>
-              
-            )}
+                  
+                </div>
+                </div>
+            )
           }))
           :
           <h1>No items added</h1>
         }
       </div>
+      </div>
+      
       
     </>
   )

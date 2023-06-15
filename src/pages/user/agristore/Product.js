@@ -108,7 +108,7 @@ function Product(props) {
                         <div className='inner d-flex justify-content-center align-items-center'>
                             <div className="d-flex justify-content-around flex-column">
                                 <div>
-                                    <Button variant="warning w-100" onClick={() => { addToCart(props.product) }}><img src={shoppingCart} alt='' /> Add To Cart</Button>
+                                    <Button variant="primary w-100" onClick={() => { addToCart(props.product) }}><img src={shoppingCart} alt='' /> Add To Cart</Button>
                                 </div>
                                 <div className='my-4'>
                                     <Button variant="success p-2 w-100" onClick={() => {setModalDetails(props.product); setShowBuyModal(!openBuyModal)}}>{disableBuy ? "Ordering..." : "Buy Now"}</Button>
