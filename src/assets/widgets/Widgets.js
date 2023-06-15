@@ -44,6 +44,8 @@ export function renderWidget(id, props) {
             return <MSPChart {...props} />
         case "wallet-balance":
             return <WalletBalanceChart {...props} />
+        case "profile-completion":
+            return <ProfileCompletionDonut {...props} />
         default:
             return <></>
     }
@@ -560,7 +562,7 @@ export function MSPChart() {
     }
 
     useEffect(() => {
-        if(chart) chart.destroy()
+        if (chart) chart.destroy()
         const mspChart = new Chart(
             document.getElementById('acquisitions-balance'),
             {
@@ -758,6 +760,99 @@ export function WalletBalanceChart() {
                 </div>
 
             </div >
+        </>
+    )
+}
+
+export function ProfileCompletionDonut() {
+    const [loading, setLoading] = useState(false)
+    const { userData } = useUser()
+    const [donut, setDonut] = useState()
+    const dataArr = ["name", "email", "imgUrl", "region", "landArea", "phno", "about", "country", "state", "city", "pincode", "crops"]
+    let completionPercentage = 0;
+
+    function checkProfileCompletion() {
+        let completion = 0;
+        if (userData) {
+            Object.keys(userData).forEach((key) => {
+                if (dataArr.includes(key)) {
+                    // console.log(key);
+                    completion++;
+                }
+            })
+        }
+
+        completionPercentage = (completion / dataArr.length) * 100;
+        return completionPercentage
+    }
+
+    useEffect(() => {
+        setLoading(true)
+        if (userData) {
+            if (donut) donut.destroy()
+            setLoading(false)
+            let completionPercentage = checkProfileCompletion()
+            let profileCompletionDonut = new Chart(
+                document.getElementById('profile-completion'),
+                {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            "complete", "incomplete"
+                        ],
+                        datasets: [
+                            {
+                                label: 'Profile Complete',
+                                data: [
+                                    completionPercentage, 100 - completionPercentage
+                                ]
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                    }
+                }
+            )
+
+            setDonut(profileCompletionDonut)
+        }
+
+    }, [])
+
+    return (
+        <>
+            <div className='d-flex flex-column p-1 h-100'>
+                <div className="d-flex justify-content-center align-items-center flex-column">
+                    <div className="d-flex flex-column align-items-start justify-content-start w-100 p-3">
+                        <hr className='hr hr-blurry w-100 m-2' />
+                    </div>
+                    <div className="w-100" style={{ height: "90%" }}>
+                        {
+                            loading ?
+                                <div className="d-flex justify-content-center h-75 align-items-center flex-column">
+                                    <Loader height="100px" width="100px" />
+                                    Loading...
+                                </div>
+                                :
+                                // <Chart
+                                //     options={{
+                                //         data: lineData,
+                                //         primaryAxis,
+                                //         secondaryAxes,
+                                //         tooltip: false
+                                //     }}
+                                // />
+                                <></>
+                        }
+                        <canvas className='w-100' id="profile-completion"></canvas>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }
