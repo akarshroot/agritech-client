@@ -755,7 +755,8 @@ export function ProfileCompletionDonut() {
                                 label: 'Profile Complete',
                                 data: [
                                     completionPercentage, 100 - completionPercentage
-                                ]
+                                ],
+                                backgroundColor: ['green', 'silver'],
                             }
                         ]
                     },

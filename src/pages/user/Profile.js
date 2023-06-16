@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import './Profile.css'
 import ProfileTabs from './ProfileTabs'
 
@@ -6,8 +6,8 @@ function Profile() {
 
     return (
         <>
-            <div className='profile-into-sec'>
-                <h2>Manage your account</h2><br></br>
+            <div className='profile-intro-sec'>
+                <h2>Manage your account</h2>
             </div>
 
             <div className='three-profile-panes'>

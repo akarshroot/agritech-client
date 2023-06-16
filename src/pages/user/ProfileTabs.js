@@ -104,7 +104,7 @@ function ProfileTabs() {
                         <Tab.Pane eventKey="first">
                             <form className='profile-form'>
                                 <div className='profile-label-ip'>
-                                    <label className='profile-label' for="profile-name">Name : </label>
+                                    <label className='profile-label' htmlFor="profile-name">Name : </label>
                                     <input
                                         type="text"
                                         className='profile-name profile-ip' id="profileName" value={userData?.name} placeholder='Enter your name'
@@ -114,7 +114,7 @@ function ProfileTabs() {
 
                                 </div>
                                 <div className='profile-label-ip'>
-                                    <label className='profile-label' for="profile-email">Email : </label>
+                                    <label className='profile-label' htmlFor="profile-email">Email : </label>
                                     <input
                                         type="email"
                                         className='profile-email profile-ip'
@@ -132,7 +132,7 @@ function ProfileTabs() {
 
                                 </div>
                                 <div className='profile-label-ip'>
-                                    <label className='profile-label' for="profile-phno">Mobile :</label>
+                                    <label className='profile-label' htmlFor="profile-phno">Mobile :</label>
                                     <input
                                         type="number"
                                         className='profile-phno profile-ip'
@@ -151,7 +151,7 @@ function ProfileTabs() {
 
                                 </div>
                                 <div className='profile-label-ip'>
-                                    <label className='profile-label' for="profile-about">About :</label>
+                                    <label className='profile-label' htmlFor="profile-about">About :</label>
                                     <textarea
                                         rows="5"
                                         cols="35"
@@ -164,7 +164,7 @@ function ProfileTabs() {
 
                                 </div>
                                 <div className='profile-label-ip react-select-tags'>
-                                    <label className='profile-label' for='profile-country'>Country :</label>
+                                    <label className='profile-label' htmlFor='profile-country'>Country :</label>
                                     <Select
                                         className='profile-ip'
                                         id="profile-country"
@@ -184,7 +184,7 @@ function ProfileTabs() {
                                 </div>
 
                                 <div className='profile-label-ip react-select-tags'>
-                                    <label className='profile-label' for='profile-state'>State :</label>
+                                    <label className='profile-label' htmlFor='profile-state'>State :</label>
                                     <Select className='profile-ip' id="profile-state"
                                         options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
                                         getOptionLabel={(options) => {
@@ -202,7 +202,7 @@ function ProfileTabs() {
 
                                 </div>
                                 <div className='profile-label-ip react-select-tags'>
-                                    <label className='profile-label' for='profile-city'>City :</label>
+                                    <label className='profile-label' htmlFor='profile-city'>City :</label>
                                     <Select className='profile-ip' id="profile-city"
                                         options={City.getCitiesOfState(
                                             selectedState?.countryCode,
@@ -223,7 +223,7 @@ function ProfileTabs() {
                                 </div>
                                 <div className='profile-label-ip'>
                                     <div className='profile-label-ip'>
-                                        <label className='profile-label' for="profile-pincode">Pincode :</label>
+                                        <label className='profile-label' htmlFor="profile-pincode">Pincode :</label>
                                         <input
                                             type="number"
                                             className='profile-pincode profile-ip'
@@ -247,7 +247,7 @@ function ProfileTabs() {
                         <Tab.Pane eventKey="second">
                             <form className='profile-form'>
                                 <div className='profile-label-ip'>
-                                    <label for='landArea'>Land Area(in heactares) :</label>
+                                    <label className='profile-label' htmlFor='landArea'>Land Area(in heactares) :</label>
                                     <input
                                         type="float" className='profile-ip' placeholder='Enter land area in heactares'
                                         value={editStatus ? agriDetails?.landArea : userData?.landArea} onChange={(e) => { editAgriDetails(e) }}
@@ -256,7 +256,7 @@ function ProfileTabs() {
                                     />
                                 </div>
                                 <div className='profile-label-ip'>
-                                    <label for='landRegion'>Land Region :</label>
+                                    <label className='profile-label' htmlFor='landRegion'>Land Region :</label>
                                     <input
                                         type="text" className='profile-ip' placeholder="Enter your land's region"
                                         value={editStatus ? agriDetails?.region : userData?.region} onChange={(e) => { editAgriDetails(e) }}
@@ -264,7 +264,7 @@ function ProfileTabs() {
                                         disabled={!editStatus} />
                                 </div>
                                 <div className='profile-label-ip'>
-                                    <label for="crops">Crops :</label>
+                                    <label className='profile-label' htmlFor="crops">Crops :</label>
                                     <input
                                         type="text"
                                         ref={crops} className='profile-ip' placeholder='Enter the crop(s) you sow' disabled={!editStatus} /><button className='add-crop-btn' onClick={(e) => {
@@ -278,15 +278,15 @@ function ProfileTabs() {
                                     {
                                         cropsSown.length == 0 ? <p>No crops added yet!</p> : cropsSown.map((data) => {
                                             return (
-                                                <li>{data} <button className="crop-del-btn" onClick={(e) => {
+                                                <li className='crops-list'>{data} <button className="crop-del-btn" onClick={(e) => {
                                                     delCrop(e, data)
-                                                }}><LuDelete /></button></li>
+                                                }}><LuDelete className='delete-crop-icon' /></button></li>
                                             )
                                         })
                                     }
                                 </div>
                                 <div className='image-gallery profile-label-ip'>
-                                    <label for="field-img">Add image :</label>
+                                    <label className='profile-label' htmlFor="field-img">Add image :</label>
                                     <input type="file" id="field-img" className='profile-ip'
                                         disabled={!editStatus}
                                     />
