@@ -328,7 +328,6 @@ function ProfileTabs() {
                                 <p><i>Joined on {new Date(userData?.createdAt).toLocaleString()}</i></p>
                                 <p className='user-bio'><i>//Bio Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed convallis sollicitudin quam, id tincidunt libero cursus at. Duis condimentum, nunc at tincidunt placerat, nunc nunc consectetur lectus, vitae pulvinar leo tellus tincidunt libero.</i></p>
                             </div>
-                            <p>Joined on..</p>
                         </div>
                     </div>
                 </Col>

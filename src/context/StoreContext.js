@@ -136,6 +136,17 @@ export function StoreContextProvider({ children }) {
         }
     }
 
+    async function sendToFarmFresh(cropsData) {
+        try {
+            const response = await axios.post("/store/farmfresh/products/add", cropsData)
+            if (response.hasOwnProperty("data"))
+                return response.data
+            else throw response.response.data
+        } catch (error) {
+            return error
+        }
+    }
+
     useEffect(() => {
         setSkip(shopContent.length)
     }, [shopContent])
@@ -168,7 +179,8 @@ export function StoreContextProvider({ children }) {
         setCartTotal,
         cartLoading,
         deleteCartItem,
-        createOrder
+        createOrder,
+        sendToFarmFresh
     }
     return (
         <StoreContext.Provider value={values}>
