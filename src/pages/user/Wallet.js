@@ -386,12 +386,12 @@ function Wallet() {
           <Table responsive>
             <tbody>
               {
-                <tr>
+                <tr colSpan={2} className='w-100'>
                   <td>
                     <h3>Address:</h3>
                   </td>
-                  <td className='AddressClassTD'>
-                    <h5 hidden={!showAddress} className='AddressClass' title='Copy' onClick={() => { navigator.clipboard.writeText(userData?.walletAddress) }} >{userData?.walletAddress}
+                  <td className='AddressClassTD word-break-all'>
+                    <h5 hidden={!showAddress} className='AddressClass mt-2' title='Copy' onClick={() => { navigator.clipboard.writeText(userData?.walletAddress) }} >{userData?.walletAddress}
                     </h5>
                     <sub className='text-center lead'>
                       <span onClick={hideShowAddress} className='Camplink m-4'>{!showAddress ? "Show" : "Hide"} Address</span>
