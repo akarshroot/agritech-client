@@ -1,8 +1,8 @@
 import {useState} from 'react'
 
-export default function useInput(type,placeholder) {
+export default function useInput(type,placeholder, defaultValue) {
     
-    const [data,setData] = useState('')
+    const [data,setData] = useState(defaultValue ? defaultValue : "")
 
     function handleChange(e){
         // console.log(e.target.value)

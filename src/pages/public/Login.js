@@ -69,7 +69,7 @@ function Login() {
     return (
         <>
             <Helmet>
-                <title>SignUp | AgriTech</title>
+                <title>Login | AgriTech</title>
             </Helmet>
             <ToastContainer
                 position="top-right"

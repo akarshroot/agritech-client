@@ -1004,10 +1004,15 @@ function ModalForm({ show, handleShow }) {
 }
 
 export function ContributeModal({ show, handleShow, cid, minContri }) {
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const password = useInput('password', "Password")
-  const amount = useInput('number', "how much?")
+  const amount = useInput('number', "how much?", searchParams.get('contribute') ? parseInt(searchParams.get('contribute')) : undefined)
   const [loading, setLoading] = useState(false)
+  
+  useEffect(() => {
+    amount.onChange(searchParams.get('contribute') ? parseInt(searchParams.get('contribute')) : "")
+  }, [searchParams])
+  
 
   async function handleSubmit(e) {
     e.preventDefault()

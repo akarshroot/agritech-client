@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useLocation, useSearchParams } from 'react-router-dom'
 import DOMPurify from 'dompurify'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
@@ -14,14 +14,49 @@ import { useUser } from '../../../context/UserContext'
 import StoreContext from '../../../context/StoreContext'
 import Loader from '../../../assets/loader/Loader'
 import AlreadyContributed from '../../../assets/icons/tick-box.svg'
-import {getCampbyId} from '../../../interceptors/serverAPIs'
+import { getCampbyId } from '../../../interceptors/serverAPIs'
 import { createVoteReq, usevoteReq, voteForReq } from '../../../interceptors/web3ServerApi'
 
 import './CampaignDetails.css'
+import QRCodeStyling from 'qr-code-styling'
+import KCOImg from '../../../assets/icons/currencyIcon.png'
 
 
-function CreatorDetails({ refPass,isOwner, imgUrl, name, email, walletAddress, openModal }) {
-  const [showWalletAdd,setShowWalletAdd] = useState(false);
+function CreatorDetails({ refPass, isOwner, imgUrl, name, email, walletAddress, openModal, campaignAddress }) {
+  const [showWalletAdd, setShowWalletAdd] = useState(false);
+  const canvasRef = useRef()
+  const [qr, setQr] = useState()
+
+  function renderQR() {
+    // QRCode.toCanvas(canvasRef.current, userData.walletAddress, function (error) {
+    //   if (error) console.error(error)
+    //   console.log('success!');
+    // })
+    const qrCode = new QRCodeStyling({
+      width: 200,
+      height: 200,
+      image: KCOImg,
+      dotsOptions: {
+        color: "#064635",
+        type: "rounded"
+      },
+      imageOptions: {
+        crossOrigin: "anonymous",
+        margin: 5
+      },
+      data: campaignAddress
+    })
+    if (canvasRef.current.innerHTML === "") {
+      qrCode.append(canvasRef.current)
+      setQr(qrCode)
+    }
+  }
+
+  useEffect(() => {
+    renderQR()
+  }, [canvasRef])
+
+
   return (
     <div ref={refPass}>
       <div>
@@ -29,7 +64,14 @@ function CreatorDetails({ refPass,isOwner, imgUrl, name, email, walletAddress, o
           <button onClick={openModal} className='campDonateButton'>Contribute Here</button>
         </div>
       </div>
-      <div className='d-flex flex-column justify-content-center p-3 m-3 border h-100'>
+
+      <div className='d-flex flex-column justify-content-start p-3 m-3 border h-100'>
+        <div>
+          <span className='w-100 text-center'>
+            Scan & Contribute
+          </span>
+          <div className='qrcode-container w-100 mb-3' ref={canvasRef} />
+        </div>
         {!isOwner
           ? <legend>Creator</legend>
           : <legend className='bg-success bg-opacity-50 rounded '>Your Campaign</legend>
@@ -49,18 +91,18 @@ function CreatorDetails({ refPass,isOwner, imgUrl, name, email, walletAddress, o
                 <td>{email}</td>
               </tr>
               {showWalletAdd
-                &&(<tr>
-                    <th>WalletAddress</th>
-                    <td>{showWalletAdd? walletAddress:<p className='CampLink'>Show Address</p>}</td>
-                  </tr>)
+                && (<tr>
+                  <th>WalletAddress</th>
+                  <td>{showWalletAdd ? walletAddress : <p className='CampLink'>Show Address</p>}</td>
+                </tr>)
               }
             </tbody>
           </Table>
-          <span onClick={()=>{setShowWalletAdd(!showWalletAdd)}} className='Camplink m-4'>{!showWalletAdd? "Show" : "Hide"} Wallet Address</span>
+          <span onClick={() => { setShowWalletAdd(!showWalletAdd) }} className='Camplink m-4'>{!showWalletAdd ? "Show" : "Hide"} Wallet Address</span>
           <div className='ViewProfileButtonContainer'>
-              <button className='ViewProfileButton'>
-                View Profile
-              </button>
+            <button className='ViewProfileButton'>
+              View Profile
+            </button>
           </div>
         </div>
       </div>
@@ -68,35 +110,36 @@ function CreatorDetails({ refPass,isOwner, imgUrl, name, email, walletAddress, o
   )
 }
 
-function CampaignDescription({refPass,description}){
+function CampaignDescription({ refPass, description }) {
   return (
     <div ref={refPass} className='text-start p-3 ps-5'>
       <h3 className='p-0 m-0'>
-          Description
+        Description
       </h3>
-      <hr/>
+      <hr />
       <div className='descriptionContent'>
-        <div dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(description)}}>
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}>
         </div>
       </div>
-      <hr/>
+      <hr />
     </div>
   )
 }
 
-function CampaignPledgesAndPromises({pledges,refPass}){
+function CampaignPledgesAndPromises({ pledges, refPass, openContributionModal }) {
+  const [searchParams, setSearchParams] = useSearchParams()
   console.log(pledges)
   return (
     <div ref={refPass}>
       <div className='text-start p-3'>
         <h3 className='p-0 m-0'>
-            Plegdes and Promises
+          Plegdes & Promises
         </h3>
       </div>
-      <hr/>
+      <hr />
       <div className='CampaignPledgesAndPromisesShowcase p-3'>
-        {pledges.map(e=>{
-          return(
+        {pledges.map(e => {
+          return (
             <div className='pledgeCard m-3 shadow border rounded'>
               <div className='pledgeCardHead'>
                 <div className='p-3'>
@@ -111,19 +154,22 @@ function CampaignPledgesAndPromises({pledges,refPass}){
                 </div>
               </div>
               <div className='pledgeCardBody'>
-                {e.selectedCrops.map((f,i) => (
-                  <div key={'PromiseKey'+e.id+'and'+i}>
-                      <hr/>
-                      <div className='EachPromiseInPledge p-2'>
-                        <b>{f.discount}%</b> discount on up to
-                        <b> {f.quantity} {f.unit}</b> of <b>{f.crop}</b>
-                      </div>
+                {e.selectedCrops.map((f, i) => (
+                  <div key={'PromiseKey' + e.id + 'and' + i}>
+                    <hr />
+                    <div className='EachPromiseInPledge p-2'>
+                      <b>{f.discount}%</b> discount on up to
+                      <b> {f.quantity} {f.unit}</b> of <b>{f.crop}</b>
+                    </div>
                   </div>
                 ))}
               </div>
-              <hr/>
+              <hr />
               <div className='pledgeCardFooter'>
-                <Button variant='success m-2'>Contribute</Button>
+                <Button variant='success m-2' onClick={() => {
+                  setSearchParams({ "contribute": e.KCOLimit })
+                  openContributionModal()
+                }}>Contribute</Button>
               </div>
             </div>
           )
@@ -133,7 +179,7 @@ function CampaignPledgesAndPromises({pledges,refPass}){
   )
 }
 
-function CampaignInfo({ maxAmountReached,refPass,title, raisedAmount, target, contributors,featuredImage }) {
+function CampaignInfo({ maxAmountReached, refPass, title, raisedAmount, target, contributors, featuredImage }) {
   const { currentUser } = useUser()
   return (
     <div ref={refPass}>
@@ -149,7 +195,7 @@ function CampaignInfo({ maxAmountReached,refPass,title, raisedAmount, target, co
       </div>
       <hr />
       <div className='campFeaturedImageContainer' >
-          <img className='campFeaturedImage w-100' src={featuredImage} alt='FeaturedImage' />
+        <img className='campFeaturedImage w-100' src={featuredImage} alt='FeaturedImage' />
       </div>
       <div className='mx-5 text-start '>
         <div>
@@ -189,7 +235,7 @@ function CampaignInfo({ maxAmountReached,refPass,title, raisedAmount, target, co
   )
 }
 
-function TransactionsHistory({ refPass,tx }) {
+function TransactionsHistory({ refPass, tx }) {
   return (
     <div ref={refPass}>
       <div>
@@ -214,7 +260,7 @@ function TransactionsHistory({ refPass,tx }) {
   )
 }
 
-function CampaignVotesinfo({ refPass,isOwner, voteRequests, _id, contributors,userId }) {
+function CampaignVotesinfo({ refPass, isOwner, voteRequests, _id, contributors, userId }) {
   const [show, setShow] = useState(false);
   function handleShow() {
     setShow(!show);
@@ -230,10 +276,10 @@ function CampaignVotesinfo({ refPass,isOwner, voteRequests, _id, contributors,us
           Withdraw requests
         </h3>
       </div>
-      <hr/>
+      <hr />
       {isOwner && (
         <Button onClick={handleShow} variant='success'>+ Make a Request</Button>
-        )}
+      )}
       <div>
         {voteRequests.length === 0 ? <div className='py-3'>No Requests</div>
           : (
@@ -243,7 +289,7 @@ function CampaignVotesinfo({ refPass,isOwner, voteRequests, _id, contributors,us
                   return (
                     <WithdrawRequests
                       isOwner={isOwner}
-                      toPersonal={userId===data.receiver}
+                      toPersonal={userId === data.receiver}
                       key={'votesContainerKey' + i}
                       cid={_id}
                       voters={contributors.length}
@@ -260,59 +306,59 @@ function CampaignVotesinfo({ refPass,isOwner, voteRequests, _id, contributors,us
   )
 }
 
-function CampaignPlanDetails({refPass,title,requirements,...props}){
-  return(
+function CampaignPlanDetails({ refPass, title, requirements, ...props }) {
+  return (
     <div ref={refPass}>
       <div className='p-3 text-start'>
         <h3 className='p-0 m-0'>
           Plan - {title}
         </h3>
       </div>
-      <hr/>
+      <hr />
       <div className='CampPlanRequirements rounded row m-0 p-2'>
-          {requirements.map((e,key) => {
-            return(
-              <div className='col-md-4' key={'campPlanRequirements'+key}>
-                <div className='eachRequiredProduct rounded bg-white p-3 shadow'>
-                  <Table striped>
-                    <tbody>
-                      <tr>
-                        <th>Type:</th>
-                        <td>{e.category}</td>
-                      </tr>
-                      <tr>
-                        <th>Item:</th>
-                        <td>{e.item}</td>
-                      </tr>
-                      <tr>
-                        <th>Price:</th>
-                        <td>{e.estCost}</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
+        {requirements.map((e, key) => {
+          return (
+            <div className='col-md-4' key={'campPlanRequirements' + key}>
+              <div className='eachRequiredProduct rounded bg-white p-3 shadow'>
+                <Table striped>
+                  <tbody>
+                    <tr>
+                      <th>Type:</th>
+                      <td>{e.category}</td>
+                    </tr>
+                    <tr>
+                      <th>Item:</th>
+                      <td>{e.item}</td>
+                    </tr>
+                    <tr>
+                      <th>Price:</th>
+                      <td>{e.estCost}</td>
+                    </tr>
+                  </tbody>
+                </Table>
               </div>
-            )
-          })}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
 }
 
-function CampaignNavigation({refs,title}){
-  return(
+function CampaignNavigation({ refs, title }) {
+  return (
     <div className='CampaignNavigationNavigation p-3'>
       <div className='innerCampaignNavigationNavigation p-4 shadow rounded'>
         <h5 className='m-0'>
           {title}
         </h5>
-        <hr/>
+        <hr />
         <ul>
-          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.details.current.scrollIntoView()}}>Start</button></li>
-          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.description.current.scrollIntoView()}}>Description</button></li>
-          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.pledges.current.scrollIntoView()}}>Plegdes and Promises</button></li>
-          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.votes.current.scrollIntoView()}}>Withdraw requests</button></li>
-          <li><button className='campNavInternalLinkingButton' onClick={()=>{refs.plans.current.scrollIntoView()}}>Plan</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={() => { refs.details.current.scrollIntoView() }}>Start</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={() => { refs.description.current.scrollIntoView() }}>Description</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={() => { refs.pledges.current.scrollIntoView() }}>Plegdes and Promises</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={() => { refs.votes.current.scrollIntoView() }}>Withdraw requests</button></li>
+          <li><button className='campNavInternalLinkingButton' onClick={() => { refs.plans.current.scrollIntoView() }}>Plan</button></li>
         </ul>
       </div>
     </div>
@@ -340,7 +386,7 @@ function CampaignPrograssBar({ raisedAmount, target }) {
     </div>
   )
 }
-function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber,toPersonal }) {
+function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwner, voteNumber, toPersonal }) {
 
   const [loading, setLoading] = useState(false)
   const [prompt, openPrompt] = useState(false)
@@ -475,16 +521,16 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
           {parseInt(voters) === 0 ? <div>No contributors yet</div> : <CampaignPrograssBar raisedAmount={votes} target={voters} />}
         </div>
         {toPersonal
-        ? (
-          <div>
-            Requested for Personal use.
-          </div>
-        )
-        :(
-          <div>
-            Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
-          </div>
-        )
+          ? (
+            <div>
+              Requested for Personal use.
+            </div>
+          )
+          : (
+            <div>
+              Requested for : <Link to={`/agristore/product/${receiver}`}>Product</Link>
+            </div>
+          )
         }
         <div className='text-center py-3'>
           {!isOwner
@@ -598,7 +644,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
       size='md'
     >
       <Modal.Header closeButton>
-        <Modal.Title>Contribute</Modal.Title>
+        <Modal.Title>Withdraw Request</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <h4>Create a withdraw request</h4>
@@ -700,7 +746,7 @@ export default function CampaignDetails() {
   const [show, setShow] = useState(false);
   const params = useParams()
   //REFERENCES
-  
+
   const CreatorDetailsID = useRef()
   const CampaignDescriptionID = useRef()
   const CampaignPledgesAndPromisesIDs = useRef()
@@ -708,13 +754,13 @@ export default function CampaignDetails() {
   const CampaignPlanDetailsID = useRef()
   const CampaignVotesinfoID = useRef()
 
-  const refSForNav={
-    details:CreatorDetailsID,
-    description:CampaignDescriptionID,
-    pledges:CampaignPledgesAndPromisesIDs,
-    info:CampaignInfoID,
-    plans:CampaignPlanDetailsID,
-    votes:CampaignVotesinfoID
+  const refSForNav = {
+    details: CreatorDetailsID,
+    description: CampaignDescriptionID,
+    pledges: CampaignPledgesAndPromisesIDs,
+    info: CampaignInfoID,
+    plans: CampaignPlanDetailsID,
+    votes: CampaignVotesinfoID
 
   }
   //REFERENCES
@@ -722,7 +768,7 @@ export default function CampaignDetails() {
   function handleShow() {
     setShow(!show)
   }
-  async function getCampaignData(id){
+  async function getCampaignData(id) {
     const resdata = await getCampbyId(id)
     changeActiveCampaign(resdata)
   }
@@ -739,10 +785,10 @@ export default function CampaignDetails() {
 
   if (!activeCampaign || !userData || loadingUser) {
     return (
-      <div style={{height:'90vh'}} className='d-flex justify-content-center align-items-center'>
+      <div style={{ height: '90vh' }} className='d-flex justify-content-center align-items-center'>
         <Loader height='150px' width='150px' />
       </div>
-      )
+    )
   }
   const contributeModalData = {
     show,
@@ -752,27 +798,27 @@ export default function CampaignDetails() {
   }
   const isOwner = userData._id === activeCampaign.manager._id
 
-  console.log("Active Campaign--->",activeCampaign)
+  console.log("Active Campaign--->", activeCampaign)
 
 
-  const valuesForCampaignVotesInfo= {
-    isOwner:isOwner, 
-    userId : userData._id,
-    _id:activeCampaign._id,
-    contributors:activeCampaign.contributors,
-    voteRequests:activeCampaign.voteRequests
+  const valuesForCampaignVotesInfo = {
+    isOwner: isOwner,
+    userId: userData._id,
+    _id: activeCampaign._id,
+    contributors: activeCampaign.contributors,
+    voteRequests: activeCampaign.voteRequests
   }
 
   return (
     <div className='container py-4'>
       <div className='CampaignDetailsPageContainer shadow'>
-        <CreatorDetails refPass={CreatorDetailsID} {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
+        <CreatorDetails refPass={CreatorDetailsID} {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} campaignAddress={activeCampaign.address} />
         <CampaignInfo refPass={CampaignInfoID} {...activeCampaign} />
         <CampaignDescription refPass={CampaignDescriptionID} description={activeCampaign.description} />
-        <CampaignPledgesAndPromises refPass={CampaignPledgesAndPromisesIDs} pledges={activeCampaign.pledges}/>
-        <CampaignPlanDetails refPass={CampaignPlanDetailsID} {...activeCampaign.associatedPlan}/>
+        <CampaignPledgesAndPromises refPass={CampaignPledgesAndPromisesIDs} pledges={activeCampaign.pledges} openContributionModal={handleShow} />
+        <CampaignPlanDetails refPass={CampaignPlanDetailsID} {...activeCampaign.associatedPlan} />
         <CampaignVotesinfo refPass={CampaignVotesinfoID} {...valuesForCampaignVotesInfo} />
-        {(activeCampaign.campaignTransactions && isOwner)? <TransactionsHistory tx={activeCampaign.campaignTransactions} />:<div></div>}
+        {(activeCampaign.campaignTransactions && isOwner) ? <TransactionsHistory tx={activeCampaign.campaignTransactions} /> : <div></div>}
         <CampaignNavigation refs={refSForNav} title={activeCampaign.title} />
         <ContributeModal {...contributeModalData} />
       </div>

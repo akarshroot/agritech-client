@@ -633,7 +633,6 @@ export function WalletBalanceChart() {
         getGraphPassbookData().then((data) => {
             setLoading(false)
             setBalance(data[data.length - 1].balance)
-            data = data.splice(0, 11)
             new Chart(
                 document.getElementById('acquisitions-balance'),
                 {
@@ -695,14 +694,6 @@ export function WalletBalanceChart() {
                                     Loading...
                                 </div>
                                 :
-                                // <Chart
-                                //     options={{
-                                //         data: lineData,
-                                //         primaryAxis,
-                                //         secondaryAxes,
-                                //         tooltip: false
-                                //     }}
-                                // />
                                 <></>
                         }
                         <canvas className='w-100' id="acquisitions-balance"></canvas>
