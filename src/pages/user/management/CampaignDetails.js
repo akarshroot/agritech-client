@@ -97,7 +97,7 @@ function CampaignPledgesAndPromises({pledges,refPass}){
       <div className='CampaignPledgesAndPromisesShowcase p-3'>
         {pledges.map(e=>{
           return(
-            <div className='pledgeCard shadow border rounded'>
+            <div className='pledgeCard m-3 shadow border rounded'>
               <div className='pledgeCardHead'>
                 <div className='p-3'>
                   <h3 className='p-0 m-0'>
@@ -133,7 +133,7 @@ function CampaignPledgesAndPromises({pledges,refPass}){
   )
 }
 
-function CampaignInfo({ refPass,title, raisedAmount, target, contributors,featuredImage }) {
+function CampaignInfo({ maxAmountReached,refPass,title, raisedAmount, target, contributors,featuredImage }) {
   const { currentUser } = useUser()
   return (
     <div ref={refPass}>
@@ -154,7 +154,7 @@ function CampaignInfo({ refPass,title, raisedAmount, target, contributors,featur
       <div className='mx-5 text-start '>
         <div>
           <CampaignPrograssBar
-            raisedAmount={raisedAmount}
+            raisedAmount={maxAmountReached}
             target={target}
           />
         </div>
@@ -163,6 +163,11 @@ function CampaignInfo({ refPass,title, raisedAmount, target, contributors,featur
             <tbody>
               <tr>
                 <th>Amount Raised so far:</th>
+                <td>{maxAmountReached}</td>
+                <td>KCO</td>
+              </tr>
+              <tr>
+                <th>Amount of Current Balance:</th>
                 <td>{raisedAmount}</td>
                 <td>KCO</td>
               </tr>
