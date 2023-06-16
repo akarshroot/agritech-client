@@ -668,7 +668,7 @@ function ModalForm({ show, handleShow }) {
   const { userData } = useUser()
   const title = useInput('text', 'Title Goes Here')
   const [featuredImage, setFeaturedImage] = useState()
-  const [deadline, setDeadline] = useState(new Date())
+  const [deadline, setDeadline] = useState(new Date(Date.now() + 2592000000))
   const [description, setDescription] = useState("")
   const [descriptionFormat, setDescriptionFormat] = useState([
     'header',
@@ -809,7 +809,6 @@ function ModalForm({ show, handleShow }) {
     // html is the new html content
     // text is the new text content
   }
-
   const stepperContent = [
     {
       label: 'Basic Details',
@@ -822,10 +821,10 @@ function ModalForm({ show, handleShow }) {
                 <input required className='agri-input p-2' id='createCampTitle' {...title} />
               </fieldset>
               <fieldset className="col-md-6 p-3">
-                <label htmlFor='createCampDeadline'>Deadline</label>
+                <label htmlFor='createCampDeadline'>Deadline {'(1 Month By default)'}</label>
                 <DatePicker
                   className='agri-input p-2'
-                  minDate={new Date()} // +2592000
+                  minDate={new Date(Date.now() + 2592000000)}
                   selected={deadline}
                   onChange={changeDeadline}
                 />
