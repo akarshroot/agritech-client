@@ -59,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "dompurify": "^3.0.3",
     "react-aria": "^3.24.0"
   }
 }

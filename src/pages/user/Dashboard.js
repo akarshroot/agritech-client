@@ -3,9 +3,11 @@ import { CampaignWidget, renderWidget } from '../../assets/widgets/Widgets'
 import { useUser } from '../../context/UserContext'
 import './Dashboard.css'
 import { Helmet } from 'react-helmet'
+import { useNavigate } from 'react-router'
+import Button from 'react-bootstrap/Button'
 
 function Dashboard() {
-
+    const navigate = useNavigate()
     const { currentUser, userData, theme, loading, getUserData, getUserCampaigns, userCampaigns } = useUser()
     const [campaignWidget, setCampaignWidget] = useState()
     const [widgets, setWidgets] = useState([
@@ -43,16 +45,17 @@ function Dashboard() {
                 <title>Dashboard | AgriTech</title>
             </Helmet>
             <div className={`dashboard-container px-3 theme-${theme}`}>
-                <div className='welcome-user'>
+                <div className='welcome-user w-100 justify-content-between d-flex'>
                     <h2>Welcome, {userData?.name}! </h2>
+                    <Button onClick={() => navigate("/profile")}>Go to profile</Button>
                 </div>
-
                 <div className="all-widgets-container row">
                     <div className='col-md-6 col-lg-8 col-xl-4 p-3'>
                         <div className="widget balance-widget">
                             {renderWidget('wallet-balance')}
                         </div>
                     </div>
+
                     {
                         widgets.map((widget, key) => {
                             return (
@@ -69,11 +72,12 @@ function Dashboard() {
                             )
                         })
                     }
-                    <div className="col-md-4 col-xl-3 p-3">
+                    <div className="col-md-4 col-xl-4 p-3">
                         <div className='widget'>
                             <CampaignWidget title={campaignWidget?.title} target={campaignWidget?.target} _id={campaignWidget?._id} contributors={campaignWidget?.contributors} deadline={campaignWidget?.deadline} dateCreated={campaignWidget?.dateCreated} />
                         </div>
                     </div>
+
                 </div>
             </div>
         </>

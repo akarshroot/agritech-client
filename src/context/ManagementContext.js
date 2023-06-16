@@ -14,7 +14,7 @@ export function ManagementContextProvider({ children }) {
     const INR = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
-      });
+    });
 
     async function createPlan(planData) {
         try {
@@ -28,9 +28,9 @@ export function ManagementContextProvider({ children }) {
         }
     }
 
-    async function getUserPlans() {
+    async function getUserPlans(planId) {
         try {
-            const response = await axios.get("/management/plan/all")
+            const response = await axios.get(`/management/plan/${planId ? planId : "all"}`)
             if (response.hasOwnProperty("data"))
                 return response.data
             else throw response.response.data
@@ -79,7 +79,7 @@ export function ManagementContextProvider({ children }) {
 
     async function getUserInventory() {
         try {
-            if(!currentUser) return
+            if (!currentUser) return
             const response = await axios.get("/management/inventory/all?user=" + currentUser)
             if (response.hasOwnProperty("data")) {
                 setInventory(response.data.data)
@@ -113,7 +113,6 @@ export function ManagementContextProvider({ children }) {
             return error
         }
     }
-
 
     const values = {
         createPlan,

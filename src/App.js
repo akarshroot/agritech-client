@@ -63,6 +63,7 @@ function App() {
                   <Route exact path='/admin/panel' element={<PrivateBody body={AdminConsole} restricted={true} />} />
                   <Route exact path='/docs/whitepaper' element={<PublicBody body={Whitepaper}/>} />
                   <Route exact path='/forbidden' element={<PublicBody body={Forbidden}/>} />
+                  
                   <Route exact path='/loader' element={<Loader height='50px' width='50px' />} />
                   <Route exact path = '/profile' element = {<PrivateBody body = {UserProfile} />} />
                   <Route exact path = '/road' element = {<PrivateBody body = {Roadblock} />} />

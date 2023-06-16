@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, Fragment, useRef } from 'react'
+import React, { useEffect, useState, Fragment, useRef, useContext } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import DatePicker from "react-datepicker"
-import PropTypes from 'prop-types'
+import PropTypes, { func } from 'prop-types'
 import FontAwesome from 'react-fontawesome';
 import Spinner from 'react-bootstrap/esm/Spinner'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
@@ -22,6 +22,9 @@ import '../../index.css'
 import { Helmet } from 'react-helmet'
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
+import ManagementContext from '../../context/ManagementContext'
+import Table from 'react-bootstrap/esm/Table'
+import StoreContext from '../../context/StoreContext'
 
 
 // STEPPER FUNCTIONS START
@@ -306,8 +309,8 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
   }, [userData])
 
 
-  function handleSelectPlan(id, ele) {
-    selectPlan(id)
+  function handleSelectPlan(plan) {
+    selectPlan(plan)
     secondTermsHandler()
   }
 
@@ -322,14 +325,14 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
             </div>)
             : plans?.length
               ? plans.map((plan, key) => {
-                const styleColor = selectedPlan === plan._id ? 'borderS' : plan.executing ? 'borderE' : ''
+                const styleColor = selectedPlan?._id === plan._id ? 'borderS' : plan.executing ? 'borderE' : ''
                 return (
-                  <div onClick={(e) => handleSelectPlan(plan._id, this)} key={'EachUserPlanKey' + key} className='EachUserPlan col-11'>
+                  <div onClick={() => handleSelectPlan(plan)} key={'EachUserPlanKey' + key} className='EachUserPlan col-11'>
                     <div className={`plan planBorder newEachPlanShadow ${styleColor}`} >
                       <div className="d-flex align-items-center justify-content-between">
                         <h5>{plan.title}</h5>
                         {
-                          selectedPlan === plan._id && <div className="alert alert-primary p-1 m-0">&#10004; Selected</div>
+                          selectedPlan._id === plan._id && <div className="alert alert-primary p-1 m-0">&#10004; Selected</div>
                         }
                       </div>
                       <hr className="style-two" />
@@ -409,12 +412,78 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
   )
 }
 
-function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id}){
-  const [saved,setSaved] = useState(false)
-  
-  const headingTop = useInput('text',"Pledge name")
-  const investment = useInput('number',"KCO")
-  const discount = useInput('number',"Discount")
+/*
+{
+  crop:'',
+  quantity:'',
+  discount:'',
+  unit:'Kg',
+}
+{crop:'',quantity:'',discount:'',unit:'Kg'}
+*/
+
+function DiscountPromise({ cropsArr, promises, setPromises, handleAddPromise, KCOLimit }) {
+
+  const [crop, setCrop] = useState(cropsArr[0].item)
+  const quantityInput = useInput('number', 'quantity?')
+  const discountInput = useInput('number', 'discount here')
+  const [unit, setUnit] = useState('kilogram')
+
+  console.log(crop)
+
+  function handleFormSubmit(e) {
+    e.preventDefault()
+    // saved,crop,quantity,discount,unitKg'
+    handleAddPromise(true, crop, quantityInput.value, discountInput.value, unit)
+    setCrop(cropsArr[0].item)
+    quantityInput.onChange('')
+    discountInput.onChange('')
+    setUnit('kilogram')
+  }
+
+  return (
+    <div className='border border-1 border-success rounded p-1'>
+      <form onSubmit={handleFormSubmit}>
+        <input {...discountInput} />
+        % discount on my yeild of <br />
+        <select onChange={(e) => { setCrop(e.target.value) }}>
+          {cropsArr.map((e, i) => (
+            <option value={e.item} key={'eachCropOption' + i + 'for' + promises[promises.length - 1]?.promiseId}>
+              {e.item}
+            </option>))}
+        </select>for up to <br />
+        <input {...quantityInput} />
+        <br />
+        <select defaultValue={'kilogram'} onChange={(e) => setUnit(e.target.value)}>
+          <option value={'kilogram'}>{'(Kg)'}Kilogram</option>
+          <option value={'gram'}>{'(g)'}Gram</option>
+          <option value={'quintal'}>{'(q)'}Quintal</option>
+          <option value={'tonne'}>{'(ton)'}Tonne</option>
+          <option value={'Pounds'}>{'(lbs)'}Pounds</option>
+        </select>
+        <div className='m-1 d-flex justify-content-end'>
+          <button className='btn btn-sm btn-outline-success'>
+            + Add this Promise
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+function EachPledgePlan({ associatedPlan, checkedForNext, plansAllowed, setPlansAllowed, planData, id }) {
+  const [saved, setSaved] = useState(planData.saved)
+  const [promises, setPromises] = useState(planData.selectedCrops)
+
+  const headingTop = useInput('text', "Pledge name")
+  const investment = useInput('number', "KCO")
+  const discount = useInput('number', "Discount")
+
+
+
+  const cropsArr = associatedPlan.requirements.filter(e => e.category === 'crop')
+
+  console.log("Promise-->", promises)
 
   useEffect(() => {
     if (planData.headingTop && planData.investment && planData.discount && saved) {
@@ -424,23 +493,29 @@ function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id
     }
   }, [handleRemove, handleSave])
 
-  function handleSave(){
-    if(checkedForNext){
+  const unsavedPromises = promises.filter(e => !e.saved)
+
+  function handleSave() {
+    if (checkedForNext) {
       toast.warn('uncheck terms to edit further')
       return
     }
-    setSaved(!saved)
-    
-    const index = plansAllowed.findIndex(e => e.id===id)
-    const objUpdate = plansAllowed[index]
-    const filteredArr =plansAllowed.filter(e => e.id!==id)
-    if(!saved){
-      objUpdate.headingTop= headingTop.value
-      objUpdate.investment= investment.value
-      objUpdate.discount= discount.value
+    if (!promises.length) {
+      toast.warn('Must Have atleat 1 promise')
+      return
     }
-    objUpdate.saved=!saved
-    filteredArr.splice(index,0,objUpdate)
+    setSaved(!saved)
+
+    const index = plansAllowed.findIndex(e => e.id === id)
+    const objUpdate = plansAllowed[index]
+    const filteredArr = plansAllowed.filter(e => e.id !== id)
+    if (!saved) {
+      objUpdate.selectedCrops = promises
+      objUpdate.KCOLimit = investment.value
+      objUpdate.name = headingTop.value
+    }
+    objUpdate.saved = !saved
+    filteredArr.splice(index, 0, objUpdate)
     setPlansAllowed(filteredArr)
   }
 
@@ -449,54 +524,101 @@ function EachPledgePlan({checkedForNext,plansAllowed,setPlansAllowed,planData,id
       toast.warn("You must have atleast one return promise in order to proceed")
       return
     }
-    const newArr = plansAllowed.filter(e=>e.id!==id);
+    const newArr = plansAllowed.filter(e => e.id !== id);
     setPlansAllowed(newArr)
   }
 
-  return(
-      <div className='eachPledgePlan m-3'>
-        <header>
-          <div className='d-flex justify-content-between align-items-center'>
-            {saved? <h2>{planData.headingTop}</h2>: <input {...headingTop} />}
-            {saved? <h4>{planData.investment} KCO</h4>: <div>-/-</div>}
+
+
+
+  function handleAddPromise(saved = false, crop = '', quantity = 0, discount = 0, unit = 'Kg') {
+    const newPromiseObj = {
+      saved,
+      crop,
+      quantity,
+      discount,
+      unit,
+      promiseId: ("promiseOnPlan" + id + "for" + Date.now())
+    }
+    if (unsavedPromises.length) {
+      toast.warn('Already a promise is in editing')
+      return
+    }
+    setPromises((prev) => ([...prev, newPromiseObj]))
+  }
+
+  function handlePromiseRemove(promiseId) {
+    setPromises(prev => {
+      return [...prev.filter(e => e.promiseId !== promiseId)]
+    })
+  }
+
+
+  return (
+    <div className='eachPledgePlan m-3'>
+      <header>
+        <div className='d-flex justify-content-between align-items-center'>
+          {saved ? <h2>{planData.name}</h2> : <input {...headingTop} />}
+          {saved ? <h4>{planData.KCOLimit} KCO</h4> : <input className='w-25' {...investment} />}
+        </div>
+      </header>
+      <hr />
+      <main>
+        {promises.map(({ crop, quantity, unit, discount, promiseId }, key) => (
+          <div key={'promiseOnPlan' + id + 'for' + key}>
+            <div>
+              {!saved && <button onClick={() => handlePromiseRemove(promiseId)} className='btn btn-outline-danger'>Remove</button>}<br />
+              {discount}% discount
+              on my yeild of {crop} for up
+              to {quantity} {unit}
+            </div>
+            <hr />
           </div>
-        </header>
-        <hr/>
-        <main>
-          On every {saved? investment.value:<input {...investment}/>} or above KCO investment,<br/>
-          I pledge to give {saved? discount.value:<input {...discount}/>}% discount on my yield
-          on the FarmFresh platform.
-        </main>
-        <div className='controlsButtonForPledgePlans'>
-          <Button variant='outline-success' onClick={handleSave} >{saved? 'Edit':'Save'}</Button>
-          <Button variant='outline-danger mx-2' onClick={handleRemove}>Remove</Button>
+        ))}
+        {!saved &&
+          <div className='mb-5'>
+            <DiscountPromise
+              setPromises={setPromises}
+              promises={promises}
+              cropsArr={cropsArr}
+              handleAddPromise={handleAddPromise}
+            />
+            <hr />
+          </div>
+        }
+      </main>
+      <div className='controlsButtonForPledgePlans'>
+        <Button variant='outline-success' onClick={handleSave} >{saved ? 'Edit' : 'Save'}</Button>
+        <Button variant='outline-danger mx-2' onClick={handleRemove}>Remove</Button>
       </div>
     </div>
   )
 }
 
-function PledgeReturnsForm({plansAllowed,setPlansAllowed,checkedForNext}){
-  const UsersAllowedLength = 2;
-  function addNewPlan(){
-    
-    if(checkedForNext){
+function PledgeReturnsForm({ associatedPlan, plansAllowed, setPlansAllowed, checkedForNext, manager }) {
+
+
+  function addNewPlan() {
+
+    if (checkedForNext) {
       toast.warn('Uncheck terms to edit further')
       return
     }
-    const prevPlan = plansAllowed[plansAllowed.length-1]
+    const prevPlan = plansAllowed[plansAllowed.length - 1]
+    console.log(prevPlan)
     const allForms = plansAllowed.filter(e => !e.saved)
-    if(!prevPlan.headingTop.length || !prevPlan.investment.length || !prevPlan.discount.length || allForms.length){
+    if (!prevPlan.name.length || !prevPlan.KCOLimit || !prevPlan.selectedCrops.length || allForms.length) {
       toast.warn('Save/complete all plan before creating a new one')
       return
-    }else{
+    } else {
       const newPlansObj = {
-        id:('IdForEachPledgePlan'+Date.now()),
-        investment:'',
-        headingTop:'',
-        discount:'',
+        id: ('IdForEachPledgePlan' + Date.now()),
+        KCOLimit: 0,
+        name: '',
+        selectedCrops: [],
         saved: false,
       }
-      const newPlans = [...plansAllowed,newPlansObj]
+      const newPlans = [...plansAllowed, newPlansObj]
       setPlansAllowed(newPlans)
     }
   }
@@ -516,15 +638,15 @@ function PledgeReturnsForm({plansAllowed,setPlansAllowed,checkedForNext}){
         pauseOnHover
         theme="light"
       />
-      <div className='createPledgeContainer'>
-      <div className={`disableFormContainer ${!checkedForNext && 'd-none'}`} >
-        <FontAwesome name="check" />
-        All Set
-      </div>
-        {plansAllowed.map((e,i) => {return <EachPledgePlan checkedForNext={checkedForNext} planData={e} plansAllowed={plansAllowed} key={'EachPledgeToCreate'+i} id={e.id} setPlansAllowed={setPlansAllowed} />})}
+      <div className={`createPledgeContainer ${checkedForNext && 'overflow-hidden'}`}>
+        <div className={`disableFormContainer ${!checkedForNext && 'd-none'}`} >
+          <FontAwesome name="check" />
+          All Set
+        </div>
+        {plansAllowed.map((e, i) => { return <EachPledgePlan associatedPlan={associatedPlan} checkedForNext={checkedForNext} planData={e} plansAllowed={plansAllowed} key={'EachPledgeToCreate' + i} id={e.id} setPlansAllowed={setPlansAllowed} /> })}
         <div className='createNewPlanDiv m-3'>
           {
-            plansAllowed.length < UsersAllowedLength
+            plansAllowed.length < manager.allowedCampaignReturnSlots
               ? (
                 <div onClick={addNewPlan} className='createNewPlanDivIcon PlusIcon'>
                   <FontAwesome className='LockIcon' name='fas fa-plus' />
@@ -573,15 +695,15 @@ function ModalForm({ show, handleShow }) {
   const [createCampaignLoading, setCreateCampaignLoading] = useState(false)
   const campaignFormRef = useRef();
 
-  const [plansAllowed,setPlansAllowed] = useState([{
-    id:'INITIALID',
-    investment:'',
-    discount:'',
-    headingTop:'',
-    saved:false,
+  const [plansAllowed, setPlansAllowed] = useState([{
+    id: 'INITIALID',
+    KCOLimit: 0,
+    selectedCrops: [],
+    name: '',
+    saved: false,
   }])
 
-  const [associatedPlan, setAssociatedPlan] = useState();
+  const [associatedPlan, setAssociatedPlan] = useState({ _id: '' });
   const password = useInput('password', 'Password')
   function changeDeadline(date) {
     setDeadline(date)
@@ -594,6 +716,23 @@ function ModalForm({ show, handleShow }) {
     // e.preventDefault()
     setCreateCampaignLoading(true)
     const deadlineToSend = Math.floor(deadline.getTime() / 1000)
+
+
+    console.log('planAllowed', plansAllowed)
+
+    const formedPlansAllowed = plansAllowed.map(e => {
+      const { id, saved, ...toSend } = e
+      console.log('toSend', toSend)
+      const ans = toSend.selectedCrops.map(f => {
+        const { saved, promiseId, ...r3 } = f
+        return r3
+      })
+      toSend.selectedCrops = ans
+      return toSend
+    })
+
+    console.log('preform', formedPlansAllowed)
+
     const dataToSend = {
       title: title.value,
       deadline: deadlineToSend,
@@ -603,11 +742,12 @@ function ModalForm({ show, handleShow }) {
       password: password.value,
       walletAddress: userData.walletAddress,
       userId: userData._id,
-      associatedPlan: associatedPlan,
-      pledges: plansAllowed,
-      featuredImage: featuredImage
+      pledges: formedPlansAllowed,
+      featuredImage: featuredImage,
+      associatedPlan: associatedPlan._id
     }
     const res = await createCampaign(dataToSend);
+    // const res = ''
     if (res.status === 'Deployed Successfully') {
       toast.success(res.status, {
         position: "top-right",
@@ -659,12 +799,12 @@ function ModalForm({ show, handleShow }) {
     setEnableFourth((prev) => ({ checked: !prev.checked, touched: true }));
   };
 
-  function handlePledgesSubmission(){
+  function handlePledgesSubmission() {
     const allForms = plansAllowed.filter(e => !e.saved)
-    const prevPlan = plansAllowed[plansAllowed.length-1]
-    if(!prevPlan.headingTop.length || !prevPlan.investment.length || !prevPlan.discount.length || allForms.length){
+    const prevPlan = plansAllowed[plansAllowed.length - 1]
+    if (!prevPlan.name.length || !prevPlan.KCOLimit.length || !prevPlan.selectedCrops.length || allForms.length) {
       toast.warn("Invalid/Unsaved Pledges")
-    }else{
+    } else {
 
       thirdTermsHandler()
     }
@@ -755,7 +895,7 @@ function ModalForm({ show, handleShow }) {
       label: 'Pledge your Returns',
       content: (
         <div>
-          <PledgeReturnsForm checkedForNext={enableFourth.checked} plansAllowed={plansAllowed} setPlansAllowed={setPlansAllowed}/>
+          <PledgeReturnsForm associatedPlan={associatedPlan} manager={userData} checkedForNext={enableFourth.checked} plansAllowed={plansAllowed} setPlansAllowed={setPlansAllowed} />
           <label>
             <input
               type="checkbox"
@@ -791,16 +931,26 @@ function ModalForm({ show, handleShow }) {
     destroyStepper();
   };
   const destroyStepper = () => {
-    campaignFormRef.current.reset()
+    // console.log(campaignFormRef)
+    // campaignFormRef.current.reset()
+    title.onChange('')
+    setDescription('')
+    setDeadline(new Date())
+    password.onChange('')
+    minContribution.onChange('')
+    target.onChange('')
+    setFeaturedImage(null)
+
+    setAssociatedPlan({ _id: '' })
     setPlansAllowed([{
-      id:'INITIALID',
-      investment:'',
-      discount:'',
-      headingTop:'',
-      saved:false,
+      id: 'INITIALID',
+      KCOLimit: '',
+      selectedCrops: [],
+      name: '',
+      saved: false,
     }])
     setEnableSecond({
-      checked: true,
+      checked: false,
       touched: false
     })
     setEnableThird({
@@ -1031,6 +1181,121 @@ function CampaignWidgetV2({ title, target, contributors, _id, ...props }) {
   )
 }
 
+function InventoryToFarmFreshModal({ show, handleShow, campaign }) {
+  const [loading, setLoading] = useState(false)
+  const [crops, setCrops] = useState([])
+  const [inventoryData, setInventoryData] = useState([])
+
+  const [confirmModal, setConfirmModal] = useState(false)
+  const handleConfirm = () => setConfirmModal(!confirmModal)
+
+  const { getUserPlans } = useContext(ManagementContext)
+  const { sendToFarmFresh } = useContext(StoreContext)
+
+  function handleCropImage(file, cropId) {
+    console.log("setting")
+    const inventoryCrops = [...inventoryData]
+    const crop = inventoryCrops.find(crop => crop._id === cropId)
+    crop.image = file
+    setInventoryData(inventoryCrops)
+  }
+
+  function handleCropsInfo(e) {
+    const cropId = e.target.name.split("-")[0]
+    const attribute = e.target.name.split("-")[1]
+    const inventoryCrops = [...inventoryData]
+    const crop = inventoryCrops.find(crop => crop._id === cropId)
+    crop[attribute] = e.target.type === 'number' ? parseInt(e.target.value) : e.target.type === 'file' ? "file" : e.target.value
+    setInventoryData(inventoryCrops)
+  }
+
+  async function confirmPostToFarmfresh() {
+    const response = await sendToFarmFresh(inventoryData)
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    getUserPlans(campaign.associatedPlan).then(res => {
+      const data = res.data.requirements.filter(item => item.category === "crop")
+      setCrops(data)
+      setInventoryData(data)
+    })
+
+  }, [campaign])
+
+  return (
+    <>
+      <Modal
+        show={show}
+        onHide={handleShow}
+        backdrop="static"
+        keyboard={false}
+        size='lg'
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className='inventory-to-farmfresh'>Finish Campaign</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Congratulations! Your campaign is finished. Below is a summary of your campaign.</p>
+          {/* Maybe insert a contributions with time chart */}
+          <p>Select the crops to post on FarmFresh. Note that the prices you set would be applicable for all consumers. Contributors would automatically be shown the discounted price as applicable</p>
+          <Table className='w-100'>
+            <thead>
+              <tr>
+                <th className=''>Crop</th>
+                <th className='text-center'>Quantity<span className='text-center'><span className='d-table-cell d-lg-none'>/Unit</span><span className='d-table-cell d-lg-none'>/Photo</span><span className='d-table-cell d-sm-none'>/Price (KCO) per unit</span></span></th>
+                <th className='d-none d-lg-table-cell'>Unit</th>
+                <th className='d-none d-sm-table-cell'>Price (KCO) per unit</th>
+                <th className='d-none d-lg-table-cell'>Photo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                crops.map(crop => {
+                  return (
+                    <tr key={crop._id}>
+                      <td>{crop.item}</td>
+                      <td className='d-flex flex-column align-items-center justify-content-center p-2'>
+                        <input className='mb-2' type="number" placeholder='Quantity' name={crop._id + "-" + "quantity"} onChange={handleCropsInfo} />
+                        <select className='d-table-cell d-lg-none mb-2' defaultValue={'kilogram'} name={crop._id + "-" + "unit"} onChange={handleCropsInfo}>
+                          <option value={'kilogram'}>{'(Kg)'}Kilogram</option>
+                          <option value={'gram'}>{'(g)'}Gram</option>
+                          <option value={'quintal'}>{'(q)'}Quintal</option>
+                          <option value={'tonne'}>{'(ton)'}Tonne</option>
+                          <option value={'Pounds'}>{'(lbs)'}Pounds</option>
+                        </select>
+                        <input className='d-block d-lg-none mb-2 w-75' type="file" name="cropImage"  onChange={(e) => handleCropImage(e.target.files[0], crop._id)} />
+                        <td className='d-table-cell d-sm-none'><input type="number" placeholder='Price' name={crop._id + "-" + "price"} onChange={handleCropsInfo} /></td>
+                      </td>
+                      <td className='d-none d-lg-table-cell'>
+                        <select defaultValue={'kilogram'} name={crop._id + "-" + "unit"} onChange={handleCropsInfo}>
+                          <option value={'kilogram'}>{'(Kg)'}Kilogram</option>
+                          <option value={'gram'}>{'(g)'}Gram</option>
+                          <option value={'quintal'}>{'(q)'}Quintal</option>
+                          <option value={'tonne'}>{'(ton)'}Tonne</option>
+                          <option value={'Pounds'}>{'(lbs)'}Pounds</option>
+                        </select>
+                      </td>
+                      <td className='d-none d-sm-table-cell'><input type="number" placeholder='Price' name={crop._id + "-" + "price"} onChange={handleCropsInfo} /></td>
+                      <td className='d-none d-lg-table-cell'>
+                        <input className='d-none d-lg-block w-100 mb-2' type="file" name="cropImage"  onChange={(e) => handleCropImage(e.target.files[0], crop._id)}  />
+                      </td>
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant='success' onClick={()=>{}}>Save to Inventory</Button>
+          <Button variant='success' onClick={confirmPostToFarmfresh}>Post Crops on FarmFresh</Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  )
+}
+
 function Campaigns() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showContribute, setShowContribute] = useState(false);
@@ -1054,6 +1319,11 @@ function Campaigns() {
     setLoading(false)
   }, [])
 
+  const [farmfreshModal, setFarmfreshModal] = useState(false)
+  const handleFarmfreshModal = () => {
+    setFarmfreshModal(!farmfreshModal)
+  }
+
   return (
     <div className='container'>
       <Helmet>
@@ -1064,6 +1334,29 @@ function Campaigns() {
           <Button variant="success" onClick={handleShow}>
             + Create Campaign
           </Button>
+        </div>
+        <div className='col-sm-3 p-3'>
+          <Button variant="success" onClick={handleFarmfreshModal}>
+            Push to FarmFresh
+          </Button>
+          <InventoryToFarmFreshModal campaign={{
+            "_id": "648a22f2eff1092e874cd268",
+            "title": "Help me Rebuild My Farm",
+            "address": "0xc30dAEbBDa97156f0dA32A96b26639d6B7B7D18c",
+            "target": 100000,
+            "deadline": 1701289107,
+            "minContri": 100,
+            "associatedPlan": "648a207e0741a641f4ce8cfa",
+            "description": "<p>Hello! My name is Rajesh, and I am a farmer from a small village in India. My family has been farming for generations, but our farm has fallen on tough times. I need your support to bring it back to life!</p><p>With your help, I want to make my farm better and more sustainable. I dream of using modern techniques like eco-friendly farming and renewable energy to grow healthy crops without harmful chemicals. This will not only benefit my family but also the entire community.</p><p><img src=\"https://im.rediff.com/money/2016/may/17farm.jpg?w=670&amp;h=900\"></p><p>By contributing to my crowdfunding campaign, you become a part of this exciting journey. Your support will provide resources and hope for my family and help us create a thriving farm. As a thank you, I am offering special rewards like fresh produce, farm tours, and more.</p><p><img src=\"https://static.toiimg.com/thumb/msid-58352995,width-1280,resizemode-4/58352995.jpg\"></p><p>Join me in making a positive change in our community. Your contribution, no matter how small, will make a big difference. Together, we can rebuild my farm, support local agriculture, and bring hope back to our village.</p><p>Thank you for believing in me and our shared future.</p><p>Best regards,</p><p>Rajesh</p>",
+            "featuredImage": "https://picsum.photos/536/354",
+            "manager": "645e43d4c8210259e8a62a13",
+            "campaignTransactions": [],
+            "dateCreated": "2023-06-14T20:28:34.048Z",
+            "voteRequests": [],
+            "contributors": [],
+            "__v": 0,
+            "pledges": []
+          }} show={farmfreshModal} handleShow={handleFarmfreshModal} />
         </div>
         <div className='col-sm-3 p-3'>
           <Button variant="success" onClick={() => { navigate("/campaigns/all", { replace: true }) }}>
