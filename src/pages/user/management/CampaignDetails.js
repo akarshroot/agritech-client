@@ -84,13 +84,50 @@ function CampaignDescription({refPass,description}){
   )
 }
 
-function CampaignPledgesAndPromises({refPass}){
+function CampaignPledgesAndPromises({pledges,refPass}){
+  console.log(pledges)
   return (
     <div ref={refPass}>
       <div className='text-start p-3'>
         <h3 className='p-0 m-0'>
             Plegdes and Promises
         </h3>
+      </div>
+      <hr/>
+      <div className='CampaignPledgesAndPromisesShowcase p-3'>
+        {pledges.map(e=>{
+          return(
+            <div className='pledgeCard shadow border rounded'>
+              <div className='pledgeCardHead'>
+                <div className='p-3'>
+                  <h3 className='p-0 m-0'>
+                    {e.name}
+                  </h3>
+                </div>
+                <div className='text-light px-3'>
+                  <h3 className='p-0 m-0'>
+                    {e.KCOLimit} KCO
+                  </h3>
+                </div>
+              </div>
+              <div className='pledgeCardBody'>
+                {e.selectedCrops.map((f,i) => (
+                  <div key={'PromiseKey'+e.id+'and'+i}>
+                      <hr/>
+                      <div className='EachPromiseInPledge p-2'>
+                        <b>{f.discount}%</b> discount on up to
+                        <b> {f.quantity} {f.unit}</b> of <b>{f.crop}</b>
+                      </div>
+                  </div>
+                ))}
+              </div>
+              <hr/>
+              <div className='pledgeCardFooter'>
+                <Button variant='success m-2'>Contribute</Button>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -101,7 +138,7 @@ function CampaignInfo({ refPass,title, raisedAmount, target, contributors,featur
   return (
     <div ref={refPass}>
       <div className='p-3'>
-        <div className='text-start'>
+        <div className='text-start d-flex align-items-center'>
           <h1>{title}</h1>
           {
             contributors.find(contributor => contributor.userId === currentUser) ?
@@ -183,17 +220,21 @@ function CampaignVotesinfo({ refPass,isOwner, voteRequests, _id, contributors,us
   }
   return (
     <div ref={refPass}>
+      <div className='text-start p-3'>
+        <h3 className='p-0 m-0'>
+          Withdraw requests
+        </h3>
+      </div>
+      <hr/>
       {isOwner && (
-          <Button onClick={handleShow} variant='success'>+ Make a Request</Button>
-      )}
+        <Button onClick={handleShow} variant='success'>+ Make a Request</Button>
+        )}
       <div>
         {voteRequests.length === 0 ? <div className='py-3'>No Requests</div>
           : (
             <div>
-              <hr />
               <div className='row'>
                 {voteRequests?.map((data, i) => {
-                  console.log(data)
                   return (
                     <WithdrawRequests
                       isOwner={isOwner}
@@ -222,6 +263,7 @@ function CampaignPlanDetails({refPass,title,requirements,...props}){
           Plan - {title}
         </h3>
       </div>
+      <hr/>
       <div className='CampPlanRequirements rounded row m-0 p-2'>
           {requirements.map((e,key) => {
             return(
@@ -253,7 +295,6 @@ function CampaignPlanDetails({refPass,title,requirements,...props}){
 }
 
 function CampaignNavigation({refs,title}){
-  console.log(refs)
   return(
     <div className='CampaignNavigationNavigation p-3'>
       <div className='innerCampaignNavigationNavigation p-4 shadow rounded'>
@@ -304,10 +345,6 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
   const handleChange = (e) => {
     setPassword(e.target.value)
   }
-
-
-  console.log('Receiver->',toPersonal)
-  console.log('Receiver->')
   async function useRequest() {
     if (!password) {
       return
@@ -317,7 +354,6 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
       password,
       cid
     }
-    console.log(dataToSend)
     setLoading(true)
     const res = await usevoteReq(dataToSend)
     handlePrompt()
@@ -353,7 +389,6 @@ function WithdrawRequests({ cid, reason, amount, votes, voters, receiver, isOwne
       return
     }
     setLoading(true)
-    console.log(e.target.value)
     const dataToSend = {
       voteNumber,
       vote: e.target.value,
@@ -522,7 +557,6 @@ function CreateRequestModal({ show, handleShow, vid }) {
     }
     setLoading(true)
     const res = await createVoteReq(dataToSend)
-    console.log(res);
     if (res.error) {
       toast.error(res.status + " " + res.message, {
         position: "top-right",
@@ -730,7 +764,7 @@ export default function CampaignDetails() {
         <CreatorDetails refPass={CreatorDetailsID} {...activeCampaign.manager} isOwner={isOwner} openModal={handleShow} />
         <CampaignInfo refPass={CampaignInfoID} {...activeCampaign} />
         <CampaignDescription refPass={CampaignDescriptionID} description={activeCampaign.description} />
-        <CampaignPledgesAndPromises refPass={CampaignPledgesAndPromisesIDs} />
+        <CampaignPledgesAndPromises refPass={CampaignPledgesAndPromisesIDs} pledges={activeCampaign.pledges}/>
         <CampaignPlanDetails refPass={CampaignPlanDetailsID} {...activeCampaign.associatedPlan}/>
         <CampaignVotesinfo refPass={CampaignVotesinfoID} {...valuesForCampaignVotesInfo} />
         {(activeCampaign.campaignTransactions && isOwner)? <TransactionsHistory tx={activeCampaign.campaignTransactions} />:<div></div>}

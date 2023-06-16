@@ -429,8 +429,6 @@ function DiscountPromise({ cropsArr, promises, setPromises, handleAddPromise, KC
   const discountInput = useInput('number', 'discount here')
   const [unit, setUnit] = useState('kilogram')
 
-  console.log(crop)
-
   function handleFormSubmit(e) {
     e.preventDefault()
     // saved,crop,quantity,discount,unitKg'
@@ -482,8 +480,6 @@ function EachPledgePlan({ associatedPlan, checkedForNext, plansAllowed, setPlans
 
 
   const cropsArr = associatedPlan.requirements.filter(e => e.category === 'crop')
-
-  console.log("Promise-->", promises)
 
   useEffect(() => {
     if (planData.headingTop && planData.investment && planData.discount && saved) {
@@ -605,7 +601,6 @@ function PledgeReturnsForm({ associatedPlan, plansAllowed, setPlansAllowed, chec
       return
     }
     const prevPlan = plansAllowed[plansAllowed.length - 1]
-    console.log(prevPlan)
     const allForms = plansAllowed.filter(e => !e.saved)
     if (!prevPlan.name.length || !prevPlan.KCOLimit || !prevPlan.selectedCrops.length || allForms.length) {
       toast.warn('Save/complete all plan before creating a new one')
@@ -718,11 +713,8 @@ function ModalForm({ show, handleShow }) {
     const deadlineToSend = Math.floor(deadline.getTime() / 1000)
 
 
-    console.log('planAllowed', plansAllowed)
-
     const formedPlansAllowed = plansAllowed.map(e => {
       const { id, saved, ...toSend } = e
-      console.log('toSend', toSend)
       const ans = toSend.selectedCrops.map(f => {
         const { saved, promiseId, ...r3 } = f
         return r3
@@ -730,8 +722,6 @@ function ModalForm({ show, handleShow }) {
       toSend.selectedCrops = ans
       return toSend
     })
-
-    console.log('preform', formedPlansAllowed)
 
     const dataToSend = {
       title: title.value,
@@ -931,8 +921,6 @@ function ModalForm({ show, handleShow }) {
     destroyStepper();
   };
   const destroyStepper = () => {
-    // console.log(campaignFormRef)
-    // campaignFormRef.current.reset()
     title.onChange('')
     setDescription('')
     setDeadline(new Date())
@@ -1193,7 +1181,6 @@ function InventoryToFarmFreshModal({ show, handleShow, campaign }) {
   const { sendToFarmFresh } = useContext(StoreContext)
 
   function handleCropImage(file, cropId) {
-    console.log("setting")
     const inventoryCrops = [...inventoryData]
     const crop = inventoryCrops.find(crop => crop._id === cropId)
     crop.image = file

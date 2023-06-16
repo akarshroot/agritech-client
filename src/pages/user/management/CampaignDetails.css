@@ -123,17 +123,26 @@
     border-bottom: none;
     border-right: none;
 }
-/* .descriptionContent{
-    text-align: justify;
-    padding: 1rem 5rem;
+
+
+
+
+.CampaignPledgesAndPromisesShowcase{
+    display: flex;
 }
-.descriptionContent img{
-    height: 45% !important;
-    width: 45% !important;
-    position: relative;
-    left: 50%;
-    translate: -50% 0%;
-    border-radius: 10px;
-    padding: 0.25rem;
-    border: solid 1px gray;
-} */
+.pledgeCard{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 33%;
+    overflow: hidden;
+}
+.EachPromiseInPledge{}
+.pledgeCardHead{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--cb2);
+}
+.pledgeCardBody{}
+.pledgeCardFooter{}
