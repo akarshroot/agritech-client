@@ -39,28 +39,31 @@ function CampaignWidgetV2({ manager,featuredImage, title, target, contributors, 
                 <div>Starting at<br/> {minContri} KCO</div>
             </div>
             <div onMouseEnter={()=>{setHovering(true)}} onMouseLeave={()=>{setHovering(false)}} className='widget-container-campaign-v2-body'>
-                <div className={`CampFeaturedImage`}>
-                    <img src={featuredImage} alt=''/>
-                </div>
-                <div className={`campUserProfilePic ${hovering && 'opacity-0'}`}>
-                    <img className='shadow' src={manager.imgUrl} alt='Profile Pic here'/>
-                </div>
-                <div className={`campBasicCropDetails shadow ${hovering && 'opacity-0'}`}>
-                    <div className='m-2 ps-2 pt-2 text-start'><h5>Crops Plan</h5></div>
-                    <hr className='bg-light'/>
-                    <Table className='text-light text-start ms-5'>
-                        <tbody>
-                            {cropsArr.map((e,i) => {
-                                return(
-                                    <tr key={'EachCropForCamp'+i+'For'+_id}>
-                                        <td>
-                                            {e.item}
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </Table>
+                
+                <div>
+                    <div className={`CampFeaturedImage`}>
+                        <img src={featuredImage} alt=''/>
+                    </div>
+                    <div className={`campUserProfilePic ${hovering && 'opacity-0'}`}>
+                        <img className='shadow' src={manager.imgUrl} alt='Profile Pic here'/>
+                    </div>
+                    <div className={`campBasicCropDetails shadow ${hovering && 'opacity-0'}`}>
+                        <div className='m-2 ps-2 pt-2 text-start'><h5>Crops Plan</h5></div>
+                        <hr className='bg-light'/>
+                        <Table className='text-light text-start ms-5'>
+                            <tbody>
+                                {cropsArr.map((e,i) => {
+                                    return(
+                                        <tr key={'EachCropForCamp'+i+'For'+_id}>
+                                            <td>
+                                                {e.item}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </Table>
+                    </div>
                 </div>
 
 
@@ -154,9 +157,8 @@ function ExploreCampaigns() {
                 </div>)
                 :campaigns?.map((data, i) => {
                         return (
-                            <div key={'campaignsKey' + i} className='col-sm-6'>
+                            <div key={'campaignsKey' + i} className='col-md-6 p-3'>
                                 <CampaignWidgetV2 {...data}/>
-                                    {/* <Button onClick={handleShowContribute} variant='success'>Contribute</Button> */}
                                 <ContributeModal
                                     show={showContribute}
                                     handleShow={handleShowContribute}
