@@ -1,10 +1,16 @@
 .widget-container-campaign-v2{
     cursor:pointer ;
-    /* min-height: 50dvh; */
-    /* height: 100%; */
+    min-height: 35dvh;
+    height: 100%;
     color: white;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     font-weight: 500;
+}
+.widget-container-campaign-v2>div:nth-child(1){
+    flex-grow: 1;
+    align-items: center;
 }
 .widget-container-campaign-v2,
 .widget-container-campaign-v2 *{

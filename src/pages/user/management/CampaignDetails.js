@@ -137,39 +137,41 @@ function CampaignPledgesAndPromises({ pledges, refPass, openContributionModal })
         </h3>
       </div>
       <hr />
-      <div className='CampaignPledgesAndPromisesShowcase p-3'>
-        {pledges.map(e => {
+      <div className='row m-0 p-0 justify-content-center'>
+        {pledges.map((e,key) => {
           return (
-            <div className='pledgeCard m-3 shadow border rounded'>
-              <div className='pledgeCardHead'>
-                <div className='p-3'>
-                  <h3 className='p-0 m-0'>
-                    {e.name}
-                  </h3>
-                </div>
-                <div className='text-light px-3'>
-                  <h3 className='p-0 m-0'>
-                    {e.KCOLimit} KCO
-                  </h3>
-                </div>
-              </div>
-              <div className='pledgeCardBody'>
-                {e.selectedCrops.map((f, i) => (
-                  <div key={'PromiseKey' + e.id + 'and' + i}>
-                    <hr />
-                    <div className='EachPromiseInPledge p-2'>
-                      <b>{f.discount}%</b> discount on up to
-                      <b> {f.quantity} {f.unit}</b> of <b>{f.crop}</b>
-                    </div>
+            <div key={'EachPledge'+e.id+"for"+key} className='col-md-4 p-3'>
+              <div className='pledgeCard m-3 shadow border rounded'>
+                <div className='pledgeCardHead'>
+                  <div className='p-3'>
+                    <h3 className='p-0 m-0'>
+                      {e.name}
+                    </h3>
                   </div>
-                ))}
-              </div>
-              <hr />
-              <div className='pledgeCardFooter'>
-                <Button variant='success m-2' onClick={() => {
-                  setSearchParams({ "contribute": e.KCOLimit })
-                  openContributionModal()
-                }}>Contribute</Button>
+                  <div className='text-light px-3'>
+                    <h3 className='p-0 m-0'>
+                      {e.KCOLimit} KCO
+                    </h3>
+                  </div>
+                </div>
+                <div className='pledgeCardBody'>
+                  {e.selectedCrops.map((f, i) => (
+                    <div key={'PromiseKey' + e.id + 'and' + i}>
+                      <hr />
+                      <div className='EachPromiseInPledge p-2'>
+                        <b>{f.discount}%</b> discount on up to
+                        <b> {f.quantity} {f.unit}</b> of <b>{f.crop}</b>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <hr />
+                <div className='pledgeCardFooter'>
+                  <Button variant='success m-2' onClick={() => {
+                    setSearchParams({ "contribute": e.KCOLimit })
+                    openContributionModal()
+                  }}>Contribute</Button>
+                </div>
               </div>
             </div>
           )
@@ -318,9 +320,9 @@ function CampaignPlanDetails({ refPass, title, requirements, ...props }) {
       <div className='CampPlanRequirements rounded row m-0 p-2'>
         {requirements.map((e, key) => {
           return (
-            <div className='col-md-4' key={'campPlanRequirements' + key}>
+            <div className='col-md-4 p-2' key={'campPlanRequirements' + key}>
               <div className='eachRequiredProduct rounded bg-white p-3 shadow'>
-                <Table striped>
+                <Table striped responsive>
                   <tbody>
                     <tr>
                       <th>Type:</th>

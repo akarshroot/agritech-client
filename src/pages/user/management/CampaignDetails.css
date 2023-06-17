@@ -14,6 +14,23 @@
     ;
     /* grid-template-columns:1fr; */
 }
+/*767*/
+@media screen and (max-width:768px) {
+    .CampaignDetailsPageContainer{
+        display: flex;
+        flex-direction: column;
+    }
+    .CampaignDetailsPageContainer>div:nth-child(1){order: 0;} /* User */
+    .CampaignDetailsPageContainer>div:nth-child(2){order: 1;} /* Details */
+    .CampaignDetailsPageContainer>div:nth-child(3){order: 2;} /* Description */
+    .CampaignDetailsPageContainer>div:nth-child(4){order: 3;} /* Pledges and Promises */
+    .CampaignDetailsPageContainer>div:nth-child(5){order: 4;} /* vote Requests */
+    .CampaignDetailsPageContainer>div:nth-child(6){order: 5;} /* Plan */
+    .CampaignDetailsPageContainer>div:nth-child(7){order: 6;} /* Transaction History */
+    .CampaignNavigationNavigation{
+
+    }
+}
 .CampaignDetailsPageContainer>div{
     background-color: white;
     padding: 0.5rem;
@@ -127,14 +144,11 @@
 
 
 
-.CampaignPledgesAndPromisesShowcase{
-    display: flex;
-}
+
 .pledgeCard{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: 33%;
     overflow: hidden;
 }
 .EachPromiseInPledge{}

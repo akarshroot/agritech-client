@@ -11,7 +11,7 @@ function FloatingMenu(props) {
 
     return (
         <>
-            <nav className={`floating-menu-container theme-${props.theme} d-none d-md-block`}>
+            <nav className={`floating-menu-container floating-menu-container-translate theme-${props.theme} d-none d-md-block`}>
                 <ul>
                     <li onClick={() => navigate("/management/planning")}><img src={PlanningIco} alt="Planning" /><p>Planning</p></li>
                     <li onClick={() => navigate("/management/pipeline")}><img src={ProduceIco} alt="Produce Pipeline" /><p>Produce Pipeline</p></li>

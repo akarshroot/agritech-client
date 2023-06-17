@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import DatePicker from "react-datepicker"
-import PropTypes, { func } from 'prop-types'
+import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome';
 import Spinner from 'react-bootstrap/esm/Spinner'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
@@ -168,7 +168,7 @@ const StepperFooter = ({
         onClick={
           currentTabIndex === 0
             ? () => {
-              createCampaignFormRef.current.checkValidity() && descriptionField != ""
+              createCampaignFormRef.current.checkValidity() && descriptionField !== ""
                 ? submitCurrentStep()
                 : toast.warn('Missing or invalid value. Please check the provided details')
             }
@@ -297,6 +297,9 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
   const { userData } = useUser()
   const [plans, setPlans] = useState(null)
   const [loading, setLoading] = useState(false)
+
+  const [swipped,setSwipped] = useState(false)
+
   useEffect(() => {
     setLoading(true)
     getUserPlans().then(e => {
@@ -318,7 +321,20 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
     <div className='PlanAssociateContainer'>
       <h2>Choose Plan To Associate</h2>
       <div className="d-flex align-items-center">
-        <div className='UserPlans d-flex w-100'>
+        <div onScroll={()=>{setSwipped(true)}} className='UserPlans d-flex w-100'>
+          {!swipped && 
+            <div className='TopSwipeInstruct w-75 text-center p-1'>
+              <h4 className='p-0 m-0'>
+                <i className='animateSwipe'>{'<'}</i>
+                <i className='animateSwipe'>{'<'}</i>
+                <i className='animateSwipe'>{'<'}</i>
+                <i>Swipe</i>
+                <i className='animateSwipe'>{'>'}</i>
+                <i className='animateSwipe'>{'>'}</i>
+                <i className='animateSwipe'>{'>'}</i>
+              </h4>
+            </div>
+          }
           {loading
             ? (<div className='loaderFormSelectPlans text-center'>
               <Loader height='100px' width='100px' />
@@ -327,7 +343,7 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
               ? plans.map((plan, key) => {
                 const styleColor = selectedPlan?._id === plan._id ? 'borderS' : plan.executing ? 'borderE' : ''
                 return (
-                  <div onClick={() => handleSelectPlan(plan)} key={'EachUserPlanKey' + key} className='EachUserPlan col-11'>
+                  <div onClick={() => handleSelectPlan(plan)} key={'EachUserPlanKey' + key} className='EachUserPlan mx-0 mt-4'>
                     <div className={`plan planBorder newEachPlanShadow ${styleColor}`} >
                       <div className="d-flex align-items-center justify-content-between">
                         <h5>{plan.title}</h5>
@@ -551,17 +567,17 @@ function EachPledgePlan({ associatedPlan, checkedForNext, plansAllowed, setPlans
 
 
   return (
-    <div className='eachPledgePlan m-3'>
+    <div className='eachPledgePlan'>
       <header>
         <div className='d-flex justify-content-between align-items-center'>
-          {saved ? <h2>{planData.name}</h2> : <input {...headingTop} />}
+          {saved ? <h2>{planData.name}</h2> : <input className='w-75 mx-1' {...headingTop} />}
           {saved ? <h4>{planData.KCOLimit} KCO</h4> : <input className='w-25' {...investment} />}
         </div>
       </header>
       <hr />
       <main>
         {promises.map(({ crop, quantity, unit, discount, promiseId }, key) => (
-          <div key={'promiseOnPlan' + id + 'for' + key}>
+          <div className='w-100' key={'promiseOnPlan' + id + 'for' + key}>
             <div>
               {!saved && <button onClick={() => handlePromiseRemove(promiseId)} className='btn btn-outline-danger'>Remove</button>}<br />
               {discount}% discount
@@ -619,45 +635,39 @@ function PledgeReturnsForm({ associatedPlan, plansAllowed, setPlansAllowed, chec
   }
 
   return (
-    <div className='pledgeReturnsForm'>
+    <div className={`createPledgeContainer ${checkedForNext && 'overflow-hidden'}`}>
+      <div className={`disableFormContainer ${!checkedForNext && 'd-none'}`} >
+        <FontAwesome name="check" />
+        All Set
+      </div>
+      {plansAllowed.map((e, i) => { 
+        return <EachPledgePlan 
+                  key={'EachPledgeToCreate' + i} 
+                  id={e.id}
+                  associatedPlan={associatedPlan}
+                  checkedForNext={checkedForNext}
+                  planData={e}
+                  plansAllowed={plansAllowed}
+                  setPlansAllowed={setPlansAllowed} /> })}
 
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <div className={`createPledgeContainer ${checkedForNext && 'overflow-hidden'}`}>
-        <div className={`disableFormContainer ${!checkedForNext && 'd-none'}`} >
-          <FontAwesome name="check" />
-          All Set
-        </div>
-        {plansAllowed.map((e, i) => { return <EachPledgePlan associatedPlan={associatedPlan} checkedForNext={checkedForNext} planData={e} plansAllowed={plansAllowed} key={'EachPledgeToCreate' + i} id={e.id} setPlansAllowed={setPlansAllowed} /> })}
-        <div className='createNewPlanDiv m-3'>
-          {
-            plansAllowed.length < manager.allowedCampaignReturnSlots
-              ? (
-                <div onClick={addNewPlan} className='createNewPlanDivIcon PlusIcon'>
-                  <FontAwesome className='LockIcon' name='fas fa-plus' />
+      <div className='createNewPlanDiv'>
+        {
+          plansAllowed.length < manager.allowedCampaignReturnSlots
+            ? (
+              <div onClick={addNewPlan} className='createNewPlanDivIcon PlusIcon'>
+                <FontAwesome className='LockIcon' name='fas fa-plus' />
+              </div>
+            )
+            : (
+              <div onClick={() => console.log('coming soon')} className='createNewPlanDivIcon'>
+                <FontAwesome className='LockIcon' name='fas fa-lock' />
+                <div>
+                  ...coming soon
                 </div>
-              )
-              : (
-                <div onClick={() => console.log('coming soon')} className='createNewPlanDivIcon'>
-                  <FontAwesome className='LockIcon' name='fas fa-lock' />
-                  <div>
-                    ...coming soon
-                  </div>
-                </div>
-              )
-          }
+              </div>
+            )
+        }
 
-        </div>
       </div>
     </div>
   )
@@ -704,14 +714,12 @@ function ModalForm({ show, handleShow }) {
     setDeadline(date)
   }
   useEffect(() => {
-    setEnableThird((prev) => ({ checked: associatedPlan ? true : false, touched: false }));
+    setEnableThird((prev) => ({ checked: associatedPlan._id.length ? true : false, touched: false }));
   }, [associatedPlan])
 
   async function handleSubmit() {
-    // e.preventDefault()
     setCreateCampaignLoading(true)
     const deadlineToSend = Math.floor(deadline.getTime() / 1000)
-
 
     const formedPlansAllowed = plansAllowed.map(e => {
       const { id, saved, ...toSend } = e
@@ -814,7 +822,7 @@ function ModalForm({ show, handleShow }) {
       label: 'Basic Details',
       content: (
         <div>
-          <Form ref={campaignFormRef} onSubmit={firstTermsHandler} encType='multipart/form-data'>
+          <Form ref={campaignFormRef} encType='multipart/form-data'>
             <div className='createCampaginForm d-flex flex-wrap justify-content-center'>
               <fieldset className="col-md-6 p-3">
                 <label htmlFor='createCampTitle'>Title</label>
@@ -874,11 +882,14 @@ function ModalForm({ show, handleShow }) {
       label: 'Choose Plan to Associate',
       content: (
         <div>
-          <StepperSelectPlanForm secondTermsHandler={secondTermsHandler} selectedPlan={associatedPlan} selectPlan={setAssociatedPlan} />
+          <StepperSelectPlanForm
+            secondTermsHandler={secondTermsHandler}
+            selectedPlan={associatedPlan}
+            selectPlan={setAssociatedPlan} />
         </div>
       ),
       isError: !enableThird.checked && enableThird.touched,
-      isComplete: enableThird.checked,
+      isComplete: enableSecond.checked && enableThird.checked
     },
     {
       label: 'Pledge your Returns',
@@ -937,8 +948,8 @@ function ModalForm({ show, handleShow }) {
       saved: false,
     }])
     setEnableSecond({
-      checked: false,
-      touched: false
+      checked: true,
+      touched: true
     })
     setEnableThird({
       checked: false,
@@ -956,19 +967,6 @@ function ModalForm({ show, handleShow }) {
 
   return (
     <>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-        theme="light"
-      />
       <Modal
         show={show}
         onHide={() => {
@@ -1057,18 +1055,6 @@ export function ContributeModal({ show, handleShow, cid, minContri }) {
   }
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-        theme="light"
-      />
       <Modal
         show={show}
         onHide={handleShow}
@@ -1201,7 +1187,7 @@ function InventoryToFarmFreshModal({ show, handleShow, campaign }) {
   }
 
   async function confirmPostToFarmfresh() {
-    const response = await sendToFarmFresh(inventoryData)
+    await sendToFarmFresh(inventoryData)
   }
 
   useEffect(() => {
@@ -1320,6 +1306,18 @@ function Campaigns() {
       <Helmet>
         <title>Campaigns | AgriTech</title>
       </Helmet>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className='row shadow my-4 justify-content-around'>
         <div className='col-sm-3 p-3'>
           <Button variant="success" onClick={handleShow}>
@@ -1366,8 +1364,7 @@ function Campaigns() {
               userCampaigns?.map((data, i) => {
                 return (
                   <React.Fragment key={'campaignsKey' + i}>
-                    {/* <button onClick={handleShowContribute} className='neumorph-btn-green'>Contribute</button> */}
-                    <div className='widget shadow m-3'>
+                    <div className='widget shadow'>
                       <CampaignWidgetV2 {...data} />
                     </div>
                     <ContributeModal
