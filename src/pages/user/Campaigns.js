@@ -495,7 +495,7 @@ function EachPledgePlan({ associatedPlan, checkedForNext, plansAllowed, setPlans
 
 
 
-  const cropsArr = associatedPlan.requirements.filter(e => e.category === 'crop')
+  const cropsArr = associatedPlan?.requirements.filter(e => e.category === 'crop')
 
   useEffect(() => {
     if (planData.headingTop && planData.investment && planData.discount && saved) {

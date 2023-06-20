@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import {RatingStars} from './ProductDetails';
 
 function Product(props) {
     const { theme } = useUser()
@@ -49,9 +50,11 @@ function Product(props) {
         setShowBuyModal(!openBuyModal)
     }
 
+    console.log(props.product)
+
     return (
         <>
-            <div className='col-md-6 col-xl-3 p-5'>
+            <div className='col-md-6 col-xl-3 p-2'>
                 <Modal
                     show={openBuyModal}
                     onHide={handleBuyModal}
@@ -102,7 +105,9 @@ function Product(props) {
                     <hr className='style-two' />
                     <span>Price:<CurrencyIconComponent size='30' adjustY={'-10%'} /><span className="price">{INR.format(props.product.price).replace("₹", "KCO ")}</span>/-</span>
                     <hr className='style-two' />
-
+                    <div>
+                        <RatingStars rating={props.product.rating} />
+                    </div>
 
                     <div className='overlay-box'>
                         <div className='inner d-flex justify-content-center align-items-center'>

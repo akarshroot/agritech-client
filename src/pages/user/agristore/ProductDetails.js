@@ -9,6 +9,18 @@ import { Cart } from './Cart'
 import CustomImageLoader from 'react-custom-image-loader.'
 import grains from '../../../assets/icons/grain.png'
 import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent'
+import star from '../../../assets/icons/star.svg'
+
+export function RatingStars({rating}){
+    const percentage = (rating/5)*100
+    return(
+        <div className='StarsWrapper' >
+            <div style={{width:`${percentage}+%`}} className='ratingStars'>
+            <div className='bg-RatingDiv bg-warning'/> 
+            </div>
+        </div>
+    )
+}
 
 function ProductDetails(props) {
 
@@ -43,6 +55,7 @@ function ProductDetails(props) {
         fetchProductDetails(productId)
     }, [location])
 
+    console.log(productData)
     return (
         <div className='row flex-column align-items-start w-100 p-3'>
             <div className="product-details-header d-flex justify-content-between">
@@ -57,12 +70,13 @@ function ProductDetails(props) {
                     <div className="product-details col-12 col-sm-12 col-md-5 d-flex flex-column align-items-start p-3 m-3">
                         <div className="category-path mb-3">PRODUCTS / {productData.category.map((category,i) => (category !== "all" || productData.category.length === 1) && (<Link key={'specificProductLink'+productData._id+i} className='link' to={`/agrineeds?category=${category}`}>{category.toUpperCase()}</Link>))}</div>
                         <h3 className="product-title">{productData.title}</h3>
-                        <span>Sold By: {productData.soldBy}</span><span>Rating: {productData.rating}/5</span>
+                        <span>Sold By: {productData.soldBy}</span>
+                        <span className='d-flex align-items-center p-3'>Rating: {productData.rating && <RatingStars rating={productData.rating} />}</span>
                         <div className="w-100">
                             <hr />
                         </div>
                         <h3><CurrencyIconComponent size='35' adjustY={'-5%'}/>{INR.format(productData.price).replace("₹", "KCO ")}</h3>
-                        <span>Quantity: {productData.quantity && productData.quantity}</span>
+                        <span>Quantity: {productData.availableQuantity && productData.availableQuantity}</span>
                         <div className="d-flex justify-content-around mt-3">
                             <Button variant="outline-danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>
                             &nbsp;

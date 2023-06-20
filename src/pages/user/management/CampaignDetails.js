@@ -242,7 +242,7 @@ function TransactionsHistory({ refPass, tx }) {
     <div ref={refPass}>
       <div>
         <legend>Campaign Transactions</legend>
-        <Table striped bordered size="sm">
+        <Table responsive striped bordered size="sm">
           <thead>
             <tr>
               <th>S.No</th>
