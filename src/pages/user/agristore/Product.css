@@ -23,7 +23,7 @@
 }
 
 .price {
-    font-size: x-large;
+    font-size: 20px;
 }
 
 .star-product {
@@ -58,4 +58,21 @@
     cursor: pointer;
     visibility: visible;
     opacity: 1;
+}
+
+.qty-text{
+    animation-name: zoom;
+    animation-duration: 2s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-timing-function:  linear;
+}
+
+@keyframes zoom {
+    0%{
+        transform: scale(0.8);
+    }
+    100%{
+        transform: scale(1);
+    }
 }
