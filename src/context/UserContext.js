@@ -5,8 +5,6 @@ import Cookies from 'js-cookie';
 import axios from 'axios'
 // import { io } from 'socket.io-client'
 // import { SOCKET_URL as socketURL } from './config'
-import CustomImageLoader from 'react-custom-image-loader.'
-import grains from '../assets/icons/grain.png'
 import Loader from '../assets/loader/Loader'
 
 const UserContext = React.createContext()

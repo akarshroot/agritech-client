@@ -291,16 +291,16 @@ function ProfileTabs() {
                                         disabled={!editStatus}
                                     />
                                     <div className='grid-container'>
-                                        <div><img className='grid-item grid-item-1' src="https://images.pexels.com/photos/4737484/pexels-photo-4737484.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" /></div>
-                                        <div><img className='grid-item grid-item-2' src="https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg" /></div>
-                                        <div><img className='grid-item grid-item-3' src="https://api.contentstack.io/v2/assets/575e4d1c0342dfd738264a1f/download?uid=bltada7771f270d08f6" /></div>
-                                        <div><img className='grid-item grid-item-4' src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/matching-replacing-mixing-colors/jcr_content/main-pars/before_and_after/image-after/match-outcome3.png" /></div>
-                                        <div><img className='grid-item grid-item-5' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8g0hSiA0eoOfogf7XDpaQLwEXnw1uptrPr1flLm6FnMeyLaJcAUykLNdsb7j5fJ7S-su4c-VYOZs&usqp=CAU&ec=48600113" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-1' src="https://images.pexels.com/photos/4737484/pexels-photo-4737484.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-2' src="https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-3' src="https://api.contentstack.io/v2/assets/575e4d1c0342dfd738264a1f/download?uid=bltada7771f270d08f6" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-4' src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/matching-replacing-mixing-colors/jcr_content/main-pars/before_and_after/image-after/match-outcome3.png" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-5' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8g0hSiA0eoOfogf7XDpaQLwEXnw1uptrPr1flLm6FnMeyLaJcAUykLNdsb7j5fJ7S-su4c-VYOZs&usqp=CAU&ec=48600113" /></div>
                                         <div>
-                                            <img class='grid-item grid-item-6' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjz6-e5lR2rdUsPC1_wnaEwSDWXJIp0sbB7hf12Zx1Qg&usqp=CAU&ec=48600113' alt='' />
+                                            <img loading='lazy' class='grid-item grid-item-6' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjz6-e5lR2rdUsPC1_wnaEwSDWXJIp0sbB7hf12Zx1Qg&usqp=CAU&ec=48600113' alt='' />
                                         </div>
                                         <div>
-                                            <img class='grid-item grid-item-7' src='https://wallpaperaccess.com/full/1956710.png' alt='' />
+                                            <img loading='lazy' class='grid-item grid-item-7' src='https://wallpaperaccess.com/full/1956710.png' alt='' />
                                         </div>
                                     </div>
                                     <div className='profile-label-ip'>
@@ -322,7 +322,7 @@ function ProfileTabs() {
                     <div className='profile-img'>
                         <div className='profile-card-body'>
                             <div className='user-profile-img'>
-                                <img src={userData?.imgUrl} />
+                                <img loading='lazy' src={userData?.imgUrl} />
                             </div>
                             <div className='joined-platform'>
                                 <p><i>Joined on {new Date(userData?.createdAt).toLocaleString()}</i></p>

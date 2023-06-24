@@ -33,7 +33,49 @@
     margin-left: 30px;
     margin-top: 5px;
 }
- 
+.StarsWrapper{
+    --size-of-rating-bar:30px;
+    position: relative;
+    width: calc(5*var(--size-of-rating-bar));
+    height: var(--size-of-rating-bar);
+}
+.ratingStars{
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+
+    mask-image: url('../../../assets/icons/star.svg');
+    mask-size: var(--size-of-rating-bar) var(--size-of-rating-bar);
+    mask-repeat: repeat-x;
+}
+.ratingStars img{
+    opacity: 0.3;
+}
+.bg-RatingDiv{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 500%;
+    height: 100%;
+    z-index: -1;
+}
+/* .ratingStars img{
+    height: 1.5rem;
+
+    aspect-ratio: 1;
+} */
+/* .ratingStars::before{
+    content: '';
+    background-color: yellow;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    height: 100%;
+    z-index: -1;
+} */
+
 @keyframes floating {
     0% { transform: translate(0,  1px); }
     50%  { transform: translate(0, 0px); }

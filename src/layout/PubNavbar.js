@@ -61,10 +61,10 @@ function Navbar() {
         // style={navState ? { backgroundColor: "var(--c1)", color: "var(--base-text)" } : { backgroundColor: "var(--c2)", color: "var(--base-text)" }}
         <div className={`nav-container theme-${theme}`} >
             <div className="nav-icon-container">
-                <img src={navState ? hamburger : hamburgerDark} alt="" id="hamburger" onClick={openMobileMenu} />
+                <img loading='lazy' src={navState ? hamburger : hamburgerDark} alt="" id="hamburger" onClick={openMobileMenu} />
             </div>
             <div className="nav-title d-flex align-items-center">
-                <img src={horizontalLogo} width="50px" alt="AgriTech" />&nbsp;<h1 onClick={() => { navigate("/") }}>AgriTech</h1>
+                <img loading='lazy' src={horizontalLogo} width="50px" alt="AgriTech" />&nbsp;<h1 onClick={() => { navigate("/") }}>AgriTech</h1>
             </div>
             <ul className={screenWidth > 665 ? "nav-tabs-container" : "nav-tabs-container-mobile"} style={screenWidth > 665 ? { marginLeft: "0px" } : (mobileMenuState ? { marginLeft: "0vw" } : { marginLeft: "-200vw" })}>
                 <li id="close-mobile-menu" onClick={closeMobileMenu}>X</li>

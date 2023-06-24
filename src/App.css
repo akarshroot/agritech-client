@@ -52,6 +52,13 @@ body::-webkit-scrollbar-thumb {
   height: fit-content;
 }
 
+.LoaderDiv{
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

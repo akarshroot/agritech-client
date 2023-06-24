@@ -34,7 +34,7 @@ export function Cart() {
                 !cartLoading ?
                     <>
                         <div className={`cart theme-${theme}`}>
-                            <Button variant="primary cart-btn" onClick={() => { openCart(!showCart) }}><img src={shoppingCart} alt="cart" />&nbsp;View Cart <b>({cart.length})</b></Button>
+                            <Button variant="primary cart-btn" onClick={() => { openCart(!showCart) }}><img loading='lazy' src={shoppingCart} alt="cart" />&nbsp;View Cart <b>({cart.length})</b></Button>
                         </div>
                         <Modal
                             show={showCart}
@@ -44,7 +44,7 @@ export function Cart() {
                             size='md'
                         >
                             <Modal.Header closeButton>
-                                <Modal.Title><img src={shoppingCart} alt="cart" className='cart-img' /> Your saved items</Modal.Title>
+                                <Modal.Title><img loading='lazy' src={shoppingCart} alt="cart" className='cart-img' /> Your saved items</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <ul className={`list-group theme-${theme}`}>
@@ -56,7 +56,7 @@ export function Cart() {
                                                 return (
                                                         <li className='list-group-item w-100 d-flex justify-content-between align-items-center bg-success bg-opacity-10' key={productDetails._id}>
                                                             <div className='d-flex cart-list' onClick={() => { openProduct(productDetails)}}>
-                                                                <img src={productDetails.imgUrl} alt="" width="20%" />
+                                                                <img loading='lazy' src={productDetails.imgUrl} alt="" width="20%" />
                                                                 <div className='m-3'>
                                                                     <h5>{productDetails.title}</h5>
                                                                     {/* {INR.format(productDetails.price)} */}
