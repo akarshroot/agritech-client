@@ -13,21 +13,21 @@ function FloatingMenu(props) {
         <>
             <nav className={`floating-menu-container floating-menu-container-translate theme-${props.theme} d-none d-md-block`}>
                 <ul>
-                    <li onClick={() => navigate("/management/planning")}><img src={PlanningIco} alt="Planning" /><p>Planning</p></li>
-                    <li onClick={() => navigate("/management/pipeline")}><img src={ProduceIco} alt="Produce Pipeline" /><p>Produce Pipeline</p></li>
-                    <li onClick={() => navigate("/management/inventory")}><img src={InventoryIco} alt="Inventory" /><p>Inventory</p></li>
-                    <li onClick={() => navigate("/management/sales")}><img src={SalesIco} alt="Sales" /><p>Sales</p></li>
+                    <li onClick={() => navigate("/management/planning")}><img loading='lazy' src={PlanningIco} alt="Planning" /><p>Planning</p></li>
+                    <li onClick={() => navigate("/management/pipeline")}><img loading='lazy' src={ProduceIco} alt="Produce Pipeline" /><p>Produce Pipeline</p></li>
+                    <li onClick={() => navigate("/management/inventory")}><img loading='lazy' src={InventoryIco} alt="Inventory" /><p>Inventory</p></li>
+                    <li onClick={() => navigate("/management/sales")}><img loading='lazy' src={SalesIco} alt="Sales" /><p>Sales</p></li>
                 </ul>
             </nav>
             <nav className={`floating-menu-container theme-${props.theme} d-block fixed-bottom w-100 rounded-0 d-md-none`}>
                 <ul>
-                    <li className='p-2' onClick={() => navigate("/management/planning")}><img src={PlanningIco} alt="Planning" /></li>
+                    <li className='p-2' onClick={() => navigate("/management/planning")}><img loading='lazy' src={PlanningIco} alt="Planning" /></li>
                     <div className="vr"></div>
-                    <li className='p-2' onClick={() => navigate("/management/pipeline")}><img src={ProduceIco} alt="Produce Pipeline" /></li>
+                    <li className='p-2' onClick={() => navigate("/management/pipeline")}><img loading='lazy' src={ProduceIco} alt="Produce Pipeline" /></li>
                     <div className="vr"></div>
-                    <li className='p-2' onClick={() => navigate("/management/inventory")}><img src={InventoryIco} alt="Inventory" /></li>
+                    <li className='p-2' onClick={() => navigate("/management/inventory")}><img loading='lazy' src={InventoryIco} alt="Inventory" /></li>
                     <div className="vr"></div>
-                    <li className='p-2' onClick={() => navigate("/management/sales")}><img src={SalesIco} alt="Sales" /></li>
+                    <li className='p-2' onClick={() => navigate("/management/sales")}><img loading='lazy' src={SalesIco} alt="Sales" /></li>
                 </ul>
             </nav>
         </>

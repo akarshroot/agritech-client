@@ -683,7 +683,7 @@ export function WalletBalanceChart() {
                 <div className="d-flex justify-content-center align-items-center flex-column">
                     <div className="d-flex flex-column align-items-start justify-content-start w-100 p-3">
                         <div className='small'>Total Balance</div>
-                        <div className='notranslate h3 d-flex align-items-end m-0'><img src={KCO} width="30px" alt="KCO" />&nbsp;{balance}.00</div>
+                        <div className='notranslate h3 d-flex align-items-end m-0'><img loading='lazy' src={KCO} width="30px" alt="KCO" />&nbsp;{balance}.00</div>
                         <hr className='hr hr-blurry w-100 m-2' />
                     </div>
                     <div className="w-100" style={{ height: "90%" }}>

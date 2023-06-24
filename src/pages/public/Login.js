@@ -92,7 +92,7 @@ function Login() {
                     <div className='row justify-content-center'>
                         <form className='col-md-3' onSubmit={(e) => processLogin(e)} id="login">
                             <input ref={email} className='form-control' placeholder='Email' type="email" id="email" required /><br />
-                            <div className='position-relative'><input ref={password} className='form-control' placeholder='Password' type={pwdType} id="password" required /><img src={pwdSrc} className='eye-icn' alt='' onClick={changeIcon} /></div>
+                            <div className='position-relative'><input ref={password} className='form-control' placeholder='Password' type={pwdType} id="password" required /><img loading='lazy' src={pwdSrc} className='eye-icn' alt='' onClick={changeIcon} /></div>
                             <input className='form-input btn btn-success my-3' type="submit" value={loading ? "Please Wait..." : "Login"} disabled={loading} />
                         </form>
                     </div>

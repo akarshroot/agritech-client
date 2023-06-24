@@ -322,7 +322,7 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
       <h2>Choose Plan To Associate</h2>
       <div className="d-flex align-items-center">
         <div onScroll={()=>{setSwipped(true)}} className='UserPlans d-flex w-100'>
-          {!swipped && 
+          {!swipped && plans.length>1 && 
             <div className='TopSwipeInstruct w-75 text-center p-1'>
               <h4 className='p-0 m-0'>
                 <i className='animateSwipe'>{'<'}</i>
@@ -387,7 +387,7 @@ function StepperSelectPlanForm({ selectedPlan, selectPlan, secondTermsHandler })
               })
               : <div className='noPlansForForm flex-grow-1 d-flex flex-column align-items-center justify-content-center'>
                 <div className='m-3'>
-                  <img src={LogoImage} width='150px' height='150px' alt='Logo' />
+                  <img loading='lazy' src={LogoImage} width='150px' height='150px' alt='Logo' />
                 </div>
                 <div className='m-3'>
                   <h3>
@@ -495,7 +495,7 @@ function EachPledgePlan({ associatedPlan, checkedForNext, plansAllowed, setPlans
 
 
 
-  const cropsArr = associatedPlan?.requirements.filter(e => e.category === 'crop')
+  const cropsArr = associatedPlan?.requirements?.filter(e => e.category === 'crop')
 
   useEffect(() => {
     if (planData.headingTop && planData.investment && planData.discount && saved) {
@@ -1336,7 +1336,7 @@ function Campaigns() {
             "deadline": 1701289107,
             "minContri": 100,
             "associatedPlan": "648a207e0741a641f4ce8cfa",
-            "description": "<p>Hello! My name is Rajesh, and I am a farmer from a small village in India. My family has been farming for generations, but our farm has fallen on tough times. I need your support to bring it back to life!</p><p>With your help, I want to make my farm better and more sustainable. I dream of using modern techniques like eco-friendly farming and renewable energy to grow healthy crops without harmful chemicals. This will not only benefit my family but also the entire community.</p><p><img src=\"https://im.rediff.com/money/2016/may/17farm.jpg?w=670&amp;h=900\"></p><p>By contributing to my crowdfunding campaign, you become a part of this exciting journey. Your support will provide resources and hope for my family and help us create a thriving farm. As a thank you, I am offering special rewards like fresh produce, farm tours, and more.</p><p><img src=\"https://static.toiimg.com/thumb/msid-58352995,width-1280,resizemode-4/58352995.jpg\"></p><p>Join me in making a positive change in our community. Your contribution, no matter how small, will make a big difference. Together, we can rebuild my farm, support local agriculture, and bring hope back to our village.</p><p>Thank you for believing in me and our shared future.</p><p>Best regards,</p><p>Rajesh</p>",
+            "description": "<p>Hello! My name is Rajesh, and I am a farmer from a small village in India. My family has been farming for generations, but our farm has fallen on tough times. I need your support to bring it back to life!</p><p>With your help, I want to make my farm better and more sustainable. I dream of using modern techniques like eco-friendly farming and renewable energy to grow healthy crops without harmful chemicals. This will not only benefit my family but also the entire community.</p><p><img loading='lazy' src=\"https://im.rediff.com/money/2016/may/17farm.jpg?w=670&amp;h=900\"></p><p>By contributing to my crowdfunding campaign, you become a part of this exciting journey. Your support will provide resources and hope for my family and help us create a thriving farm. As a thank you, I am offering special rewards like fresh produce, farm tours, and more.</p><p><img loading='lazy' src=\"https://static.toiimg.com/thumb/msid-58352995,width-1280,resizemode-4/58352995.jpg\"></p><p>Join me in making a positive change in our community. Your contribution, no matter how small, will make a big difference. Together, we can rebuild my farm, support local agriculture, and bring hope back to our village.</p><p>Thank you for believing in me and our shared future.</p><p>Best regards,</p><p>Rajesh</p>",
             "featuredImage": "https://picsum.photos/536/354",
             "manager": "645e43d4c8210259e8a62a13",
             "campaignTransactions": [],

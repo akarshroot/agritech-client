@@ -109,7 +109,7 @@ function Signup() {
                         <input ref={name}  className='form-control' placeholder='Full Name' type="text" id="name" required /><br/>
                         <input ref={email} className='form-control' placeholder='Email' type="email" id="email" required /><br/>
                         <input ref={phno} className='form-control' placeholder='Phone Number' type="number" max="9999999999" min="1000000000" id="phno" required onInvalid={()=>{showWarning('Invalid PhoneNumber')}} /><br/>
-                        <div className='position-relative'><input ref={password} className='form-control' placeholder='Password' type={pwdType} id="password" required /><img src={pwdSrc} className='eye-icn' alt='' onClick={changeIcon} /></div><br/>
+                        <div className='position-relative'><input ref={password} className='form-control' placeholder='Password' type={pwdType} id="password" required /><img loading='lazy' src={pwdSrc} className='eye-icn' alt='' onClick={changeIcon} /></div><br/>
                         <input ref={repassword} className='form-control' type="password" placeholder='Re-type Password' id="re-password" required /><br/>
                         <input className='form-input  btn btn-success' type="submit" value={loading ? "Please Wait..." : "Signup"} disabled={loading} />
                     </form>

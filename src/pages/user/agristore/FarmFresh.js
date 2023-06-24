@@ -6,7 +6,7 @@ import ManagementContext from '../../../context/ManagementContext';
 import Product from './Product';
 import './FarmFresh.css'
 import Button from 'react-bootstrap/esm/Button';
-import farmFresh from '../../../assets/images/farmFresh.jpg'
+import farmFresh from '../../../assets/images/farmFresh.webp'
 import SideBar from './SideBar';
 import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent';
 import tag from '../../../assets/images/tag.png'
@@ -91,7 +91,7 @@ export default function FarmFresh() {
   return (
     <>
       <div className=' row justify-content-around shadow  outer-prod'>
-        <h2 className='col-md-8'><img src={logo} alt='' width='20%' />  Buy Exclusive Products Direct From The Farms</h2>
+        <h2 className='col-md-8'><img loading='lazy' src={logo} alt='' width='20%' />  Buy Exclusive Products Direct From The Farms</h2>
         <div className='col-md-4 d-flex align-items-center'><button onClick={showModal} className='btn btn-primary'>Add products from the inventory</button></div>
       </div>
       <Modal show={isOpen} onHide={hideModal}>
@@ -163,7 +163,7 @@ export default function FarmFresh() {
                 <div className=' product-container col-12 col-sm-10 border shadow p-3'>
                 <div className='d-flex flex-wrap col-12 col-sm-10 justify-content-between'>
                   <div className='col-12 col-sm-3'>
-                    <img src={farmFresh} width='100%' alt='' />
+                    <img loading='lazy' src={farmFresh} width='100%' alt='' />
                   </div>
                   <div className='d-flex col-10 col-sm-5 flex-column justify-content-center'>
                     <h5>{e.item}</h5>
@@ -174,8 +174,8 @@ export default function FarmFresh() {
                     <hr className='style-two' />
                   </div>
                     <div className='col-2 col-sm-2'>
-                      <img src={tag} alt='' /><br/>
-                      <img src={rating} alt='' />
+                      <img loading='lazy' src={tag} alt='' /><br/>
+                      <img loading='lazy' src={rating} alt='' />
                     </div>
                   
                 </div>
