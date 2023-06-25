@@ -53,13 +53,13 @@ function PrivateNav(props) {
                     </div>
                     <div className="language-setter col d-flex align-items center h-100 justify-content-end">
                         {userData?.admin && < Button variant='success m-1' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
-                        <Button variant='success m-1' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
-                        <Button variant='success m-1' onClick={() => logout()}>Logout</Button>
+                        <Button variant='success m-1' className='translate-intro' onClick={(e) => { googleTranslateElementInit(); e.target.hidden = true }} hidden={false}>Translate</Button>
+                        <Button variant='success m-1' className='logout-intro' onClick={() => logout()}>Logout</Button>
                         <div id="google_translate_element"></div>
                     </div>
                 </div>
                 {/* <div className='d-flex justify-content-between pt-1'> */}
-                <div className='links-container d-flex justify-content-between flex-wrap'>
+                <div className='links-container d-flex justify-content-between flex-wrap navigation-links-intro'>
                     {/* <div className='d-flex'> */}
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/dashboard"><li className={`nav-element ${tab === "dashboard" ? "nav-element-selected" : ""}`}><img loading='lazy' src={dashboard} height={45} width={45} />Dashboard</li></Link>
                     <Link onClick={() => setHamShow(false)} className={`link theme-${props.theme}`} to="/wallet"><li className={`nav-element ${tab === "wallet" ? "nav-element-selected" : ""}`}><img loading='lazy' src={wallet} height={45} width={45} />Wallet</li></Link>
@@ -72,7 +72,7 @@ function PrivateNav(props) {
 
             <div className={`private-nav d-block d-md-none theme-${props.theme}`}>
                 <div className='logoConsole d-flex align-items-center'><img loading='lazy' src={logoHorizontal} width="40px" alt="AgriTech" />&nbsp;AgriTech Console</div>
-                <div className='hamButtonNav'>
+                <div className='hamButtonNav navigation-links-intro'>
                     <FontAwesome name='bars' onClick={() => setHamShow(!hamShow)} className="fa-light fa-bars" />
                     {userData?.admin && < Button variant='success' className='admin-btn' onClick={() => navigate("/admin/panel")}>Admin Panel</Button>}
                     <Button variant='btn bg-primary text-white fw-bold bg-opacity-75' onClick={() => logout()}>LOGOUT</Button>
