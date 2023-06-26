@@ -66,7 +66,7 @@ function Home() {
         </div>
 
         <div className='features'>
-          <div className='row m-5 align-items-center'>
+          <div className='row align-items-center'>
             <div className='col-lg-6 col-md-12'>
                 <h1 {...fadeUpFeatures}>Features</h1>
                 <div onMouseEnter={()=>{setHovering(true)}}

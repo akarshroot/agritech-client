@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap');
 
 .bg-img{
-    background-image: url('../../assets/backgrounds/bg.jpg');
-    height: 260vh;
+    /* background-image: url('../../assets/backgrounds/bg.jpg'); */
+    background-color: #d0edd1;
+    height: 245vh;
     background-size: cover;
 }
 
