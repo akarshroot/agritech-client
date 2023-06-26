@@ -9,7 +9,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import shoppingCart from '../../../assets/icons/shopping_cart.svg'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+<<<<<<< master
+import StarRating from './StarRating';
+=======
 import {RatingStars} from './ProductDetails';
+>>>>>>> master
 
 function Product(props) {
     const { theme } = useUser()
@@ -20,7 +24,7 @@ function Product(props) {
         style: 'currency',
         currency: 'INR',
     });
-
+    console.log(props)
     const [openBuyModal, setShowBuyModal] = useState(false)
     const [modalDetails, setModalDetails] = useState({})
     const passwordRef = useRef()
@@ -98,17 +102,27 @@ function Product(props) {
                     pauseOnHover
                     theme="light"
                 />
-                <div className={`product-container h-100 shadow row flex-column justify-content-center theme-${theme} py-3`}>
+                <div className={`product-container h-100 shadow row flex-column justify-content-center theme-${theme}`}>
                     <div className="star-product" hidden={!props.product.recent}>Recently Watched</div>
+                    {
+                        (props.product.availableQuantity <= 5) ? <h5 className='text-danger qty-text'>Only {props.product.availableQuantity} left</h5>:''
+                    }
                     <div onClick={() => { navigate("/agristore/product/" + props.product._id) }} style={{ backgroundImage: `url(${props.product.imgUrl})` }} alt={props.product.title} className='product-image' />
                     <h5 onClick={() => { navigate("/agristore/product/" + props.product._id) }}>{props.product.title}</h5>
                     <hr className='style-two' />
+<<<<<<< master
+=======
                     <span>Price:<CurrencyIconComponent size='30' adjustY={'-10%'} /><span className="price">{INR.format(props.product.price).replace("₹", "KCO ")}</span>/-</span>
                     <hr className='style-two' />
                     <div>
                         <RatingStars rating={props.product.rating} />
                     </div>
+>>>>>>> master
 
+                    
+                    <span>Price:<CurrencyIconComponent size='25' adjustY={'-10%'} /><span className="price">{INR.format(props.product.price).replace("₹", "KCO ")}</span>/-</span>
+                    <hr className='style-two' />
+                    <StarRating rating={props.product.rating} />
                     <div className='overlay-box'>
                         <div className='inner d-flex justify-content-center align-items-center'>
                             <div className="d-flex justify-content-around flex-column">

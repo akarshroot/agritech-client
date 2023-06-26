@@ -9,18 +9,7 @@ import { Cart } from './Cart'
 import CustomImageLoader from 'react-custom-image-loader.'
 import grains from '../../../assets/icons/grain.png'
 import CurrencyIconComponent from '../../../assets/widgets/CurrencyIconComponent'
-import star from '../../../assets/icons/star.svg'
-
-export function RatingStars({rating}){
-    const percentage = (rating/5)*100
-    return(
-        <div className='StarsWrapper' >
-            <div style={{width:`${percentage}+%`}} className='ratingStars'>
-            <div className='bg-RatingDiv bg-warning'/> 
-            </div>
-        </div>
-    )
-}
+import StarRating from './StarRating'
 
 function ProductDetails(props) {
 
@@ -70,22 +59,27 @@ function ProductDetails(props) {
                     <div className="product-details col-12 col-sm-12 col-md-5 d-flex flex-column align-items-start p-3 m-3">
                         <div className="category-path mb-3">PRODUCTS / {productData.category.map((category,i) => (category !== "all" || productData.category.length === 1) && (<Link key={'specificProductLink'+productData._id+i} className='link' to={`/agrineeds?category=${category}`}>{category.toUpperCase()}</Link>))}</div>
                         <h3 className="product-title">{productData.title}</h3>
+                        <div className="product-description mt-3 text-left">
+                            {productData.description}
+                        </div>
                         <span>Sold By: {productData.soldBy}</span>
-                        <span className='d-flex align-items-center p-3'>Rating: {productData.rating && <RatingStars rating={productData.rating} />}</span>
+
                         <div className="w-100">
                             <hr />
                         </div>
                         <h3><CurrencyIconComponent size='35' adjustY={'-5%'}/>{INR.format(productData.price).replace("₹", "KCO ")}</h3>
-                        <span>Quantity: {productData.availableQuantity && productData.availableQuantity}</span>
+
+                        <div className='d-flex justify-content-between w-50'>
+                        <span>Quantity: {productData.availableQuantity} </span>
+                        <StarRating rating={productData.rating} />
+                        </div>
+
                         <div className="d-flex justify-content-around mt-3">
                             <Button variant="outline-danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>
                             &nbsp;
                             &nbsp;
                             
                             <Button variant="success btn-buy floating">Buy Now</Button>
-                        </div>
-                        <div className="product-description mt-3">
-                            {productData.description}
                         </div>
                     </div>
                 </div>
