@@ -42,10 +42,10 @@ function CampaignWidgetV2({ manager,featuredImage, title, target, contributors, 
                 
                 <div>
                     <div className={`CampFeaturedImage`}>
-                        <img src={featuredImage} alt=''/>
+                        <img loading='lazy' src={featuredImage} alt=''/>
                     </div>
                     <div className={`campUserProfilePic ${hovering && 'opacity-0'}`}>
-                        <img className='shadow' src={manager.imgUrl} alt='Profile Pic here'/>
+                        <img loading='lazy' className='shadow' src={manager.imgUrl} alt='Profile Pic here'/>
                     </div>
                     <div className={`campBasicCropDetails shadow ${hovering && 'opacity-0'}`}>
                         <div className='m-2 ps-2 pt-2 text-start'><h5>Crops Plan</h5></div>

@@ -44,6 +44,7 @@ function ProductDetails(props) {
         fetchProductDetails(productId)
     }, [location])
 
+    console.log(productData)
     return (
         <div className='row flex-column align-items-start w-100 p-3'>
             <div className="product-details-header d-flex justify-content-between">
@@ -53,7 +54,7 @@ function ProductDetails(props) {
             {productData ? <>
                 <div className="row p-3 product-details-container d-flex justify-content-center justify-content-around">
                     <div className="product-details-img p-3 col-12 col-sm-12 col-md-4" >
-                        <img src={productData.imgUrl} alt="" width="70%" />
+                        <img loading='lazy' src={productData.imgUrl} alt="" width="70%" />
                     </div>
                     <div className="product-details col-12 col-sm-12 col-md-5 d-flex flex-column align-items-start p-3 m-3">
                         <div className="category-path mb-3">PRODUCTS / {productData.category.map((category,i) => (category !== "all" || productData.category.length === 1) && (<Link key={'specificProductLink'+productData._id+i} className='link' to={`/agrineeds?category=${category}`}>{category.toUpperCase()}</Link>))}</div>
@@ -62,14 +63,17 @@ function ProductDetails(props) {
                             {productData.description}
                         </div>
                         <span>Sold By: {productData.soldBy}</span>
+
                         <div className="w-100">
                             <hr />
                         </div>
                         <h3><CurrencyIconComponent size='35' adjustY={'-5%'}/>{INR.format(productData.price).replace("₹", "KCO ")}</h3>
+
                         <div className='d-flex justify-content-between w-50'>
                         <span>Quantity: {productData.availableQuantity} </span>
                         <StarRating rating={productData.rating} />
                         </div>
+
                         <div className="d-flex justify-content-around mt-3">
                             <Button variant="outline-danger" onClick={() => { addToCart(productData) }}>Add to cart</Button>
                             &nbsp;

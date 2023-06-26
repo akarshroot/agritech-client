@@ -1,9 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useRef} from 'react'
 import './Home.css'
 import shape from '../../assets/images/shape.png'
-import heroImg from '../../assets/images/main-banner.png'
+import heroImg from '../../assets/images/main-banner.webp'
 import featureShape from '../../assets/images/about-shape.png'
-import fe from '../../assets/images/wheatFarm.jpg'
+import fe from '../../assets/images/wheatFarm.webp'
 import useFade from '../../hooks/useFade'
 
 function Home() {
@@ -14,28 +14,6 @@ function Home() {
   const {entry:entry5,...divBorderRotate} = useFade('BorderAnimation','rotateIn')
   const {entry:entry6,...fadeUpFeatures} = useFade('headings preFadeUp','fadeIn')
   const featureImageRef = useRef()
-  
-  const [borderValues,setBorderValues] = useState([10,10,10,10])
-  const [hovering,setHovering] = useState(false)
-
-
-    useEffect(()=>{
-      if(hovering){
-        console.log('hovering....')
-        setTimeout(()=>{
-          const ram1 = Math.floor(Math.random()*101)
-          const ram2 = Math.floor(Math.random()*101)
-          const ram3 = Math.floor(Math.random()*101)
-          const ram4 = Math.floor(Math.random()*101)
-          const newBorderVal = [ram1,ram2,ram3,ram4]
-          setBorderValues(newBorderVal)
-        },1000)
-      }
-    },[borderValues,hovering])
-
-    const StyleBorderAnimation = {
-      borderRadius: `${borderValues[0]}% ${borderValues[1]}% ${borderValues[2]}% ${borderValues[3]}%`
-    }
 
   return (
     <>
@@ -52,13 +30,13 @@ function Home() {
           <div className='col-lg-6 col-md-12 p-0 m-0'>
             <div className='img-hero'>
               <div {...divBorderRotate}></div>
-              <img className='img-hero-main' src={heroImg} alt='' />
+              <img loading='lazy' className='img-hero-main' src={heroImg} alt='' />
               <div className='shape-area'>
                 <div className='creative-shape'>
-                  <img src={shape} alt='' />
+                  <img loading='lazy' src={shape} alt='' />
                 </div>
                 <div className='creative-shape-2'>
-                  <img src={shape} alt='' />
+                  <img loading='lazy' src={shape} alt='' />
                 </div>
               </div>
             </div>
@@ -66,12 +44,10 @@ function Home() {
         </div>
 
         <div className='features'>
-          <div className='row align-items-center'>
+          <div className='row mx-5 align-items-center'>
             <div className='col-lg-6 col-md-12'>
                 <h1 {...fadeUpFeatures}>Features</h1>
-                <div onMouseEnter={()=>{setHovering(true)}}
-                  onMouseLeave={()=>setHovering(false)}
-                  ref={featureImageRef} style={StyleBorderAnimation} className='feat-img'><img src={fe} alt='' /></div>
+                <div ref={featureImageRef} className='feat-img'><img loading='lazy' src={fe} alt='' /></div>
             </div>
             <div className='col-lg-6 col-md-12 my-5 py-5'>
                 <div className='text-left'>
@@ -89,7 +65,7 @@ function Home() {
             </div>
           </div>
           <div className='features-shape-img'>
-            <img src={featureShape} alt='' />
+            <img loading='lazy' src={featureShape} alt='' />
           </div>
         </div>
 

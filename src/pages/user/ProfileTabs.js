@@ -4,14 +4,17 @@ import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import { useUser } from '../../context/UserContext'
-import { Country, State, City } from "country-state-city";
+// import { Country, State, City } from "country-state-city";
 import Select from "react-select";
 import { LuDelete } from 'react-icons/lu'
 import { renderWidget } from '../../assets/widgets/Widgets';
 
 function ProfileTabs() {
 
-    const { userData } = useUser()
+    const { userData, getCountryData, getStatesOfCountry, getCityOfState } = useUser()
+    const [countriesList, setCountryList] = useState([])
+    const [stateList, setStateList] = useState([]);
+    const [cityList, setCityList] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState(null);
     const [selectedState, setSelectedState] = useState(null);
     const [selectedCity, setSelectedCity] = useState(null);
@@ -62,10 +65,20 @@ function ProfileTabs() {
     }
 
     useEffect(() => {
-        console.log(selectedCountry);
-        console.log(selectedCountry?.isoCode);
-        console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
+        getCountryData().then(res => {
+            setCountryList(res)
+        })
+    }, [])
+
+    useEffect(() => {
+        if (selectedCountry)
+            getStatesOfCountry(selectedCountry).then(res => setStateList(res))
     }, [selectedCountry]);
+
+    useEffect(() => {
+        if (selectedCountry && selectedState)
+            getCityOfState(selectedCountry, selectedState).then(res => setCityList(res))
+    }, [selectedState, selectedCountry]);
 
     function addCrops(e) {
         e.preventDefault()
@@ -165,27 +178,40 @@ function ProfileTabs() {
                                 </div>
                                 <div className='profile-label-ip react-select-tags'>
                                     <label className='profile-label' htmlFor='profile-country'>Country :</label>
-                                    <Select
+                                    {/* <Select
                                         className='profile-ip'
                                         id="profile-country"
-                                        options={Country.getAllCountries()}
+                                        options={countriesList}
                                         getOptionLabel={(options) => {
-                                            return options["name"];
+                                            return options;
                                         }}
                                         getOptionValue={(options) => {
-                                            return options["name"];
+                                            return options;
                                         }}
                                         value={selectedCountry}
                                         onChange={(item) => {
                                             setSelectedCountry(item);
                                         }}
                                         placeholder="Select Country"
-                                    />
+                                    /> */}
+                                    <select name="country" className='profile-ip' id="profile-country" defaultValue={"null"}
+                                        onChange={(e) => {
+                                            setSelectedCountry(e.target.value);
+                                        }}>
+                                        <option value="null" disabled={true}>Select Country</option>
+                                        {
+                                            countriesList.map(country => {
+                                                return (
+                                                    <option value={country} key={country}>{country}</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
                                 </div>
 
                                 <div className='profile-label-ip react-select-tags'>
                                     <label className='profile-label' htmlFor='profile-state'>State :</label>
-                                    <Select className='profile-ip' id="profile-state"
+                                    {/* <Select className='profile-ip' id="profile-state"
                                         options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
                                         getOptionLabel={(options) => {
                                             return options["name"];
@@ -198,12 +224,25 @@ function ProfileTabs() {
                                             setSelectedState(item);
                                         }}
                                         placeholder="Select State"
-                                    />
+                                    /> */}
+                                    <select name="state" className='profile-ip' id="profile-state" defaultValue={"null"}
+                                        onChange={(e) => {
+                                            setSelectedState(e.target.value);
+                                        }}>
+                                        <option value="null" disabled={true}>Select State</option>
+                                        {
+                                            stateList.map(state => {
+                                                return (
+                                                    <option value={state} key={state}>{state}</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
 
                                 </div>
                                 <div className='profile-label-ip react-select-tags'>
                                     <label className='profile-label' htmlFor='profile-city'>City :</label>
-                                    <Select className='profile-ip' id="profile-city"
+                                    {/* <Select className='profile-ip' id="profile-city"
                                         options={City.getCitiesOfState(
                                             selectedState?.countryCode,
                                             selectedState?.isoCode
@@ -219,7 +258,20 @@ function ProfileTabs() {
                                             setSelectedCity(item);
                                         }}
                                         placeholder="Select City"
-                                    />
+                                    /> */}
+                                    <select name="city" className='profile-ip' id="profile-city" defaultValue={"null"}
+                                        onChange={(e) => {
+                                            setSelectedCity(e.target.value);
+                                        }}>
+                                        <option value="null" disabled={true}>Select City</option>
+                                        {
+                                            cityList.map(city => {
+                                                return (
+                                                    <option value={city} key={city}>{city}</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
                                 </div>
                                 <div className='profile-label-ip'>
                                     <div className='profile-label-ip'>
@@ -291,16 +343,16 @@ function ProfileTabs() {
                                         disabled={!editStatus}
                                     />
                                     <div className='grid-container'>
-                                        <div><img className='grid-item grid-item-1' src="https://images.pexels.com/photos/4737484/pexels-photo-4737484.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" /></div>
-                                        <div><img className='grid-item grid-item-2' src="https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg" /></div>
-                                        <div><img className='grid-item grid-item-3' src="https://api.contentstack.io/v2/assets/575e4d1c0342dfd738264a1f/download?uid=bltada7771f270d08f6" /></div>
-                                        <div><img className='grid-item grid-item-4' src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/matching-replacing-mixing-colors/jcr_content/main-pars/before_and_after/image-after/match-outcome3.png" /></div>
-                                        <div><img className='grid-item grid-item-5' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8g0hSiA0eoOfogf7XDpaQLwEXnw1uptrPr1flLm6FnMeyLaJcAUykLNdsb7j5fJ7S-su4c-VYOZs&usqp=CAU&ec=48600113" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-1' src="https://images.pexels.com/photos/4737484/pexels-photo-4737484.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-2' src="https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-3' src="https://api.contentstack.io/v2/assets/575e4d1c0342dfd738264a1f/download?uid=bltada7771f270d08f6" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-4' src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/matching-replacing-mixing-colors/jcr_content/main-pars/before_and_after/image-after/match-outcome3.png" /></div>
+                                        <div><img loading='lazy' className='grid-item grid-item-5' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8g0hSiA0eoOfogf7XDpaQLwEXnw1uptrPr1flLm6FnMeyLaJcAUykLNdsb7j5fJ7S-su4c-VYOZs&usqp=CAU&ec=48600113" /></div>
                                         <div>
-                                            <img class='grid-item grid-item-6' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjz6-e5lR2rdUsPC1_wnaEwSDWXJIp0sbB7hf12Zx1Qg&usqp=CAU&ec=48600113' alt='' />
+                                            <img loading='lazy' class='grid-item grid-item-6' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjz6-e5lR2rdUsPC1_wnaEwSDWXJIp0sbB7hf12Zx1Qg&usqp=CAU&ec=48600113' alt='' />
                                         </div>
                                         <div>
-                                            <img class='grid-item grid-item-7' src='https://wallpaperaccess.com/full/1956710.png' alt='' />
+                                            <img loading='lazy' class='grid-item grid-item-7' src='https://wallpaperaccess.com/full/1956710.png' alt='' />
                                         </div>
                                     </div>
                                     <div className='profile-label-ip'>

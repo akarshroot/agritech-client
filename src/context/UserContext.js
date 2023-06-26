@@ -5,8 +5,6 @@ import Cookies from 'js-cookie';
 import axios from 'axios'
 // import { io } from 'socket.io-client'
 // import { SOCKET_URL as socketURL } from './config'
-import CustomImageLoader from 'react-custom-image-loader.'
-import grains from '../assets/icons/grain.png'
 import Loader from '../assets/loader/Loader'
 
 const UserContext = React.createContext()
@@ -256,6 +254,54 @@ export function UserProvider({ children }) {
     //////////////////////////WALLET FUNCTIONS END HERE//////////////////////////////
     ////////////////////////////////////////////////////////////
 
+    async function getCountryData() {
+        try {
+            const response = await axios.get("https://easyworldapi.onrender.com/country?country=all")
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data)
+                return response.data.data
+            } else {
+                console.log(response)
+                throw response
+            }
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    }
+
+    async function getStatesOfCountry(country) {
+        try {
+            const response = await axios.get(`https://easyworldapi.onrender.com/state?country=${country}&&state=all`)
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data)
+                return response.data.data
+            } else {
+                console.log(response)
+                throw response
+            }
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    }
+
+    async function getCityOfState(country, state) {
+        try {
+            const response = await axios.get(`https://easyworldapi.onrender.com/city?country=${country}&&state=${state}&&city=all`)
+            if (response.hasOwnProperty("data")) {
+                console.log(response.data)
+                return response.data.data
+            } else {
+                console.log(response)
+                throw response
+            }
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    }
+
     useEffect(() => {
         if (checkTokenCookie)
             checkToken();
@@ -282,7 +328,10 @@ export function UserProvider({ children }) {
         verifyPayment,
         getAdminData,
         adminData,
-        verifyUserEmail
+        verifyUserEmail,
+        getCountryData,
+        getStatesOfCountry,
+        getCityOfState
     }
     return (
         <UserContext.Provider value={value}>

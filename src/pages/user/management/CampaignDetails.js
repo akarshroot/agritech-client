@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useParams, useLocation, useSearchParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import DOMPurify from 'dompurify'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
@@ -77,7 +77,7 @@ function CreatorDetails({ refPass, isOwner, imgUrl, name, email, walletAddress, 
           : <legend className='bg-success bg-opacity-50 rounded '>Your Campaign</legend>
         }
         <div className='p-2'>
-          <img height='156px' width='156px' className='rounded-circle' src={imgUrl} alt='User profile Img here' />
+          <img loading='lazy' height='156px' width='156px' className='rounded-circle' src={imgUrl} alt='User profile Img here' />
         </div>
         <div>
           <Table responsive>
@@ -190,14 +190,14 @@ function CampaignInfo({ maxAmountReached, refPass, title, raisedAmount, target, 
           <h1>{title}</h1>
           {
             contributors.find(contributor => contributor.userId === currentUser) ?
-              <img src={AlreadyContributed} width="80px" height="80px" alt="" />
+              <img loading='lazy' src={AlreadyContributed} width="80px" height="80px" alt="" />
               : <></>
           }
         </div>
       </div>
       <hr />
       <div className='campFeaturedImageContainer' >
-        <img className='campFeaturedImage w-100' src={featuredImage} alt='FeaturedImage' />
+        <img loading='lazy' className='campFeaturedImage w-100' src={featuredImage} alt='FeaturedImage' />
       </div>
       <div className='mx-5 text-start '>
         <div>
@@ -242,7 +242,7 @@ function TransactionsHistory({ refPass, tx }) {
     <div ref={refPass}>
       <div>
         <legend>Campaign Transactions</legend>
-        <Table striped bordered size="sm">
+        <Table responsive striped bordered size="sm">
           <thead>
             <tr>
               <th>S.No</th>
@@ -553,7 +553,7 @@ function SelectFromCartOptions({ setProd, product, hide }) {
     <div onClick={changeSelectId} value={product.id} className='row align-items-center p-0 border rounded custom-Options'>
       {product.imgUrl && (
         <div className='col-2'>
-          <img src={product.imgUrl} alt='Product' />
+          <img loading='lazy' src={product.imgUrl} alt='Product' />
         </div>
       )}
       <div className='col-10 d-flex flex-column justify-content-center'>
@@ -663,7 +663,7 @@ function CreateRequestModal({ show, handleShow, vid }) {
                   <div className='row p-0 m-0 rounded '>
                     {receiverProduct.imgUrl && (
                       <div className='col-4'>
-                        <img height='40px' width='40px' src={receiverProduct.imgUrl} alt='Product' />
+                        <img loading='lazy' height='40px' width='40px' src={receiverProduct.imgUrl} alt='Product' />
                       </div>
                     )}
                     <div className='col-8 d-flex flex-column justify-content-center'>

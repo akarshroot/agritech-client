@@ -3,14 +3,12 @@ import Button from 'react-bootstrap/esm/Button'
 import Product from './Product'
 import StoreContext from '../../../context/StoreContext'
 import { Cart } from './Cart'
-import CustomImageLoader from 'react-custom-image-loader.'
-import grains from '../../../assets/icons/grain.png'
 import SideBar from './SideBar'
-import { ToastContainer } from 'react-toastify'
 import './AgriNeeds.css'
 
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { useUser } from '../../../context/UserContext'
+import Loader from '../../../assets/loader/Loader'
 
 
 export default function AgriNeeds() {
@@ -50,7 +48,9 @@ export default function AgriNeeds() {
           <Button variant='warning my-3' onClick={() => { fetchShopContent("", activeStatus) }} disabled={shopLoading}>{shopLoading ? "Loading..." : "Load More"}</Button>
           {
             shopLoading ?
-              <div className='d-flex w-100 justify-content-center align-items-center'><CustomImageLoader image={grains} animationType={'float'} /></div>
+              <div className='d-flex w-100 justify-content-center align-items-center'>
+                <Loader height='200px' width='200px' />
+              </div>
               :
               <></>
           }

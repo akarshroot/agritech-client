@@ -1,9 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap');
 
 .bg-img{
-    /* background-image: url('../../assets/backgrounds/bg.jpg'); */
-    background-color: #d0edd1;
-    height: 245vh;
+    background-image: linear-gradient(90deg, #d0edd1,#eef8f0);
+    /* height: 200%; */
     background-size: cover;
 }
 
@@ -58,10 +57,12 @@ img{
 
 .features{
     position: relative;
+    overflow: hidden;
 }
 
 .feat-img{
     position: relative;
+    z-index: 1;
     left: -200px;
     height: 100%;
     transition: all 2s;
@@ -87,7 +88,6 @@ img{
 .features-shape-img{
     position: absolute;
     top: 40px;
-    z-index: -1;
 }
 .BorderAnimation{
     border: solid green;
